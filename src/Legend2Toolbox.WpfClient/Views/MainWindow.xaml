@@ -1,0 +1,170 @@
+﻿<Window
+    x:Class="Legend2Toolbox.WpfClient.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Legend2Toolbox.WpfClient"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewmodels="clr-namespace:Legend2Toolbox.WpfClient.ViewModels"
+    Title="功能网关"
+    Width="700"
+    Height="650"
+    d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModel}"
+    AllowsTransparency="True"
+    Background="Transparent"
+    Closing="Window_Closing"
+    ResizeMode="NoResize"
+    StateChanged="Window_StateChanged"
+    WindowStyle="None"
+    mc:Ignorable="d">
+    <Window.Resources>
+        <SolidColorBrush x:Key="DefaultWindowBackgroundBrush" Color="#F0F0F0" />
+        <Style x:Key="TitleBarButtonStyle" TargetType="{x:Type Button}">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontFamily" Value="Segoe MDL2 Assets" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Width" Value="30" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border
+                            Padding="{TemplateBinding Padding}"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#10FFFFFF" />
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#20FFFFFF" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style
+            x:Key="CloseButtonStyle"
+            BasedOn="{StaticResource TitleBarButtonStyle}"
+            TargetType="{x:Type Button}">
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#FF5050" />
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#CC0000" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Geometry x:Key="LogIcon">
+            M273.408 742.4l179.2-29.696 478.208-482.304c17.408-17.408 29.696-47.104 29.696-72.704 0-55.296-47.104-102.4-102.4-102.4-29.696 0-55.296 13.312-72.704 29.696L307.2 563.2 273.408 742.4zM815.104 115.712c13.312-13.312 25.6-17.408 43.008-17.408 33.792 0 64.512 29.696 64.512 63.488 0 17.408-8.192 33.792-17.408 43.008l-25.6 25.6-90.112-90.112L815.104 115.712zM755.712 171.008l90.112 90.112L460.8 644.096l0-47.104 0-43.008-43.008 0-43.008 0L755.712 171.008zM340.992 596.992l76.8 0 0 76.8-94.208 17.408L340.992 596.992zM943.104 366.592c-12.288 0-21.504 8.192-21.504 21.504l0 456.704c0 47.104-38.912 84.992-84.992 84.992l-665.6 0c-47.104 0-84.992-38.912-84.992-84.992l0-665.6c0-47.104 38.912-84.992 84.992-84.992l456.704 0c13.312 0 21.504-8.192 21.504-21.504S640 51.2 626.688 51.2L171.008 51.2C102.4 51.2 47.104 106.496 47.104 175.104l0 665.6c0 68.608 55.296 123.904 123.904 123.904l665.6 0c68.608 0 123.904-55.296 123.904-123.904L960.512 388.096C960.512 375.808 951.296 366.592 943.104 366.592z
+        </Geometry>
+        <Geometry x:Key="SettingIcon">
+            M354.133333 896c-55.466667-17.066667-102.4-51.2-145.066666-89.6 17.066667-25.6 25.6-51.2 25.6-81.066667 0-81.066667-64-145.066667-145.066667-149.333333-4.266667-21.333333-8.533333-42.666667-8.533333-64 0-38.4 4.266667-72.533333 12.8-106.666667C170.666667 396.8 230.4 332.8 230.4 256c0-17.066667-4.266667-34.133333-8.533333-51.2C264.533333 170.666667 311.466667 145.066667 362.666667 128c25.6 42.666667 72.533333 64 123.733333 64s98.133333-25.6 123.733333-64c51.2 17.066667 98.133333 42.666667 140.8 81.066667-4.266667 17.066667-8.533333 34.133333-8.533333 51.2 0 76.8 59.733333 140.8 136.533333 149.333333 8.533333 34.133333 12.8 72.533333 12.8 106.666667 0 21.333333 0 38.4-4.266666 59.733333h42.666666c4.266667-21.333333 4.266667-38.4 4.266667-59.733333 0-46.933333-8.533333-89.6-21.333333-132.266667-4.266667-8.533333-12.8-17.066667-21.333334-17.066667-59.733333 0-106.666667-46.933333-106.666666-106.666666 0-17.066667 4.266667-34.133333 12.8-46.933334 4.266667-8.533333 0-17.066667-4.266667-25.6-51.2-46.933333-115.2-85.333333-183.466667-102.4-8.533333-4.266667-21.333333 0-25.6 8.533334-17.066667 34.133333-55.466667 59.733333-93.866666 59.733333-38.4 0-76.8-21.333333-93.866667-59.733333-8.533333-12.8-21.333333-17.066667-29.866667-12.8-68.266667 17.066667-132.266667 55.466667-183.466666 102.4-8.533333 8.533333-8.533333 17.066667-4.266667 25.6 4.266667 17.066667 8.533333 29.866667 8.533333 46.933333 0 59.733333-46.933333 106.666667-106.666666 106.666667-12.8 0-17.066667 4.266667-21.333334 17.066666-12.8 42.666667-21.333333 89.6-21.333333 132.266667 0 29.866667 4.266667 59.733333 8.533333 89.6 0 8.533333 12.8 17.066667 21.333334 17.066667h8.533333c59.733333 0 106.666667 46.933333 106.666667 106.666666 0 25.6-8.533333 51.2-25.6 68.266667-8.533333 8.533333-8.533333 21.333333 0 29.866667 55.466667 55.466667 119.466667 98.133333 196.266666 119.466666 17.066667 4.266667 29.866667-4.266667 29.866667-12.8 8.533333-34.133333 38.4-59.733333 68.266667-68.266666v-42.666667c-42.666667 4.266667-81.066667 34.133333-98.133334 76.8zM358.4 512c0-68.266667 59.733333-128 128-128s128 59.733333 128 128c0 21.333333-4.266667 42.666667-17.066667 59.733333h46.933334c8.533333-17.066667 12.8-38.4 12.8-59.733333 0-93.866667-76.8-170.666667-170.666667-170.666667s-170.666667 76.8-170.666667 170.666667c0 81.066667 59.733333 153.6 136.533334 166.4v-42.666667c-51.2-12.8-93.866667-64-93.866667-123.733333zM964.266667 610.133333H524.8c-12.8 0-21.333333 8.533333-21.333333 21.333334s8.533333 21.333333 21.333333 21.333333h439.466667c12.8 0 21.333333-8.533333 21.333333-21.333333s-8.533333-21.333333-21.333333-21.333334zM964.266667 733.866667H524.8c-12.8 0-21.333333 8.533333-21.333333 21.333333s8.533333 21.333333 21.333333 21.333333h439.466667c12.8 0 21.333333-8.533333 21.333333-21.333333s-8.533333-21.333333-21.333333-21.333333zM964.266667 861.866667H524.8c-12.8 0-21.333333 8.533333-21.333333 21.333333s8.533333 21.333333 21.333333 21.333333h439.466667c12.8 0 21.333333-8.533333 21.333333-21.333333s-8.533333-21.333333-21.333333-21.333333z
+        </Geometry>
+        <Geometry x:Key="MinimizeIcon">
+            M149.977218 192.043331l381.921629 0 0 85.141764-381.921629 0 0-85.141764Z
+        </Geometry>
+        <Geometry x:Key="CloseIcon">
+            M842.947458 778.116917 576.847937 512.013303 842.946434 245.883083c8.67559-8.674567 13.447267-20.208251 13.43908-32.477692-0.008186-12.232602-4.7727-23.715121-13.414521-32.332383-8.655124-8.677637-20.149922-13.450337-32.384571-13.4575-12.286838 0-23.808242 4.771677-32.474622 13.434987L512.019443 447.143876 245.88206 181.050496c-8.66331-8.66331-20.175505-13.434987-32.416294-13.434987-12.239765 0-23.75196 4.770653-32.414247 13.43294-8.66024 8.636704-13.428847 20.12434-13.437034 32.356942-0.008186 12.269441 4.76349 23.803125 13.437034 32.476669l266.135336 266.13022L181.050496 778.11794c-8.664334 8.66331-13.43601 20.173458-13.43601 32.41527 0 12.239765 4.7727 23.752983 13.437034 32.417317 8.662287 8.66331 20.173458 13.43294 32.413224 13.43294 12.240789 0 23.754007-4.770653 32.416294-13.43294l266.134313-266.100544 266.101567 266.100544c8.66331 8.66331 20.185738 13.43294 32.4429 13.43294 12.265348-0.008186 23.74889-4.771677 32.369222-13.412474C860.81643 825.081555 860.821547 795.991006 842.947458 778.116917z
+        </Geometry>
+    </Window.Resources>
+    <Border Background="{DynamicResource DefaultWindowBackgroundBrush}" CornerRadius="8">
+        <Border.Effect>
+            <DropShadowEffect
+                BlurRadius="10"
+                Opacity="0.3"
+                ShadowDepth="0"
+                Color="Black" />
+        </Border.Effect>
+        <DockPanel>
+            <Grid
+                Height="30"
+                Background="#00ACE3"
+                DockPanel.Dock="Top"
+                MouseLeftButtonDown="TitleBar_MouseLiftButtonDown">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock
+                    Margin="10,0,0,0"
+                    VerticalAlignment="Center"
+                    FontSize="16"
+                    FontWeight="Bold"
+                    Foreground="White"
+                    Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=Title}" />
+                <Button
+                    Grid.Column="1"
+                    Click="MinimumButton_Click"
+                    Style="{StaticResource TitleBarButtonStyle}">
+                    <Path
+                        Width="10"
+                        Height="10"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Data="{StaticResource MinimizeIcon}"
+                        Fill="White"
+                        Stretch="Uniform" />
+                </Button>
+                <Button
+                    Grid.Column="2"
+                    Click="CloseButton_Click"
+                    Style="{StaticResource CloseButtonStyle}">
+                    <Path
+                        Width="10"
+                        Height="10"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Data="{StaticResource CloseIcon}"
+                        Fill="White"
+                        Stretch="Uniform" />
+                </Button>
+            </Grid>
+            <StackPanel
+                Background="#00ACE3"
+                DockPanel.Dock="Top"
+                Orientation="Horizontal">
+                <RadioButton IsChecked="{Binding IsLogSelected}" Style="{StaticResource NavRadioButtonStyle}">
+                    <StackPanel>
+                        <Path
+                            Width="40"
+                            Height="40"
+                            Margin="0,0,0,10"
+                            VerticalAlignment="Center"
+                            Data="{StaticResource LogIcon}"
+                            Fill="White"
+                            Stretch="Uniform" />
+                        <TextBlock
+                            HorizontalAlignment="Center"
+                            FontSize="14"
+                            Text="系统日志" />
+                    </StackPanel>
+                </RadioButton>
+                <RadioButton IsChecked="{Binding IsSettingsSelected}" Style="{StaticResource NavRadioButtonStyle}">
+                    <StackPanel>
+                        <Path
+                            Width="40"
+                            Height="40"
+                            Margin="0,0,0,10"
+                            VerticalAlignment="Center"
+                            Data="{StaticResource SettingIcon}"
+                            Fill="White"
+                            Stretch="Uniform" />
+                        <TextBlock
+                            HorizontalAlignment="Center"
+                            FontSize="14"
+                            Text="系统设置" />
+                    </StackPanel>
+                </RadioButton>
+            </StackPanel>
+            <ContentControl Content="{Binding CurrentView}" />
+        </DockPanel>
+    </Border>
+</Window>

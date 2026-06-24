@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Legend2Toolbox.Api/Legend2Toolbox.Api.csproj" />
+    <Project Path="src/Legend2Toolbox.Application/Legend2Toolbox.Application.csproj" />
+    <Project Path="src/Legend2Toolbox.Domain/Legend2Toolbox.Domain.csproj" />
+    <Project Path="src/Legend2Toolbox.Infrastructure/Legend2Toolbox.Infrastructure.csproj" />
+    <Project Path="src/Legend2Toolbox.Shared/Legend2Toolbox.Shared.csproj" />
+    <Project Path="src/Legend2Toolbox.WpfClient/Legend2Toolbox.WpfClient.csproj" />
+  </Folder>
+</Solution>

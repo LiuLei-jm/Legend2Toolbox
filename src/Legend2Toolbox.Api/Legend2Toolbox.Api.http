@@ -1,0 +1,6 @@
+@Legend2Toolbox.Api_HostAddress = http://localhost:5098
+
+GET {{Legend2Toolbox.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
