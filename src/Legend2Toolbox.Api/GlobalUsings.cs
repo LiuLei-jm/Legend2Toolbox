@@ -1,0 +1,10 @@
+﻿global using Mapster;
+global using MediatR;
+global using Microsoft.AspNetCore.Authentication;
+global using Microsoft.AspNetCore.Diagnostics;
+global using Microsoft.AspNetCore.Identity;
+global using Microsoft.AspNetCore.Mvc;
+global using Microsoft.EntityFrameworkCore;
+global using Serilog;
+global using System.Diagnostics;
+global using System.Security.Claims;

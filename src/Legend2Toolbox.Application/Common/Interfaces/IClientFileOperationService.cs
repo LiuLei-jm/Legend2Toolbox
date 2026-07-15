@@ -4,6 +4,6 @@ namespace Legend2Toolbox.Application.Common.Interfaces;
 
 public interface IClientFileOperationService
 {
-    Task ModifyFileAppendAsync(ModifyContentCommand command);
-    Task RemoveContentFromFileAsync(ModifyContentCommand command);
+    Task ModifyFileAppendAsync(FileWriteCommand command);
+    Task RemoveContentFromFileAsync(FileDeleteCommand command);
 }

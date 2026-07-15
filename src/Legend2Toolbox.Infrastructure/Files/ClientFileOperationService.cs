@@ -7,17 +7,19 @@ namespace Legend2Toolbox.Infrastructure.Files;
 public class ClientFileOperationService : IClientFileOperationService
 {
     private readonly IAppLogger<ClientFileOperationService> _logger;
-    private readonly IValidator<ModifyContentCommand> _validator;
+    private readonly IValidator<FileWriteCommand> _fileWriteValidator;
+    private readonly IValidator<FileDeleteCommand> _fileDeleteValidator;
 
-    public ClientFileOperationService(IAppLogger<ClientFileOperationService> logger, IValidator<ModifyContentCommand> validator)
+    public ClientFileOperationService(IAppLogger<ClientFileOperationService> logger, IValidator<FileWriteCommand> fileWriteValidator, IValidator<FileDeleteCommand> fileDeleteValidator)
     {
         _logger = logger;
-        _validator = validator;
+        _fileWriteValidator = fileWriteValidator;
+        _fileDeleteValidator = fileDeleteValidator;
     }
 
-    public async Task ModifyFileAppendAsync(ModifyContentCommand command)
+    public async Task ModifyFileAppendAsync(FileWriteCommand command)
     {
-        var validationResult = await _validator.ValidateAsync(command);
+        var validationResult = await _fileWriteValidator.ValidateAsync(command);
         if (!validationResult.IsValid)
         {
             string errors = string.Join("; ", validationResult.Errors.Select(e => e.ErrorMessage));
@@ -53,9 +55,9 @@ public class ClientFileOperationService : IClientFileOperationService
     }
 
 
-    public async Task RemoveContentFromFileAsync(ModifyContentCommand command)
+    public async Task RemoveContentFromFileAsync(FileDeleteCommand command)
     {
-        var validationResult = await _validator.ValidateAsync(command);
+        var validationResult = await _fileDeleteValidator.ValidateAsync(command);
         if (!validationResult.IsValid)
         {
             string errors = string.Join("; ", validationResult.Errors.Select(e => e.ErrorMessage));
@@ -70,10 +72,10 @@ public class ClientFileOperationService : IClientFileOperationService
                 return;
             }
             var originalContentLines = await File.ReadAllLinesAsync(command.FilePath);
-            if (!originalContentLines.Contains(command.Content))
+            if (!originalContentLines.Contains(command.ContentToRemove))
                 return;
-            if (originalContentLines.Length == 0 || string.IsNullOrEmpty(command.Content)) return;
-            var filteredLines = originalContentLines.Where(line => !line.Contains(command.Content) || string.IsNullOrEmpty(line));
+            if (originalContentLines.Length == 0 || string.IsNullOrEmpty(command.ContentToRemove)) return;
+            var filteredLines = originalContentLines.Where(line => !line.Contains(command.ContentToRemove) || string.IsNullOrEmpty(line));
             await File.WriteAllLinesAsync(command.FilePath, filteredLines);
             _logger.LogInfo(command.LogMessage);
         }

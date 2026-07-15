@@ -28,8 +28,8 @@ public class AppLogger<T> : IAppLogger<T>
         _messenger.Send(new AppLogMessage(message));
     }
 
-    public void LogDebug(string message)
+    public void LogDebug(string message, Exception? ex = null)
     {
-        _logger.LogInformation(message);
+        _logger.LogDebug(message, ex);
     }
 }

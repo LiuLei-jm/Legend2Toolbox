@@ -5,8 +5,8 @@ namespace Legend2Toolbox.WpfClient.ViewModels;
 
 public partial class MainViewModel : ObservableObject
 {
-    private readonly LogViewModel _logViewModel;
-    private readonly SettingsViewModel _settingsViewModel;
+    private readonly LogViewModel _logViewModel = null!;
+    private readonly SettingsViewModel _settingsViewModel = null!;
     [ObservableProperty]
     private object _currentView;
     [ObservableProperty]

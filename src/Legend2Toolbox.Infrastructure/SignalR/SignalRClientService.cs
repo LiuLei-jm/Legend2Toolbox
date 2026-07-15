@@ -93,7 +93,7 @@ public class SignalRClientService : ISignalRClientService, IAsyncDisposable, IDi
                     return Task.CompletedTask;
                 };
                 RegisterHubSubscriptions();
-                _logger.LogInfo("正在尝试连接服务器...");
+                _logger.LogDebug("正在尝试连接服务器...");
                 await _hubConnection.StartAsync(token).ConfigureAwait(false);
                 _logger.LogInfo("成功连接服务器!等待指令...");
                 await connectionTcs.Task.ConfigureAwait(false);
@@ -105,7 +105,7 @@ public class SignalRClientService : ISignalRClientService, IAsyncDisposable, IDi
             }
             catch (Exception ex)
             {
-                _logger.LogError("连接失败，准备失败...", ex);
+                _logger.LogDebug("连接失败，准备重试...", ex);
             }
             if (!token.IsCancellationRequested)
             {
@@ -127,7 +127,7 @@ public class SignalRClientService : ISignalRClientService, IAsyncDisposable, IDi
     {
         if (_hubConnection == null) return;
         ClearSubScriptions();
-        var subWrite = _hubConnection.On<ModifyContentCommand>("ReceiveWriteCommand", async (cmd) =>
+        var subWrite = _hubConnection.On<FileWriteCommand>("ReceiveWriteCommand", async (cmd) =>
         {
             try
             {
@@ -139,7 +139,7 @@ public class SignalRClientService : ISignalRClientService, IAsyncDisposable, IDi
             }
         });
         _hubMethodSubscriptions.Add(subWrite);
-        var subDelete = _hubConnection.On<ModifyContentCommand>("ReceiveDeleteCommand", async (cmd) =>
+        var subDelete = _hubConnection.On<FileDeleteCommand>("ReceiveDeleteCommand", async (cmd) =>
         {
             try
             {
