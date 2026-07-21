@@ -1,7 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Legend2Toolbox.WpfClient.ViewModels.Pages;
-
-namespace Legend2Toolbox.WpfClient.ViewModels;
+﻿namespace Legend2Toolbox.WpfClient.ViewModels;
 
 public partial class MainViewModel : ObservableObject
 {

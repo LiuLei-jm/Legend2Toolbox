@@ -4,6 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>5649a870-d8ed-45d5-846c-e6a32d008e8e</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -30,10 +31,6 @@
     <None Update="data.db">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Endpoints\Users\" />
   </ItemGroup>
 
 </Project>

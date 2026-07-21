@@ -1,6 +1,4 @@
-﻿using Legend2Toolbox.WpfClient.ViewModels;
-using System.Windows;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using Forms = System.Windows.Forms;
 
 namespace Legend2Toolbox.WpfClient;

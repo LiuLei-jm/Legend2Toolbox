@@ -1,13 +1,5 @@
-﻿using Legend2Toolbox.Shared.Helpers;
-
-namespace Legend2Toolbox.Application.Common.Models;
-
-public class FileDeleteCommand
-{
-    public string FilePath { get; set; } = string.Empty;
-    public string ContentToRemove { get; set; } = string.Empty;
-    public string LogMessage { get; set; } = string.Empty;
-}
+﻿
+namespace Legend2Toolbox.WpfClient.Validators;
 
 public class FileDeleteCommandValidator : AbstractValidator<FileDeleteCommand>
 {

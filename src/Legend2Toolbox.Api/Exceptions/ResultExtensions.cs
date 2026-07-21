@@ -1,5 +1,4 @@
-﻿using Legend2Toolbox.Domain.Models;
-
+﻿
 namespace Legend2Toolbox.Api.Exceptions;
 
 public static class ResultExtensions

@@ -1,15 +1,4 @@
-﻿using FluentAssertions;
-using Legend2Toolbox.Application.Common.Interfaces;
-using Legend2Toolbox.Application.Feature.Identity;
-using Legend2Toolbox.Domain.Models;
-using NSubstitute;
-using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Text;
-using Xunit.Sdk;
-
-namespace Legend2Toolbox.Application.UnitTests.Users.Commands;
+﻿namespace Legend2Toolbox.Application.UnitTests.Users.Commands;
 
 public class RegisterCommandHandlerTests
 {

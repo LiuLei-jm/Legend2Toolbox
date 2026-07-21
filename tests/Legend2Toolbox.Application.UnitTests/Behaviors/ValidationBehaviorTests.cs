@@ -1,14 +1,4 @@
-﻿using FluentAssertions;
-using FluentValidation;
-using FluentValidation.Results;
-using Legend2Toolbox.Application.Behaviors;
-using MediatR;
-using NSubstitute;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Legend2Toolbox.Application.UnitTests.Behaviors;
+﻿namespace Legend2Toolbox.Application.UnitTests.Behaviors;
 
 public class ValidationBehaviorTests
 {

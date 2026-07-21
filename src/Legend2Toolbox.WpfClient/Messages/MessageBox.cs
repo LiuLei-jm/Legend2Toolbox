@@ -4,6 +4,6 @@ public static class Notification
 {
     public static void Show(string message)
     {
-        MessageBox.Show(message);
+        System.Windows.Forms.MessageBox.Show(message);
     }
 }

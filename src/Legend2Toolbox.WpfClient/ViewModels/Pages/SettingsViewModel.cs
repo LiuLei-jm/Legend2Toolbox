@@ -1,11 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
-using Legend2Toolbox.Application.Common.Interfaces;
-using Legend2Toolbox.Application.Common.Models;
-using Legend2Toolbox.WpfClient.Messages;
-
-namespace Legend2Toolbox.WpfClient.ViewModels.Pages;
+﻿namespace Legend2Toolbox.WpfClient.ViewModels.Pages;
 
 public partial class SettingsViewModel : ObservableObject
 {

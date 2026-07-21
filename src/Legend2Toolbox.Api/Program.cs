@@ -1,9 +1,3 @@
-using Legend2Toolbox.Api;
-using Legend2Toolbox.Api.Endpoints.Identity;
-using Legend2Toolbox.Application;
-using Legend2Toolbox.Infrastructure;
-using Legend2Toolbox.Infrastructure.Identity;
-using Legend2Toolbox.Infrastructure.Persistence;
 
 try
 {
@@ -15,8 +9,8 @@ try
     builder.Host.UseSerilog();
 
 
-    builder.Services.AddApplicationToApi();
-    builder.Services.AddInfrastructureToApi(builder.Configuration);
+    builder.Services.AddApplicationService();
+    builder.Services.AddInfrastructureService(builder.Configuration);
     builder.Services.AddApiServices(builder.Configuration);
 
     var app = builder.Build();
@@ -35,6 +29,7 @@ try
     app.UseAuthorization();
 
     app.MapCustomIdentityEndpoints();
+    app.MapAdminUserEndpoints();
 
     using (var scope = app.Services.CreateScope())
     {

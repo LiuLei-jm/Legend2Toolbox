@@ -1,7 +1,4 @@
-﻿using Legend2Toolbox.Application.Common.Interfaces;
-using Legend2Toolbox.Domain.Models;
-
-namespace Legend2Toolbox.Application.Feature.Identity;
+﻿namespace Legend2Toolbox.Application.Feature.Identity;
 
 public record RegisterCommand(string Username, string Email, string Password) : IRequest<Result>;
 

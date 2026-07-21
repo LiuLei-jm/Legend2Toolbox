@@ -1,7 +1,4 @@
-﻿using Legend2Toolbox.Api.Exceptions;
-using Legend2Toolbox.Application.Feature.Identity;
-using Legend2Toolbox.Domain.Constants;
-
+﻿
 namespace Legend2Toolbox.Api.Endpoints.Identity;
 
 public static class IdentityEndpoints
@@ -24,7 +21,7 @@ public static class IdentityEndpoints
             [FromServices] ISender sender
             ) =>
         {
-            var query = request.Adapt<LoginQuery>();
+            var query = request.Adapt<LoginCommand>();
             var result = await sender.Send(query);
             if (result.IsFailure) return result.ToMinimalApiResult();
             return Results.SignIn(

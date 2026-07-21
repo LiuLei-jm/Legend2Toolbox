@@ -1,5 +1,4 @@
-﻿using Legend2Toolbox.Domain.Exceptions;
-using ValidationException = FluentValidation.ValidationException;
+﻿using ValidationException = FluentValidation.ValidationException;
 
 namespace Legend2Toolbox.Api.Exceptions;
 

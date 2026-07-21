@@ -1,15 +1,4 @@
-﻿using CommunityToolkit.Mvvm.Messaging;
-using Legend2Toolbox.Application;
-using Legend2Toolbox.Application.Common.Interfaces;
-using Legend2Toolbox.Infrastructure;
-using Legend2Toolbox.WpfClient.Logging;
-using Legend2Toolbox.WpfClient.ViewModels;
-using Legend2Toolbox.WpfClient.ViewModels.Pages;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Serilog;
-using System.Windows;
-using ApplicationContext = System.Windows.Application;
+﻿using ApplicationContext = System.Windows.Application;
 
 namespace Legend2Toolbox.WpfClient;
 
@@ -36,8 +25,10 @@ public partial class App : ApplicationContext
                 services.AddSingleton(typeof(IAppLogger<>), typeof(AppLogger<>));
                 services.AddSingleton<IMessenger>(WeakReferenceMessenger.Default);
 
-                services.AddApplication();
-                services.AddInfrastructure();
+                services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+                services.AddSingleton<IClientConfigurationService, ClientConfigurationService>();
+                services.AddSingleton<IClientFileOperationService, ClientFileOperationService>();
+                services.AddSingleton<ISignalRClientService, SignalRClientService>();
 
                 services.AddTransient<LogViewModel>();
                 services.AddTransient<SettingsViewModel>();

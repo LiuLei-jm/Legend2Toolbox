@@ -1,4 +1,4 @@
-﻿namespace Legend2Toolbox.Application.Common.Interfaces;
+﻿namespace Legend2Toolbox.WpfClient.Services.Interfaces;
 
 public interface IAppLogger<T>
 {

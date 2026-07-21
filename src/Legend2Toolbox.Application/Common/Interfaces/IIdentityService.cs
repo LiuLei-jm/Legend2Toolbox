@@ -1,7 +1,4 @@
-﻿using Legend2Toolbox.Application.Feature.Identity;
-using Legend2Toolbox.Domain.Models;
-using System.Security.Claims;
-
+﻿
 namespace Legend2Toolbox.Application.Common.Interfaces;
 
 public interface IIdentityService
@@ -10,5 +7,12 @@ public interface IIdentityService
     Task<Result> ChangePasswordAsync(ChangePasswordCommand request);
     Task<Result> ForgotPasswordAsync(ForgotPasswordCommand request);
     Task<Result> ResetPasswordAsync(ResetPasswordCommand request);
-    Task<Result<ClaimsPrincipal>> AuthenticateUserAsync(LoginQuery request);
+    Task<Result<ClaimsPrincipal>> AuthenticateUserAsync(LoginCommand request);
+
+    Task<Result<PagedResult<UserDto>>> GetAllUsersAsync(int pageNumber, int pageSize);
+    Task<Result<UserDto>> GetUserByNameAsync(string name);
+    Task<Result> AssignRoleAsync(AssignRoleCommand request);
+    Task<Result> ToggleUserLockAsync(ToggleUserLockCommand request);
+    Task<Result> UpdateUserAsync(UpdateUserCommand request);
+    Task<Result> DeleteUserAsync(string userId);
 }

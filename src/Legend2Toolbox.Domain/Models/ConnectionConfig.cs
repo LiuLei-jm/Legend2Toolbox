@@ -1,4 +1,4 @@
-﻿namespace Legend2Toolbox.Application.Common.Models;
+﻿namespace Legend2Toolbox.Domain.Models;
 
 public class ConnectionConfig
 {

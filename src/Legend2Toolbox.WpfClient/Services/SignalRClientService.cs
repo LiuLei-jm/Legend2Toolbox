@@ -1,8 +1,4 @@
-﻿using Legend2Toolbox.Application.Common.Interfaces;
-using Legend2Toolbox.Application.Common.Models;
-using Microsoft.AspNetCore.SignalR.Client;
-
-namespace Legend2Toolbox.Infrastructure.SignalR;
+﻿namespace Legend2Toolbox.WpfClient.Services;
 
 public class SignalRClientService : ISignalRClientService, IAsyncDisposable, IDisposable
 {

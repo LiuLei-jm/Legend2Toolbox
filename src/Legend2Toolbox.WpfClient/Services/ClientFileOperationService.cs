@@ -1,8 +1,4 @@
-﻿using FluentValidation;
-using Legend2Toolbox.Application.Common.Interfaces;
-using Legend2Toolbox.Application.Common.Models;
-
-namespace Legend2Toolbox.Infrastructure.Files;
+﻿namespace Legend2Toolbox.WpfClient.Services;
 
 public class ClientFileOperationService : IClientFileOperationService
 {

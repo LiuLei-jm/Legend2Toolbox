@@ -1,7 +1,4 @@
-﻿using Legend2Toolbox.Application.Common.Interfaces;
-using Microsoft.Extensions.Logging;
-
-namespace Legend2Toolbox.Infrastructure.Services;
+﻿namespace Legend2Toolbox.Infrastructure.Services;
 
 public class EmailSender : IEmailSender
 {

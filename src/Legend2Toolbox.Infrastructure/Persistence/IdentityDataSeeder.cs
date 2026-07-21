@@ -1,8 +1,4 @@
-﻿using Legend2Toolbox.Domain.Enums;
-using Legend2Toolbox.Infrastructure.Identity;
-using Microsoft.Extensions.Logging;
-
-namespace Legend2Toolbox.Infrastructure.Persistence;
+﻿namespace Legend2Toolbox.Infrastructure.Persistence;
 
 public static class IdentityDataSeeder
 {
@@ -24,25 +20,22 @@ public static class IdentityDataSeeder
             }
 
         }
-        const string adminUserName = "admin";
-        const string adminEmail = "admin@legendtoolbox.com";
-        const string adminPassword = "LegendAdmin@2026";
 
-        if (await userManager.FindByNameAsync(adminUserName) == null)
+        if (await userManager.FindByNameAsync(AdminInfo.AdminUserName) == null)
         {
             var adminUser = new ApplicationUser
             {
-                UserName = adminUserName,
-                Email = adminEmail,
+                UserName = AdminInfo.AdminUserName,
+                Email = AdminInfo.AdminEmail,
                 EmailConfirmed = true
             };
-            var createResult = await userManager.CreateAsync(adminUser, adminPassword);
+            var createResult = await userManager.CreateAsync(adminUser, AdminInfo.AdminPassword);
 
             if (createResult.Succeeded)
             {
-                logger.LogInformation("超级管理员账户 {AdminUserName} 创建成功.", adminUserName);
+                logger.LogInformation("超级管理员账户 {AdminUserName} 创建成功.", AdminInfo.AdminUserName);
                 await userManager.AddToRoleAsync(adminUser, nameof(Roles.SuperAdmin));
-                logger.LogInformation("已为账户 {AdminUserName} 授予 SuperAdmin 权限.", adminUserName);
+                logger.LogInformation("已为账户 {AdminUserName} 授予 SuperAdmin 权限.", AdminInfo.AdminUserName);
             }
             else
             {

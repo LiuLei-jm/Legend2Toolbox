@@ -1,24 +1,14 @@
-﻿using FluentAssertions;
-using Legend2Toolbox.Application.Common.Interfaces;
-using Legend2Toolbox.Application.Feature.Identity;
-using Legend2Toolbox.Domain.Models;
-using NSubstitute;
-using System;
-using System.Collections.Generic;
-using System.Security.Claims;
-using System.Text;
+﻿namespace Legend2Toolbox.Application.UnitTests.Users.Commands;
 
-namespace Legend2Toolbox.Application.UnitTests.Users.Queries;
-
-public class LoginQueryHandlerTests
+public class LoginCommandHandlerTests
 {
     private readonly IIdentityService _identityServiceMock;
-    private readonly LoginQueryHandler _handler;
+    private readonly LoginCommandHandler _handler;
 
-    public LoginQueryHandlerTests()
+    public LoginCommandHandlerTests()
     {
         _identityServiceMock = Substitute.For<IIdentityService>();
-        _handler = new LoginQueryHandler(_identityServiceMock); ;
+        _handler = new LoginCommandHandler(_identityServiceMock); 
     }
 
 
@@ -26,14 +16,14 @@ public class LoginQueryHandlerTests
     public async Task Handle_ShouldReturnClaimsPrincipal_WhenCredentialsAreValid()
     {
         // Arrange
-        var query = new LoginQuery("admin", "Password123!");
+        var command = new LoginCommand("admin", "Password123!");
         var expectedPrincipal = new ClaimsPrincipal(new ClaimsIdentity("Bearer"));
 
-        _identityServiceMock.AuthenticateUserAsync(query)
+        _identityServiceMock.AuthenticateUserAsync(command)
             .Returns(Result<ClaimsPrincipal>.Success(expectedPrincipal));
 
         // Act
-        var result = await _handler.Handle(query, CancellationToken.None);
+        var result = await _handler.Handle(command, CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
@@ -45,7 +35,7 @@ public class LoginQueryHandlerTests
     public async Task Handle_ShouldReturnFailure_WhenCredentialsAreInvalid()
     {
         // Arrange
-        var query = new LoginQuery("admin", "WrongPassword!");
+        var query = new LoginCommand("admin", "WrongPassword!");
         var expectedError = "用户名或密码错误";
 
         _identityServiceMock.AuthenticateUserAsync(query)

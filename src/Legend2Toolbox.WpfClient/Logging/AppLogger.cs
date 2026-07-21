@@ -1,8 +1,4 @@
-﻿using CommunityToolkit.Mvvm.Messaging;
-using Legend2Toolbox.Application.Common.Interfaces;
-using Legend2Toolbox.WpfClient.Messages;
-using Microsoft.Extensions.Logging;
-
+﻿
 namespace Legend2Toolbox.WpfClient.Logging;
 
 public class AppLogger<T> : IAppLogger<T>

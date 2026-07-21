@@ -1,8 +1,4 @@
-﻿using Legend2Toolbox.Api.Exceptions;
-using Legend2Toolbox.Infrastructure.Identity;
-using Legend2Toolbox.Infrastructure.Persistence;
-using Microsoft.OpenApi.Models;
-
+﻿
 namespace Legend2Toolbox.Api;
 
 public static class DependencyInjection

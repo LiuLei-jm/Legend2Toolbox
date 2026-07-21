@@ -1,9 +1,4 @@
-﻿using Legend2Toolbox.Application.Common.Interfaces;
-using Legend2Toolbox.Application.Common.Models;
-using Legend2Toolbox.Shared.Helpers;
-using System.Text.Json;
-
-namespace Legend2Toolbox.Infrastructure.Services;
+﻿namespace Legend2Toolbox.WpfClient.Services;
 
 public class ClientConfigurationService : IClientConfigurationService
 {

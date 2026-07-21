@@ -16,6 +16,9 @@
 
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+		<PackageReference Include="FluentValidation" Version="12.1.1" />
+		<PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
+		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.28" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.9" />
 		<PackageReference Include="Serilog" Version="4.3.1" />
 		<PackageReference Include="Serilog.Extensions.Hosting" Version="10.0.0" />
@@ -27,8 +30,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\Legend2Toolbox.Application\Legend2Toolbox.Application.csproj" />
-	  <ProjectReference Include="..\Legend2Toolbox.Infrastructure\Legend2Toolbox.Infrastructure.csproj" />
+	  <ProjectReference Include="..\Legend2Toolbox.Domain\Legend2Toolbox.Domain.csproj" />
 	  <ProjectReference Include="..\Legend2Toolbox.Shared\Legend2Toolbox.Shared.csproj" />
 	</ItemGroup>
 

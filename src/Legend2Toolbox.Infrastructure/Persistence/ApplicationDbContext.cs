@@ -1,6 +1,4 @@
-﻿using Legend2Toolbox.Infrastructure.Identity;
-
-namespace Legend2Toolbox.Infrastructure.Persistence;
+﻿namespace Legend2Toolbox.Infrastructure.Persistence;
 
 public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>
 {

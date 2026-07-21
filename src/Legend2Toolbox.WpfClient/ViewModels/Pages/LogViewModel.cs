@@ -1,12 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
-using Legend2Toolbox.WpfClient.Messages;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.Windows.Threading;
-
-namespace Legend2Toolbox.WpfClient.ViewModels.Pages;
+﻿namespace Legend2Toolbox.WpfClient.ViewModels.Pages;
 
 public partial class LogViewModel : ObservableRecipient, IRecipient<AppLogMessage>
 {
@@ -30,7 +22,7 @@ public partial class LogViewModel : ObservableRecipient, IRecipient<AppLogMessag
     public void Receive(AppLogMessage message)
     {
         var prefix = message.IsError ? "[ERROR]" : "[INFO]";
-        var formatted = $"[{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff}] {prefix} {message.Message}";
+        var formatted = $"[{DateTimeOffset.Now:yyyy-MM-dd HH:mm:ss.fff}] {prefix} {message.Message}";
         _dispatcher.InvokeAsync(() =>
         {
             Logs.Add(formatted);
