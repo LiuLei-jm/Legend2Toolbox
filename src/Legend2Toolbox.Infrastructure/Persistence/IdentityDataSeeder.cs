@@ -23,18 +23,25 @@ public static class IdentityDataSeeder
 
         if (await userManager.FindByNameAsync(AdminInfo.AdminUserName) == null)
         {
+            var userId = Guid.NewGuid();
             var adminUser = new ApplicationUser
             {
+                Id = userId,
                 UserName = AdminInfo.AdminUserName,
                 Email = AdminInfo.AdminEmail,
-                EmailConfirmed = true
+                EmailConfirmed = true,
+                IsActive = true
             };
+
+            adminUser.SecurityKey = SecurityKey.Create(userId, adminUser.UserName);
+
             var createResult = await userManager.CreateAsync(adminUser, AdminInfo.AdminPassword);
 
             if (createResult.Succeeded)
             {
                 logger.LogInformation("超级管理员账户 {AdminUserName} 创建成功.", AdminInfo.AdminUserName);
                 await userManager.AddToRoleAsync(adminUser, nameof(Roles.SuperAdmin));
+                SecurityKey.Create(adminUser.Id, adminUser.UserName);
                 logger.LogInformation("已为账户 {AdminUserName} 授予 SuperAdmin 权限.", AdminInfo.AdminUserName);
             }
             else

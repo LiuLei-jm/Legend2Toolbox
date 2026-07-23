@@ -18,6 +18,7 @@ public class IdentityService : IIdentityService
         {
             return Result<ClaimsPrincipal>.Failure(ErrorMessages.Auth.InvalidCredentials);
         }
+        if (!user.IsActive || user.IsDeleted) return Result<ClaimsPrincipal>.Failure(ErrorMessages.Auth.InvalidCredentials);
         if (await _userManager.IsLockedOutAsync(user))
         {
             var lockoutEnd = await _userManager.GetLockoutEndDateAsync(user);
@@ -37,7 +38,8 @@ public class IdentityService : IIdentityService
             return Result<ClaimsPrincipal>.Failure(ErrorMessages.Auth.InvalidCredentials);
         }
         await _userManager.ResetAccessFailedCountAsync(user);
-
+        user.LastLoginAt = DateTimeOffset.UtcNow;
+        await _userManager.UpdateAsync(user);
         var identity = new ClaimsIdentity(IdentityConstants.BearerScheme);
         identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
         identity.AddClaim(new Claim(ClaimTypes.Name, user.UserName ?? ""));
@@ -82,11 +84,15 @@ public class IdentityService : IIdentityService
     {
         var existingEmailUser = await _userManager.FindByEmailAsync(request.Email);
         if (existingEmailUser != null) return Result.Failure(ErrorMessages.Auth.EmailAlreadyExists);
+        var userId = Guid.NewGuid();
         var user = new ApplicationUser
         {
+            Id = userId,
             UserName = request.Username,
-            Email = request.Email
+            Email = request.Email,
+            IsActive = true,
         };
+        user.SecurityKey = SecurityKey.Create(userId, user.UserName);
 
         var result = await _userManager.CreateAsync(user, request.Password);
         if (result.Succeeded)
@@ -102,7 +108,7 @@ public class IdentityService : IIdentityService
         var user = await _userManager.FindByEmailAsync(request.Email);
         if (user == null)
         {
-            return Result.Failure("无效的重置请求.");
+            return Result.Failure(ErrorMessages.Auth.AccountNotExist);
         }
         var result = await _userManager.ResetPasswordAsync(user, request.Token, request.NewPassword);
         if (result.Succeeded)
@@ -116,7 +122,7 @@ public class IdentityService : IIdentityService
     public async Task<Result> AssignRoleAsync(AssignRoleCommand request)
     {
         var user = await _userManager.FindByIdAsync(request.UserId);
-        if (user == null) return Result.Failure("未找到该用户");
+        if (user == null) return Result.Failure(ErrorMessages.Auth.AccountNotExist);
 
         if (!await _userManager.IsInRoleAsync(user, request.RoleName))
         {
@@ -131,7 +137,7 @@ public class IdentityService : IIdentityService
     public async Task<Result> ToggleUserLockAsync(ToggleUserLockCommand request)
     {
         var user = await _userManager.FindByIdAsync(request.UserId);
-        if (user == null) return Result.Failure("未找到该用户");
+        if (user == null) return Result.Failure(ErrorMessages.Auth.AccountNotExist);
 
         IdentityResult result;
         if (request.LockUser)
@@ -152,7 +158,8 @@ public class IdentityService : IIdentityService
     }
     public async Task<Result<PagedResult<UserDto>>> GetAllUsersAsync(int pageNumber, int pageSize)
     {
-        var query = _userManager.Users.AsNoTracking();
+        var query = _userManager.Users
+                                      .AsNoTracking();
         var totalCount = await query.CountAsync();
         var users = await query
             .OrderBy(u => u.Id)
@@ -163,9 +170,9 @@ public class IdentityService : IIdentityService
         var userDtos = new List<UserDto>();
         foreach (var user in users)
         {
+            var lockoutEnd = user.LockoutEnd;
+            var isLocked = user.LockoutEnabled && lockoutEnd.HasValue && lockoutEnd.Value > DateTimeOffset.UtcNow;
             var roles = await _userManager.GetRolesAsync(user);
-            var isLocked = await _userManager.IsLockedOutAsync(user);
-            var lockoutEnd = await _userManager.GetLockoutEndDateAsync(user);
 
             userDtos.Add(new UserDto(
                 user.Id.ToString(),
@@ -173,7 +180,8 @@ public class IdentityService : IIdentityService
                 user.Email ?? "",
                 roles,
                 isLocked,
-                lockoutEnd
+                lockoutEnd,
+                user.IsActive
                 ));
         }
 
@@ -183,18 +191,18 @@ public class IdentityService : IIdentityService
     public async Task<Result> UpdateUserAsync(UpdateUserCommand request)
     {
         var user = await _userManager.FindByIdAsync(request.UserId);
-        if (user == null) return Result.Failure("未找到该用户");
+        if (user == null) return Result.Failure(ErrorMessages.Auth.AccountNotExist);
 
         var existingEmailUser = await _userManager.FindByEmailAsync(request.Email);
         if (existingEmailUser != null && existingEmailUser.Id.ToString() != request.UserId)
         {
-            return Result.Failure("该邮箱已被其他用户占用");
+            return Result.Failure(ErrorMessages.Auth.EmailAlreadyExists);
         }
 
         var existingNameUser = await _userManager.FindByNameAsync(request.Username);
         if (existingNameUser != null && existingNameUser.Id.ToString() != request.UserId)
         {
-            return Result.Failure("该用户名已被其他用户占用");
+            return Result.Failure(ErrorMessages.Auth.UsernameAlreadyExists);
         }
 
         if (user.UserName != AdminInfo.AdminUserName)
@@ -210,12 +218,12 @@ public class IdentityService : IIdentityService
 
         return Result.Success();
     }
+
     public async Task<Result> DeleteUserAsync(string userId)
     {
         var user = await _userManager.FindByIdAsync(userId);
-        if (user == null) return Result.Failure("未找到该用户");
+        if (user == null) return Result.Failure(ErrorMessages.Auth.AccountNotExist);
         if (user.UserName == AdminInfo.AdminUserName) return Result.Failure("超级管理员无法删除");
-
         var result = await _userManager.DeleteAsync(user);
         if (!result.Succeeded) return Result.Failure(result.Errors.Select(e => e.Description).ToArray());
         return Result.Success();
@@ -224,18 +232,31 @@ public class IdentityService : IIdentityService
     public async Task<Result<UserDto>> GetUserByNameAsync(string name)
     {
         var user = await _userManager.FindByNameAsync(name);
-        if (user == null) return Result<UserDto>.Failure("未找到该用户");
-            var roles = await _userManager.GetRolesAsync(user);
-            var isLocked = await _userManager.IsLockedOutAsync(user);
-            var lockoutEnd = await _userManager.GetLockoutEndDateAsync(user);
+        if (user == null) return Result<UserDto>.Failure(ErrorMessages.Auth.AccountNotExist);
+        var roles = await _userManager.GetRolesAsync(user);
+        var isLocked = await _userManager.IsLockedOutAsync(user);
+        var lockoutEnd = await _userManager.GetLockoutEndDateAsync(user);
         var userDto = new UserDto(
                 user.Id.ToString(),
                 user.UserName ?? "",
                 user.Email ?? "",
                 roles,
                 isLocked,
-                lockoutEnd
+                lockoutEnd,
+                user.IsActive
             );
         return Result<UserDto>.Success(userDto);
+    }
+
+    public async Task<Result> RemoveUserAsync(RemoveUserCommand request)
+    {
+        var user = await _userManager.FindByIdAsync(request.UserId);
+        if (user == null) return Result.Failure(ErrorMessages.Auth.AccountNotExist);
+        if (user.IsDeleted) return Result.Failure(ErrorMessages.Auth.AccountNotExist);
+        user.IsDeleted = true;
+        user.IsActive = false;
+        var result = await _userManager.UpdateAsync(user);
+        if (!result.Succeeded) return Result.Failure(string.Join(";", result.Errors.Select(e => e.Description)));
+        return Result.Success();
     }
 }

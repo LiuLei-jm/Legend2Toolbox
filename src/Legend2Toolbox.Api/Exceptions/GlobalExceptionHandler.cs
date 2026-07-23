@@ -36,6 +36,13 @@ public class GlobalExceptionHandler : IExceptionHandler
                 _logger.LogWarning("【认证警告】[TraceId: {TraceId}] - {Message}", traceId, unauthEx.Message);
                 break;
 
+            case KeyNotFoundException keyNotFoundEx:
+                statusCode = StatusCodes.Status404NotFound;
+                title = "资源不存在";
+                clientMessage = keyNotFoundEx.Message;
+                _logger.LogWarning("【资源警告】[TraceId: {TraceId}] - {Message}", traceId, keyNotFoundEx.Message);
+                break;
+
             case DbUpdateConcurrencyException concurrencyEx:
                 statusCode = StatusCodes.Status409Conflict;
                 title = "数据并发冲突";

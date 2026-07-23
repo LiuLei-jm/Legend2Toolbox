@@ -14,5 +14,6 @@ public interface IIdentityService
     Task<Result> AssignRoleAsync(AssignRoleCommand request);
     Task<Result> ToggleUserLockAsync(ToggleUserLockCommand request);
     Task<Result> UpdateUserAsync(UpdateUserCommand request);
+    Task<Result> RemoveUserAsync(RemoveUserCommand request);
     Task<Result> DeleteUserAsync(string userId);
 }

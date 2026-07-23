@@ -1,4 +1,7 @@
-﻿namespace Legend2Toolbox.Api.Endpoints.Users;
+﻿using Microsoft.Extensions.Configuration.UserSecrets;
+using System.Net.WebSockets;
+
+namespace Legend2Toolbox.Api.Endpoints.Users;
 
 public static class AdminUserEndpoints
 {
@@ -34,11 +37,18 @@ public static class AdminUserEndpoints
             var result = await sender.Send(command);
             return result.ToMinimalApiResult();
         });
-        group.MapPut("/{userId}", async (string userId,
+        group.MapPut("/{userId}/update", async (string userId,
             [FromBody] UpdateUserRequest request,
             [FromServices] ISender sender) =>
         {
             var command = request.Adapt<UpdateUserCommand>() with { UserId = userId };
+            var result = await sender.Send(command);
+            return result.ToMinimalApiResult();
+        });
+        group.MapPut("/{userId}/remove", async (string userId,
+            [FromServices] ISender sender) =>
+        {
+            var command = new RemoveUserCommand(userId);
             var result = await sender.Send(command);
             return result.ToMinimalApiResult();
         });

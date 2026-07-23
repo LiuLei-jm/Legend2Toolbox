@@ -1,4 +1,6 @@
 
+using Legend2Toolbox.Api.Endpoints.SecurityKey;
+
 try
 {
     Log.Information("LegendToolBox API 正在启动...");
@@ -30,6 +32,7 @@ try
 
     app.MapCustomIdentityEndpoints();
     app.MapAdminUserEndpoints();
+    app.MapSecurityKeyEndpoints();
 
     using (var scope = app.Services.CreateScope())
     {

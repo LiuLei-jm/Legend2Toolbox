@@ -12,7 +12,7 @@ public static class DependencyInjection
         {
             options.UseNpgsql(connectionString);
         });
-
+        services.AddScoped<IApplicationDbContext>(sp => sp.GetRequiredService<ApplicationDbContext>());
         services.AddScoped<IIdentityService, IdentityService>();
         services.AddScoped<ICurrentUserService, CurrentUserService>();
         services.AddTransient<IEmailSender, EmailSender>();

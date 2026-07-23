@@ -9,6 +9,7 @@ global using Legend2Toolbox.Application.Feature.Identity;
 global using Legend2Toolbox.Domain.Enums;
 global using Legend2Toolbox.Domain.Models;
 global using MediatR;
+global using Microsoft.EntityFrameworkCore;
 global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.Extensions.Logging;
 // 系统与常用基础库

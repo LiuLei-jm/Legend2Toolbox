@@ -3,6 +3,7 @@ using System;
 using Legend2Toolbox.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Legend2Toolbox.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260723071144_AddIsDeletedToUser")]
+    partial class AddIsDeletedToUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -145,12 +148,6 @@ namespace Legend2Toolbox.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Key")
-                        .IsUnique();
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
                     b.ToTable("SecurityKeys");
                 });
 
@@ -262,7 +259,7 @@ namespace Legend2Toolbox.Infrastructure.Migrations
 
                     b.HasIndex("SecurityKeyId");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("AspNetUsers", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -373,15 +370,6 @@ namespace Legend2Toolbox.Infrastructure.Migrations
                     b.HasOne("Legend2Toolbox.Infrastructure.Identity.ApplicationUser", null)
                         .WithMany("CardNumbers")
                         .HasForeignKey("ApplicationUserId");
-                });
-
-            modelBuilder.Entity("Legend2Toolbox.Domain.Entities.SecurityKey", b =>
-                {
-                    b.HasOne("Legend2Toolbox.Infrastructure.Identity.ApplicationUser", null)
-                        .WithOne()
-                        .HasForeignKey("Legend2Toolbox.Domain.Entities.SecurityKey", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Legend2Toolbox.Infrastructure.Identity.ApplicationUser", b =>
