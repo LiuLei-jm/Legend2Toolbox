@@ -31,4 +31,12 @@ public class Result<T> : Result
     public static Result<T> Success(T value) => new(value, true, Array.Empty<string>());
     public new static Result<T> Failure(IEnumerable<string> errors) => new(default, false, errors.ToArray());
     public new static Result<T> Failure(string error) => new(default, false, new[] { error });
+    public Result<TOut> Map<TOut>(Func<T, TOut> mappingFunc)
+    {
+        if (IsFailure)
+        {
+            return Result<TOut>.Failure(Errors.ToArray());
+        }
+        return Result<TOut>.Success(mappingFunc(Value!));
+    }
 }

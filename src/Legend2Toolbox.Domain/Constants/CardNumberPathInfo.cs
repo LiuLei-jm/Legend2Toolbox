@@ -3,5 +3,5 @@
 public static class CardNumberPathInfo
 {
     public const string BasePath = "D:";
-    public const string FilePath = "CDK.txt";
+    public const string FileName = "CDK.txt";
 }

@@ -1,4 +1,5 @@
 
+using Legend2Toolbox.Api.Endpoints.CardNumber;
 using Legend2Toolbox.Api.Endpoints.SecurityKey;
 
 try
@@ -33,6 +34,7 @@ try
     app.MapCustomIdentityEndpoints();
     app.MapAdminUserEndpoints();
     app.MapSecurityKeyEndpoints();
+    app.MapCardNumberEndpoints();
 
     using (var scope = app.Services.CreateScope())
     {

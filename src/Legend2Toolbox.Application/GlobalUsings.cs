@@ -16,3 +16,4 @@ global using Microsoft.Extensions.Logging;
 global using System.Diagnostics;
 global using System.Security.Claims;
 
+global using Legend2Toolbox.Domain.Constants;

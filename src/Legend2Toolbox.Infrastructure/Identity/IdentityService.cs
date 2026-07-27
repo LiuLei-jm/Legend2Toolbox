@@ -5,11 +5,13 @@ public class IdentityService : IIdentityService
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly ICurrentUserService _currentUserService;
     private readonly IEmailSender _emailSender;
-    public IdentityService(UserManager<ApplicationUser> userManager, ICurrentUserService currentUserService, IEmailSender emailSender)
+    private readonly ApplicationDbContext _context;
+    public IdentityService(UserManager<ApplicationUser> userManager, ICurrentUserService currentUserService, IEmailSender emailSender, ApplicationDbContext context)
     {
         _userManager = userManager;
         _currentUserService = currentUserService;
         _emailSender = emailSender;
+        _context = context;
     }
     public async Task<Result<ClaimsPrincipal>> AuthenticateUserAsync(LoginCommand request)
     {
@@ -93,6 +95,7 @@ public class IdentityService : IIdentityService
             IsActive = true,
         };
         user.SecurityKey = SecurityKey.Create(userId, user.UserName);
+        user.CardNumberPath = CardNumberPath.Create(userId);
 
         var result = await _userManager.CreateAsync(user, request.Password);
         if (result.Succeeded)
@@ -167,12 +170,34 @@ public class IdentityService : IIdentityService
             .Take(pageSize)
             .ToListAsync();
 
+        if (!users.Any())
+        {
+            return Result<PagedResult<UserDto>>.Success(
+                new PagedResult<UserDto>(new List<UserDto>(), pageNumber, pageSize, totalCount));
+        }
+
+        var userIds = users.Select(u => u.Id).ToList();
+
+        var userRolesQuery = await _context.UserRoles
+            .Where(ur => userIds.Contains(ur.UserId))
+            .Join(_context.Roles,
+            ur => ur.RoleId,
+            r => r.Id,
+            (ur, r) => new { ur.UserId, RoleName = r.Name }).ToListAsync();
+
+        var userRolesMap = userRolesQuery
+            .GroupBy(x => x.UserId)
+            .ToDictionary(g => g.Key, g => g.Select(x => x.RoleName ?? "").ToList());
+
+
         var userDtos = new List<UserDto>();
         foreach (var user in users)
         {
             var lockoutEnd = user.LockoutEnd;
             var isLocked = user.LockoutEnabled && lockoutEnd.HasValue && lockoutEnd.Value > DateTimeOffset.UtcNow;
-            var roles = await _userManager.GetRolesAsync(user);
+            var roles = userRolesMap.TryGetValue(user.Id, out var roleList)
+                ? roleList
+                : new List<string>();
 
             userDtos.Add(new UserDto(
                 user.Id.ToString(),

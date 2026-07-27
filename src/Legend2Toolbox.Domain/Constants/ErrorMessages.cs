@@ -16,4 +16,8 @@ public static class ErrorMessages
     {
         public const string NotFoundValidKey = "未找到有效的KEY";
     }
+    public static class Card
+    {
+        public const string NotFoundCard = "未找到卡号";
+    }
 }

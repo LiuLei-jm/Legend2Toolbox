@@ -6,7 +6,7 @@ public class SecurityKeyConfiguration : IEntityTypeConfiguration<SecurityKey>
     {
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Key)
-            .HasMaxLength(512);
+            .HasMaxLength(2048);
         builder.HasIndex(x => x.UserId)
             .IsUnique();
         builder.HasIndex(x => x.Key)

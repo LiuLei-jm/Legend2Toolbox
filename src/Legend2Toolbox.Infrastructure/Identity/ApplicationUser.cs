@@ -8,5 +8,5 @@ public class ApplicationUser : IdentityUser<Guid>
 
     public virtual SecurityKey? SecurityKey { get; set; }
     public virtual ICollection<CardNumber> CardNumbers { get; set; } = [];
-    public virtual CardNumberPath? CardNubmerPath { get; set; }
+    public virtual CardNumberPath? CardNumberPath { get; set; }
 }
