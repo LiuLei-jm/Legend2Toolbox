@@ -1,6 +1,4 @@
-﻿using Legend2Toolbox.Domain.Constants;
-
-namespace Legend2Toolbox.Application.Feature.SecurityKey;
+﻿namespace Legend2Toolbox.Application.Feature.SecurityKey;
 
 public record GetKeyQuery() : IRequest<Result<SecurityKeyResponse>>;
 

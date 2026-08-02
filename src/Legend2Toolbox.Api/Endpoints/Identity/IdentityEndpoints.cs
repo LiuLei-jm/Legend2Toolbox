@@ -14,7 +14,7 @@ public static class IdentityEndpoints
             var command = request.Adapt<RegisterCommand>();
             var result = await sender.Send(command);
             return result.ToMinimalApiResult();
-        });
+        }).RequireRateLimiting("register-policy");
 
         group.MapPost("/login", async (
             [FromBody] LoginRequest request,
@@ -27,7 +27,7 @@ public static class IdentityEndpoints
             return Results.SignIn(
                 result.Value,
                 authenticationScheme: IdentityConstants.BearerScheme);
-        });
+        }).RequireRateLimiting("login-policy");
 
         group.MapPost("/change-password", async ([FromBody] ChangePasswordRequest request, [FromServices] ISender sender) =>
         {

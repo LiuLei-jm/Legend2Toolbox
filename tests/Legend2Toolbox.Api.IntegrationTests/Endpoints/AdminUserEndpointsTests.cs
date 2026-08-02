@@ -15,7 +15,8 @@ public class AdminUserEndpointsTests : IClassFixture<CustomWebApplicationFactory
     [InlineData("GET", "/api/admin/users")]
     [InlineData("PUT", "/api/admin/users/123/lock")]
     [InlineData("POST", "/api/admin/users/123/roles")]
-    [InlineData("PUT", "/api/admin/users/123")]
+    [InlineData("PUT", "/api/admin/users/123/update")]
+    [InlineData("PUT", "/api/admin/users/123/remove")]
     [InlineData("DELETE", "/api/admin/users/123")]
     public async Task AdminEndpoints_ShouldRetureUnauthorized_WhenNotLoggedIn(string method, string url)
     {
@@ -36,7 +37,8 @@ public class AdminUserEndpointsTests : IClassFixture<CustomWebApplicationFactory
     [InlineData("GET", "/api/admin/users")]
     [InlineData("PUT", "/api/admin/users/123/lock")]
     [InlineData("POST", "/api/admin/users/123/roles")]
-    [InlineData("PUT", "/api/admin/users/123")]
+    [InlineData("PUT", "/api/admin/users/123/update")]
+    [InlineData("PUT", "/api/admin/users/123/remove")]
     [InlineData("DELETE", "/api/admin/users/123")]
     public async Task AdminEndpoints_ShouldReturnForbidden_WhenUserIsNotSuperAdmin(string method, string url)
     {
@@ -81,7 +83,7 @@ public class AdminUserEndpointsTests : IClassFixture<CustomWebApplicationFactory
         var targetUserId = await SeedUserAsync("target_user", "target@test.com");
         var updateRequest = new { Username = "updated_name", Email = "updated@test.com" };
         // Act
-        var response = await adminClient.PutAsJsonAsync($"/api/admin/users/{targetUserId}", updateRequest);
+        var response = await adminClient.PutAsJsonAsync($"/api/admin/users/{targetUserId}/update", updateRequest);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);

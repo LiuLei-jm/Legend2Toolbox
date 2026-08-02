@@ -15,7 +15,7 @@ public class ClientConfigurationService : IClientConfigurationService
         string configFilePath = Path.Combine(PathHelper.GetExeCurrentPath(), ConfigFileName);
         if (!File.Exists(configFilePath))
         {
-            _logger.LogInfo($"配置文件不存在：{configFilePath}");
+            _logger.LogInfo("配置文件不存在：{configFilePath}");
             return null!;
         }
         try

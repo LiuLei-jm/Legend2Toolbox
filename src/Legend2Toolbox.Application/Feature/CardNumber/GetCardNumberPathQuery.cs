@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Legend2Toolbox.Application.Feature.CardNumber;
+﻿namespace Legend2Toolbox.Application.Feature.CardNumber;
 
 public record CardNumberPathResult(string BasePath, string FileName, bool AllowCustomPaths);
 public record GetCardNumberPathQuery : IRequest<Result<CardNumberPathResult>>;

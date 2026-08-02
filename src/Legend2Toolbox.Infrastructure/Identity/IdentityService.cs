@@ -141,6 +141,7 @@ public class IdentityService : IIdentityService
     {
         var user = await _userManager.FindByIdAsync(request.UserId);
         if (user == null) return Result.Failure(ErrorMessages.Auth.AccountNotExist);
+        if (user.UserName == AdminInfo.AdminUserName) return Result.Failure(ErrorMessages.Auth.CannotPerformedOnSuperAdmin);
 
         IdentityResult result;
         if (request.LockUser)
@@ -217,6 +218,7 @@ public class IdentityService : IIdentityService
     {
         var user = await _userManager.FindByIdAsync(request.UserId);
         if (user == null) return Result.Failure(ErrorMessages.Auth.AccountNotExist);
+        if (user.UserName == AdminInfo.AdminUserName) return Result.Failure(ErrorMessages.Auth.CannotPerformedOnSuperAdmin);
 
         var existingEmailUser = await _userManager.FindByEmailAsync(request.Email);
         if (existingEmailUser != null && existingEmailUser.Id.ToString() != request.UserId)
@@ -243,17 +245,15 @@ public class IdentityService : IIdentityService
 
         return Result.Success();
     }
-
     public async Task<Result> DeleteUserAsync(string userId)
     {
         var user = await _userManager.FindByIdAsync(userId);
         if (user == null) return Result.Failure(ErrorMessages.Auth.AccountNotExist);
-        if (user.UserName == AdminInfo.AdminUserName) return Result.Failure("超级管理员无法删除");
+        if (user.UserName == AdminInfo.AdminUserName) return Result.Failure(ErrorMessages.Auth.CannotPerformedOnSuperAdmin);
         var result = await _userManager.DeleteAsync(user);
         if (!result.Succeeded) return Result.Failure(result.Errors.Select(e => e.Description).ToArray());
         return Result.Success();
     }
-
     public async Task<Result<UserDto>> GetUserByNameAsync(string name)
     {
         var user = await _userManager.FindByNameAsync(name);
@@ -272,11 +272,11 @@ public class IdentityService : IIdentityService
             );
         return Result<UserDto>.Success(userDto);
     }
-
     public async Task<Result> RemoveUserAsync(RemoveUserCommand request)
     {
         var user = await _userManager.FindByIdAsync(request.UserId);
         if (user == null) return Result.Failure(ErrorMessages.Auth.AccountNotExist);
+        if (user.UserName == AdminInfo.AdminUserName) return Result.Failure(ErrorMessages.Auth.CannotPerformedOnSuperAdmin);
         if (user.IsDeleted) return Result.Failure(ErrorMessages.Auth.AccountNotExist);
         user.IsDeleted = true;
         user.IsActive = false;

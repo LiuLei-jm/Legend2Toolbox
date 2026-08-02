@@ -11,6 +11,8 @@ public static class ErrorMessages
         public const string EmailAlreadyExists = "该邮箱已被注册.";
         public const string InvalidUserId = "无效的用户ID";
         public const string AccountNotExist = "未找到该用户";
+        public const string CannotPerformedOnSuperAdmin = "不能对超级管理员使用";
+        public const string NoPermissionToOperate = "没有权限操作";
     }
     public static class SeKey
     {

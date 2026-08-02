@@ -1,6 +1,6 @@
 ﻿namespace Legend2Toolbox.WpfClient.Validators;
 
-public class FileWriteCommandValidator : AbstractValidator<FileWriteCommand>
+public class FileWriteCommandValidator : AbstractValidator<AppendContentCommand>
 {
     public FileWriteCommandValidator()
     {

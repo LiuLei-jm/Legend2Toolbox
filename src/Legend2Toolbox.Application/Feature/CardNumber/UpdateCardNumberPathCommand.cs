@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Legend2Toolbox.Application.Feature.CardNumber;
+﻿namespace Legend2Toolbox.Application.Feature.CardNumber;
 
 public record UpdateCardNumberPathCommand(string BasePath, string FileName, bool AllowCustomPath) : IRequest<Result>;
 public class UpdateCardNumberPathCommandValidator : AbstractValidator<UpdateCardNumberPathCommand>

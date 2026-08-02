@@ -1,4 +1,5 @@
 
+using Legend2Toolbox.Api.Endpoints.Admin;
 using Legend2Toolbox.Api.Endpoints.CardNumber;
 using Legend2Toolbox.Api.Endpoints.SecurityKey;
 
@@ -27,7 +28,7 @@ try
     }
 
     app.UseHttpsRedirection();
-
+    app.UseRateLimiter();
     app.UseAuthentication();
     app.UseAuthorization();
 
@@ -35,6 +36,9 @@ try
     app.MapAdminUserEndpoints();
     app.MapSecurityKeyEndpoints();
     app.MapCardNumberEndpoints();
+
+    app.UseCors();
+    app.MapHub<ResourceSyncHub>("/sync");
 
     using (var scope = app.Services.CreateScope())
     {

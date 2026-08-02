@@ -2,6 +2,7 @@
 
 public interface IClientFileOperationService
 {
-    Task ModifyFileAppendAsync(FileWriteCommand command);
-    Task RemoveContentFromFileAsync(FileDeleteCommand command);
+    Task AppendContentAsync(AppendContentCommand command);
+    Task RemoveContentAsync(RemoveContentCommand command);
+    Task RemoveContentListAsync(RemoveContentListCommand command);
 }

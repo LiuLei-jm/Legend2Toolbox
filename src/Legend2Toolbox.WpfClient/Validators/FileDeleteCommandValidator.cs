@@ -1,7 +1,7 @@
 ﻿
 namespace Legend2Toolbox.WpfClient.Validators;
 
-public class FileDeleteCommandValidator : AbstractValidator<FileDeleteCommand>
+public class FileDeleteCommandValidator : AbstractValidator<RemoveContentCommand>
 {
     public FileDeleteCommandValidator()
     {

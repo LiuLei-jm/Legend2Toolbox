@@ -1,4 +1,6 @@
-﻿namespace Legend2Toolbox.WpfClient.Services;
+﻿using Legend2Toolbox.Domain.Constants;
+
+namespace Legend2Toolbox.WpfClient.Services;
 
 public class SignalRClientService : ISignalRClientService, IAsyncDisposable, IDisposable
 {
@@ -66,7 +68,8 @@ public class SignalRClientService : ISignalRClientService, IAsyncDisposable, IDi
             using var ctsRegistration = token.Register(() => connectionTcs.TrySetResult(null));
             try
             {
-                string urlWithKey = $"{config.ServerUrl}/filePushHub?apiKey={Uri.EscapeDataString(config.ApiKey)}&deviceName={config.DeviceName}";
+                //string urlWithKey = $"{config.ServerUrl}/filePushHub?apiKey={Uri.EscapeDataString(config.ApiKey)}&deviceName={config.DeviceName}";
+                string urlWithKey = $"{config.ServerUrl}/sync?Key={Uri.EscapeDataString(config.ApiKey)}&deviceName={config.DeviceName}";
                 _hubConnection = new HubConnectionBuilder()
                     .WithUrl(urlWithKey)
                     .WithAutomaticReconnect(new[] { TimeSpan.FromSeconds(0), TimeSpan.FromSeconds(2), TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(30) })
@@ -91,7 +94,7 @@ public class SignalRClientService : ISignalRClientService, IAsyncDisposable, IDi
                 RegisterHubSubscriptions();
                 _logger.LogDebug("正在尝试连接服务器...");
                 await _hubConnection.StartAsync(token).ConfigureAwait(false);
-                _logger.LogInfo("成功连接服务器!等待指令...");
+                _logger.LogInfo("成功连接服务器！等待指令...");
                 await connectionTcs.Task.ConfigureAwait(false);
             }
             catch (OperationCanceledException)
@@ -123,11 +126,11 @@ public class SignalRClientService : ISignalRClientService, IAsyncDisposable, IDi
     {
         if (_hubConnection == null) return;
         ClearSubScriptions();
-        var subWrite = _hubConnection.On<FileWriteCommand>("ReceiveWriteCommand", async (cmd) =>
+        var subWrite = _hubConnection.On<AppendContentCommand>(SignalRInteraction.Append, async (cmd) =>
         {
             try
             {
-                await _fileService.ModifyFileAppendAsync(cmd).ConfigureAwait(false);
+                await _fileService.AppendContentAsync(cmd).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -135,11 +138,11 @@ public class SignalRClientService : ISignalRClientService, IAsyncDisposable, IDi
             }
         });
         _hubMethodSubscriptions.Add(subWrite);
-        var subDelete = _hubConnection.On<FileDeleteCommand>("ReceiveDeleteCommand", async (cmd) =>
+        var subDelete = _hubConnection.On<RemoveContentCommand>(SignalRInteraction.Remove, async (cmd) =>
         {
             try
             {
-                await _fileService.RemoveContentFromFileAsync(cmd).ConfigureAwait(false);
+                await _fileService.RemoveContentAsync(cmd).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -147,6 +150,18 @@ public class SignalRClientService : ISignalRClientService, IAsyncDisposable, IDi
             }
         });
         _hubMethodSubscriptions.Add(subDelete);
+        var subDeleteList = _hubConnection.On<RemoveContentListCommand>(SignalRInteraction.RemoveList, async (cmd) =>
+        {
+            try
+            {
+                await _fileService.RemoveContentListAsync(cmd).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"执行删除指令失败. File: {cmd.FilePath}", ex);
+            }
+        });
+        _hubMethodSubscriptions.Add(subDeleteList);
     }
 
     private async Task StopInternalAsync()

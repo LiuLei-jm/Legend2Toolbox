@@ -1,4 +1,5 @@
-﻿using Legend2Toolbox.Application.Feature.SecurityKey;
+﻿using Legend2Toolbox.Application.Feature.CardNumber;
+using Legend2Toolbox.Application.Feature.SecurityKey;
 
 namespace Legend2Toolbox.Api.Endpoints.SecurityKey;
 
@@ -17,6 +18,12 @@ public static class SecurityKeyEndpoints
         group.MapGet("/", async ([FromServices] ISender sender) =>
         {
             var query = new GetKeyQuery();
+            var result = await sender.Send(query);
+            return result.ToMinimalApiResult();
+        });
+        group.MapGet("/clients", async ([FromServices] ISender sender) =>
+        {
+            var query = new GetConnectionClientsQuery();
             var result = await sender.Send(query);
             return result.ToMinimalApiResult();
         });
