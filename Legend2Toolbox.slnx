@@ -5,6 +5,10 @@
     <Project Path="src/Legend2Toolbox.Domain/Legend2Toolbox.Domain.csproj" />
     <Project Path="src/Legend2Toolbox.Infrastructure/Legend2Toolbox.Infrastructure.csproj" />
     <Project Path="src/Legend2Toolbox.Shared/Legend2Toolbox.Shared.csproj" />
+    <Project Path="src/Legend2Toolbox.Web/legend2toolbox.web.esproj" DisplayName="Legend2toolbox.web">
+      <Build />
+      <Deploy />
+    </Project>
     <Project Path="src/Legend2Toolbox.WpfClient/Legend2Toolbox.WpfClient.csproj" />
   </Folder>
   <Folder Name="/tests/">

@@ -35,8 +35,7 @@ public class SignalRCardCreatedEventHandler : INotificationHandler<CardNumberCre
         }
         var request = new SendAppendRequest(
             cardNumberPathEntity.FullPath,
-            notification.Cdk,
-            $"新增卡号 {notification.Cdk}"
+            notification.Cdk
             );
 
         var connections = _connectionManager.GetConnection(securityKeyEntity.Key).ToList();

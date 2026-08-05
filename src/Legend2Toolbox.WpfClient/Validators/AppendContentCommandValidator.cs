@@ -1,8 +1,8 @@
 ﻿namespace Legend2Toolbox.WpfClient.Validators;
 
-public class FileWriteCommandValidator : AbstractValidator<AppendContentCommand>
+public class AppendContentCommandValidator : AbstractValidator<AppendContentCommand>
 {
-    public FileWriteCommandValidator()
+    public AppendContentCommandValidator()
     {
         RuleFor(x => x.FilePath)
     .NotEmpty().WithMessage("文件路径不能为空.")

@@ -99,8 +99,7 @@ public class ExpiredCardNumberProcessor : BackgroundService
             var deleteCdks = cards.Select(v => v.Cdk).ToList();
             var request = new SendDeleteListRequest(
                 setting.CardPath,
-                deleteCdks,
-                $"共 {cards.Count} 张卡号过期."
+                deleteCdks
                 );
 
             await hubContext.Clients.Clients(connectionIds)
@@ -110,6 +109,7 @@ public class ExpiredCardNumberProcessor : BackgroundService
                 .Where(c => cardIds.Contains(c.Id))
                 .ExecuteUpdateAsync(s => s
                 .SetProperty(x => x.LastCheckedForConnection, utcNow)
+                .SetProperty(x => x.LastModifiedOn, utcNow)
                 .SetProperty(x => x.IsExpiredNotificationSent, true), stoppingToken);
             _logger.LogInformation("向 {UserId} 成功推送了 {Count} 张过期卡号.", userId, cards.Count);
         }

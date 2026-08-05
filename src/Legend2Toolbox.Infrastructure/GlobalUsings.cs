@@ -1,5 +1,4 @@
-﻿// 核心框架
-// 项目内常用命名空间
+﻿// 项目内常用命名空间
 global using Legend2Toolbox.Application.Common.Interfaces;
 global using Legend2Toolbox.Application.Common.Models;
 global using Legend2Toolbox.Application.Feature.Admin;
@@ -11,6 +10,7 @@ global using Legend2Toolbox.Domain.Models;
 global using Legend2Toolbox.Infrastructure.Identity;
 global using Legend2Toolbox.Infrastructure.Persistence;
 global using Legend2Toolbox.Infrastructure.Services;
+// 核心框架
 global using Microsoft.AspNetCore.Http;
 global using Microsoft.AspNetCore.Identity;
 global using Microsoft.AspNetCore.Identity.EntityFrameworkCore;

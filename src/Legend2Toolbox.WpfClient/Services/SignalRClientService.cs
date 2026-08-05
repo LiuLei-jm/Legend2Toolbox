@@ -1,13 +1,12 @@
-﻿using Legend2Toolbox.Domain.Constants;
-
-namespace Legend2Toolbox.WpfClient.Services;
+﻿namespace Legend2Toolbox.WpfClient.Services;
 
 public class SignalRClientService : ISignalRClientService, IAsyncDisposable, IDisposable
 {
     private HubConnection? _hubConnection;
     private readonly IClientFileOperationService _fileService;
     private readonly IAppLogger<SignalRClientService> _logger;
-    private readonly List<IDisposable> _hubMethodSubscriptions = new();
+
+    private readonly ConcurrentBag<IDisposable> _hubMethodSubscriptions = new();
     private CancellationTokenSource? _cts;
     private readonly SemaphoreSlim _lock = new(1, 1);
     private bool _isDisposed;
@@ -28,6 +27,7 @@ public class SignalRClientService : ISignalRClientService, IAsyncDisposable, IDi
             {
                 _cts.Cancel();
                 _cts.Dispose();
+                _cts = null;
             }
             _cts = CancellationTokenSource.CreateLinkedTokenSource(token);
 
@@ -74,6 +74,7 @@ public class SignalRClientService : ISignalRClientService, IAsyncDisposable, IDi
                     .WithUrl(urlWithKey)
                     .WithAutomaticReconnect(new[] { TimeSpan.FromSeconds(0), TimeSpan.FromSeconds(2), TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(30) })
                     .Build();
+
                 _hubConnection.Closed += (error) =>
                 {
                     if (!token.IsCancellationRequested)
@@ -81,20 +82,25 @@ public class SignalRClientService : ISignalRClientService, IAsyncDisposable, IDi
                     connectionTcs.TrySetResult(null);
                     return Task.CompletedTask;
                 };
+
                 _hubConnection.Reconnecting += (error) =>
                 {
                     _logger.LogDebug($"网络波动，正在尝试自动恢复连接...原因：{error?.Message}");
                     return Task.CompletedTask;
                 };
+
                 _hubConnection.Reconnected += (connectionId) =>
                 {
                     _logger.LogDebug($"网络已恢复，自动重连成功！connectionId: {connectionId}");
                     return Task.CompletedTask;
                 };
+
                 RegisterHubSubscriptions();
+
                 _logger.LogDebug("正在尝试连接服务器...");
                 await _hubConnection.StartAsync(token).ConfigureAwait(false);
                 _logger.LogInfo("成功连接服务器！等待指令...");
+
                 await connectionTcs.Task.ConfigureAwait(false);
             }
             catch (OperationCanceledException)
@@ -158,20 +164,34 @@ public class SignalRClientService : ISignalRClientService, IAsyncDisposable, IDi
             }
             catch (Exception ex)
             {
-                _logger.LogError($"执行删除指令失败. File: {cmd.FilePath}", ex);
+                _logger.LogError($"执行批量删除指令失败. File: {cmd.FilePath}", ex);
             }
         });
         _hubMethodSubscriptions.Add(subDeleteList);
+        var subSyncList = _hubConnection.On<SyncContentListCommand>(SignalRInteraction.SyncUnexpiredCardsList, async (cmd) =>
+        {
+            try
+            {
+                await _fileService.SyncUnexpiredCardsListAsync(cmd).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"执行批量同步指令失败. File: {cmd.FilePath}", ex);
+            }
+        });
+        _hubMethodSubscriptions.Add(subSyncList);
     }
 
     private async Task StopInternalAsync()
     {
         ClearSubScriptions();
-        if (_hubConnection != null)
+
+        var connection = Interlocked.Exchange(ref _hubConnection, null);
+        if (connection != null)
         {
             try
             {
-                await _hubConnection.StopAsync().ConfigureAwait(false);
+                await connection.StopAsync().ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -179,23 +199,25 @@ public class SignalRClientService : ISignalRClientService, IAsyncDisposable, IDi
             }
             finally
             {
-                await _hubConnection.DisposeAsync().ConfigureAwait(false);
-                _hubConnection = null;
+                await connection.DisposeAsync().ConfigureAwait(false);
             }
         }
     }
     private void ClearSubScriptions()
     {
-        foreach (var disposable in _hubMethodSubscriptions)
+        while (_hubMethodSubscriptions.TryTake(out var disposable))
         {
             disposable.Dispose();
         }
-        _hubMethodSubscriptions.Clear();
     }
 
     private void ThrowIfDisposed()
     {
-        if (_isDisposed) throw new ObjectDisposedException(nameof(SignalRClientService));
+        if (_isDisposed)
+        {
+            throw new ObjectDisposedException(nameof(SignalRClientService));
+        }
+        return;
     }
 
     public async ValueTask DisposeAsync()
@@ -206,9 +228,10 @@ public class SignalRClientService : ISignalRClientService, IAsyncDisposable, IDi
         {
             _cts.Cancel();
             _cts.Dispose();
+            _cts = null;
         }
         await StopInternalAsync().ConfigureAwait(false);
-        _lock.Dispose();
+
         GC.SuppressFinalize(this);
     }
 
@@ -216,13 +239,15 @@ public class SignalRClientService : ISignalRClientService, IAsyncDisposable, IDi
     {
         if (_isDisposed) return;
         _isDisposed = true;
+
         if (_cts != null)
         {
             _cts.Cancel();
             _cts.Dispose();
+            _cts = null;
         }
         Task.Run(async () => await StopInternalAsync().ConfigureAwait(false)).GetAwaiter().GetResult();
-        _lock.Dispose();
+
         GC.SuppressFinalize(this);
     }
 }

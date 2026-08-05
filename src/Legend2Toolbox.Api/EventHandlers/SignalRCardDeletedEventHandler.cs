@@ -33,8 +33,7 @@ public class SignalRCardDeletedEventHandler : INotificationHandler<CardNumberDel
         }
         var request = new SendDeleteRequest(
             cardNumberPathEntity.FullPath,
-            notification.Cdk,
-            $"删除卡号: {notification.Cdk}"
+            notification.Cdk
             );
 
         var connections = _connectionManager.GetConnection(securityKeyEntity.Key);

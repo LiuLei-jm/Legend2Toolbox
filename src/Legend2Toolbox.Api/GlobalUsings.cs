@@ -6,8 +6,10 @@ global using Legend2Toolbox.Api.Hubs;
 global using Legend2Toolbox.Application;
 global using Legend2Toolbox.Application.Common.Interfaces;
 global using Legend2Toolbox.Application.Feature.Admin;
+global using Legend2Toolbox.Application.Feature.CardNumber;
 global using Legend2Toolbox.Application.Feature.CardNumber.Events;
 global using Legend2Toolbox.Application.Feature.Identity;
+global using Legend2Toolbox.Application.Feature.SecurityKey;
 global using Legend2Toolbox.Domain.Constants;
 global using Legend2Toolbox.Domain.Exceptions;
 global using Legend2Toolbox.Domain.Models;
@@ -28,5 +30,6 @@ global using Serilog;
 // 系统和常用基础库
 global using System.Collections.Concurrent;
 global using System.Diagnostics;
+global using System.Net.WebSockets;
 global using System.Security.Claims;
 

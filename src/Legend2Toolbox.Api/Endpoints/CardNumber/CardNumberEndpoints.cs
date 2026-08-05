@@ -1,5 +1,4 @@
-﻿using Legend2Toolbox.Application.Feature.CardNumber;
-
+﻿
 namespace Legend2Toolbox.Api.Endpoints.CardNumber;
 
 public static class CardNumberEndpoints
@@ -40,6 +39,8 @@ public static class CardNumberEndpoints
             [FromServices] ISender sender) =>
         {
             var query = new GetUnexpiredCardNumbersQuery(pageNumber ?? 1, pageSize ?? 10);
+            var result = await sender.Send(query);
+            return result.ToMinimalApiResult();
         });
 
         group.MapGet("/path", async ([FromServices] ISender sender) =>

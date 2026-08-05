@@ -1,9 +1,8 @@
-﻿
-namespace Legend2Toolbox.WpfClient.Validators;
+﻿namespace Legend2Toolbox.WpfClient.Validators;
 
-public class FileDeleteCommandValidator : AbstractValidator<RemoveContentCommand>
+public class RemoveContentCommandValidator : AbstractValidator<RemoveContentCommand>
 {
-    public FileDeleteCommandValidator()
+    public RemoveContentCommandValidator()
     {
         RuleFor(x => x.FilePath)
             .NotEmpty().WithMessage("文件路径不能为空.")

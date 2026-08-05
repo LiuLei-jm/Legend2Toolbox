@@ -1,6 +1,4 @@
-﻿using Legend2Toolbox.Application.Feature.CardNumber;
-using Legend2Toolbox.Application.Feature.SecurityKey;
-
+﻿
 namespace Legend2Toolbox.Api.Endpoints.SecurityKey;
 
 public static class SecurityKeyEndpoints
