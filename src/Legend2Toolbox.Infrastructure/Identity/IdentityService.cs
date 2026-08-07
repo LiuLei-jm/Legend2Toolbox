@@ -16,11 +16,7 @@ public class IdentityService : IIdentityService
     public async Task<Result<ClaimsPrincipal>> AuthenticateUserAsync(LoginCommand request)
     {
         var user = await _userManager.FindByNameAsync(request.Username);
-        if (user == null)
-        {
-            return Result<ClaimsPrincipal>.Failure(ErrorMessages.Auth.InvalidCredentials);
-        }
-        if (!user.IsActive || user.IsDeleted) return Result<ClaimsPrincipal>.Failure(ErrorMessages.Auth.InvalidCredentials);
+        if (user == null || !user.IsActive || user.IsDeleted) return Result<ClaimsPrincipal>.Failure(ErrorMessages.Auth.InvalidCredentials);
         if (await _userManager.IsLockedOutAsync(user))
         {
             var lockoutEnd = await _userManager.GetLockoutEndDateAsync(user);
@@ -42,6 +38,7 @@ public class IdentityService : IIdentityService
         await _userManager.ResetAccessFailedCountAsync(user);
         user.LastLoginAt = DateTimeOffset.UtcNow;
         await _userManager.UpdateAsync(user);
+
         var identity = new ClaimsIdentity(IdentityConstants.BearerScheme);
         identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
         identity.AddClaim(new Claim(ClaimTypes.Name, user.UserName ?? ""));
@@ -283,5 +280,19 @@ public class IdentityService : IIdentityService
         var result = await _userManager.UpdateAsync(user);
         if (!result.Succeeded) return Result.Failure(string.Join(";", result.Errors.Select(e => e.Description)));
         return Result.Success();
+    }
+
+    public async Task<Result<UserInfoDto>> GetUserInfoAsync(GetUserInfoQuery request)
+    {
+        var user = await _userManager.FindByIdAsync(_currentUserService.UserId ?? "");
+        if (user is null) return Result<UserInfoDto>.Failure(ErrorMessages.Auth.AccountNotExist);
+        var roles = await _userManager.GetRolesAsync(user);
+        var userInfo = new UserInfoDto
+        {
+            UserId = user.Id.ToString(),
+            UserName = user.UserName ?? "",
+            Roles = roles
+        };
+        return Result<UserInfoDto>.Success(userInfo);
     }
 }

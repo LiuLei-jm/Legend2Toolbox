@@ -29,6 +29,13 @@ public static class IdentityEndpoints
                 authenticationScheme: IdentityConstants.BearerScheme);
         }).RequireRateLimiting("login-policy");
 
+        group.MapGet("/userinfo", async ([FromServices] ISender sender) =>
+        {
+            var query = new GetUserInfoQuery();
+            var result = await sender.Send(query);
+            return result.ToMinimalApiResult();
+        }).RequireAuthorization();
+
         group.MapPost("/change-password", async ([FromBody] ChangePasswordRequest request, [FromServices] ISender sender) =>
         {
             var command = request.Adapt<ChangePasswordCommand>();

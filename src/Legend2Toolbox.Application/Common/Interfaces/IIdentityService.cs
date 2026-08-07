@@ -8,6 +8,7 @@ public interface IIdentityService
     Task<Result> ForgotPasswordAsync(ForgotPasswordCommand request);
     Task<Result> ResetPasswordAsync(ResetPasswordCommand request);
     Task<Result<ClaimsPrincipal>> AuthenticateUserAsync(LoginCommand request);
+    Task<Result<UserInfoDto>> GetUserInfoAsync(GetUserInfoQuery request);
 
     Task<Result<PagedResult<UserDto>>> GetAllUsersAsync(int pageNumber, int pageSize);
     Task<Result<UserDto>> GetUserByNameAsync(string name);

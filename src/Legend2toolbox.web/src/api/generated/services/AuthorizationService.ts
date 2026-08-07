@@ -42,6 +42,16 @@ export class AuthorizationService {
         });
     }
     /**
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static getApiAuthUserinfo(): CancelablePromise<any> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/auth/userinfo',
+        });
+    }
+    /**
      * @param requestBody
      * @returns any OK
      * @throws ApiError

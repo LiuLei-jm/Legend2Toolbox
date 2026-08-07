@@ -7,9 +7,7 @@
   "paths": {
     "/api/admin/users/clients": {
       "get": {
-        "tags": [
-          "Admin User Management"
-        ],
+        "tags": ["Admin User Management"],
         "responses": {
           "200": {
             "description": "OK"
@@ -19,9 +17,7 @@
     },
     "/api/admin/users": {
       "get": {
-        "tags": [
-          "Admin User Management"
-        ],
+        "tags": ["Admin User Management"],
         "parameters": [
           {
             "name": "pageNumber",
@@ -49,9 +45,7 @@
     },
     "/api/admin/users/name": {
       "get": {
-        "tags": [
-          "Admin User Management"
-        ],
+        "tags": ["Admin User Management"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -71,9 +65,7 @@
     },
     "/api/admin/users/{userId}/lock": {
       "put": {
-        "tags": [
-          "Admin User Management"
-        ],
+        "tags": ["Admin User Management"],
         "parameters": [
           {
             "name": "userId",
@@ -103,9 +95,7 @@
     },
     "/api/admin/users/{userId}/roles": {
       "post": {
-        "tags": [
-          "Admin User Management"
-        ],
+        "tags": ["Admin User Management"],
         "parameters": [
           {
             "name": "userId",
@@ -135,9 +125,7 @@
     },
     "/api/admin/users/{userId}/update": {
       "put": {
-        "tags": [
-          "Admin User Management"
-        ],
+        "tags": ["Admin User Management"],
         "parameters": [
           {
             "name": "userId",
@@ -167,9 +155,7 @@
     },
     "/api/admin/users/{userId}/remove": {
       "put": {
-        "tags": [
-          "Admin User Management"
-        ],
+        "tags": ["Admin User Management"],
         "parameters": [
           {
             "name": "userId",
@@ -189,9 +175,7 @@
     },
     "/api/admin/users/{userId}": {
       "delete": {
-        "tags": [
-          "Admin User Management"
-        ],
+        "tags": ["Admin User Management"],
         "parameters": [
           {
             "name": "userId",
@@ -211,9 +195,7 @@
     },
     "/api/auth/register": {
       "post": {
-        "tags": [
-          "Authorization"
-        ],
+        "tags": ["Authorization"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -233,9 +215,7 @@
     },
     "/api/auth/login": {
       "post": {
-        "tags": [
-          "Authorization"
-        ],
+        "tags": ["Authorization"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -253,11 +233,19 @@
         }
       }
     },
+    "/api/auth/userinfo": {
+      "get": {
+        "tags": ["Authorization"],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/auth/change-password": {
       "post": {
-        "tags": [
-          "Authorization"
-        ],
+        "tags": ["Authorization"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -277,9 +265,7 @@
     },
     "/api/auth/forgot-password": {
       "post": {
-        "tags": [
-          "Authorization"
-        ],
+        "tags": ["Authorization"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -299,9 +285,7 @@
     },
     "/api/auth/reset-password": {
       "post": {
-        "tags": [
-          "Authorization"
-        ],
+        "tags": ["Authorization"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -321,9 +305,7 @@
     },
     "/api/auth/refresh": {
       "post": {
-        "tags": [
-          "Authorization"
-        ],
+        "tags": ["Authorization"],
         "responses": {
           "200": {
             "description": "OK"
@@ -333,9 +315,7 @@
     },
     "/api/card/create": {
       "post": {
-        "tags": [
-          "Card Number"
-        ],
+        "tags": ["Card Number"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -355,9 +335,7 @@
     },
     "/api/card/update/{id}": {
       "put": {
-        "tags": [
-          "Card Number"
-        ],
+        "tags": ["Card Number"],
         "parameters": [
           {
             "name": "id",
@@ -388,9 +366,7 @@
     },
     "/api/card/delete/{id}": {
       "delete": {
-        "tags": [
-          "Card Number"
-        ],
+        "tags": ["Card Number"],
         "parameters": [
           {
             "name": "id",
@@ -411,9 +387,7 @@
     },
     "/api/card/cards": {
       "get": {
-        "tags": [
-          "Card Number"
-        ],
+        "tags": ["Card Number"],
         "parameters": [
           {
             "name": "pageNumber",
@@ -441,9 +415,7 @@
     },
     "/api/card/unexpiredcards": {
       "get": {
-        "tags": [
-          "Card Number"
-        ],
+        "tags": ["Card Number"],
         "parameters": [
           {
             "name": "pageNumber",
@@ -471,9 +443,7 @@
     },
     "/api/card/path": {
       "get": {
-        "tags": [
-          "Card Number"
-        ],
+        "tags": ["Card Number"],
         "responses": {
           "200": {
             "description": "OK"
@@ -483,9 +453,7 @@
     },
     "/api/card/path/update": {
       "put": {
-        "tags": [
-          "Card Number"
-        ],
+        "tags": ["Card Number"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -505,9 +473,7 @@
     },
     "/api/security-key": {
       "post": {
-        "tags": [
-          "Security key"
-        ],
+        "tags": ["Security key"],
         "responses": {
           "200": {
             "description": "OK"
@@ -515,9 +481,7 @@
         }
       },
       "get": {
-        "tags": [
-          "Security key"
-        ],
+        "tags": ["Security key"],
         "responses": {
           "200": {
             "description": "OK"
@@ -527,9 +491,7 @@
     },
     "/api/security-key/clients": {
       "get": {
-        "tags": [
-          "Security key"
-        ],
+        "tags": ["Security key"],
         "responses": {
           "200": {
             "description": "OK"

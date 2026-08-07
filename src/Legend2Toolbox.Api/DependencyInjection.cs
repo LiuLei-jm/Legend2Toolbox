@@ -24,6 +24,7 @@ public static class DependencyInjection
         })
             .AddRoles<ApplicationRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddErrorDescriber<CustomIdentityErrorDescriber>()
             .AddDefaultTokenProviders();
 
         services.AddEndpointsApiExplorer();
@@ -108,9 +109,10 @@ public static class DependencyInjection
         {
             options.AddDefaultPolicy(builder =>
             {
-                builder.AllowAnyOrigin()
+                builder.WithOrigins("http://localhost:30457","http://localhost:4173")
                 .AllowAnyHeader()
-                .AllowAnyMethod();
+                .AllowAnyMethod()
+                .AllowCredentials();
             });
         });
 

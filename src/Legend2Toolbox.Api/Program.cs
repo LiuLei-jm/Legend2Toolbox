@@ -27,6 +27,7 @@ try
         app.UseSwaggerUI();
     }
 
+    app.UseCors();
     app.UseHttpsRedirection();
     app.UseRateLimiter();
     app.UseAuthentication();
@@ -37,7 +38,6 @@ try
     app.MapSecurityKeyEndpoints();
     app.MapCardNumberEndpoints();
 
-    app.UseCors();
     app.MapHub<ResourceSyncHub>("/sync");
 
     using (var scope = app.Services.CreateScope())
