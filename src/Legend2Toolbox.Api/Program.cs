@@ -1,7 +1,6 @@
-
 using Legend2Toolbox.Api.Endpoints.Admin;
 using Legend2Toolbox.Api.Endpoints.CardNumber;
-using Legend2Toolbox.Api.Endpoints.SecurityKey;
+using Legend2Toolbox.Api.Endpoints.ConnectionKey;
 
 try
 {
@@ -35,7 +34,7 @@ try
 
     app.MapCustomIdentityEndpoints();
     app.MapAdminUserEndpoints();
-    app.MapSecurityKeyEndpoints();
+    app.MapConnectionKeyEndpoints();
     app.MapCardNumberEndpoints();
 
     app.MapHub<ResourceSyncHub>("/sync");
@@ -60,7 +59,6 @@ try
     }
 
     app.Run();
-
 }
 catch (Exception ex) when (ex is not HostAbortedException)
 {
@@ -71,4 +69,6 @@ finally
     Log.CloseAndFlush();
 }
 
-public partial class Program { }
+public partial class Program
+{
+}

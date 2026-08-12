@@ -5,4 +5,4 @@ public record CardNumberCreatedEvent(
     Guid UserId,
     string Cdk,
     string UserName
-    ) : INotification;
+) : INotification;

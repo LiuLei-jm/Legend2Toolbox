@@ -1,5 +1,4 @@
-﻿
-namespace Legend2Toolbox.Api.Endpoints.Identity;
+﻿namespace Legend2Toolbox.Api.Endpoints.Identity;
 
 public static class IdentityEndpoints
 {
@@ -19,14 +18,11 @@ public static class IdentityEndpoints
         group.MapPost("/login", async (
             [FromBody] LoginRequest request,
             [FromServices] ISender sender
-            ) =>
+        ) =>
         {
             var query = request.Adapt<LoginCommand>();
             var result = await sender.Send(query);
-            if (result.IsFailure) return result.ToMinimalApiResult();
-            return Results.SignIn(
-                result.Value,
-                authenticationScheme: IdentityConstants.BearerScheme);
+            return result.ToMinimalApiResult();
         }).RequireRateLimiting("login-policy");
 
         group.MapGet("/userinfo", async ([FromServices] ISender sender) =>
@@ -36,12 +32,13 @@ public static class IdentityEndpoints
             return result.ToMinimalApiResult();
         }).RequireAuthorization();
 
-        group.MapPost("/change-password", async ([FromBody] ChangePasswordRequest request, [FromServices] ISender sender) =>
-        {
-            var command = request.Adapt<ChangePasswordCommand>();
-            var result = await sender.Send(command);
-            return result.ToMinimalApiResult();
-        }).RequireAuthorization();
+        group.MapPost("/change-password",
+            async ([FromBody] ChangePasswordRequest request, [FromServices] ISender sender) =>
+            {
+                var command = request.Adapt<ChangePasswordCommand>();
+                var result = await sender.Send(command);
+                return result.ToMinimalApiResult();
+            }).RequireAuthorization();
 
         group.MapPost("/forgot-password", async ([FromBody] ForgotPasswordRequest request, ISender sender) =>
         {
@@ -57,21 +54,23 @@ public static class IdentityEndpoints
             return result.ToMinimalApiResult();
         });
 
-        group.MapPost("/refresh", async (
-             HttpContext httpContext
-            ) =>
+        group.MapPost("/refresh", async ([FromBody] RefreshTokenRequest request,
+            [FromServices] ISender sender
+        ) =>
         {
-            var authResult = await httpContext.AuthenticateAsync(IdentityConstants.BearerScheme);
-            if (!authResult.Succeeded || authResult.Principal == null)
-            {
-                throw new UnauthorizedAccessException(ErrorMessages.Auth.TokenExpired);
-            }
-            var userId = authResult.Principal.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (string.IsNullOrEmpty(userId)) throw new UnauthorizedAccessException(ErrorMessages.Auth.TokenExpired);
-            return Results.SignIn(authResult.Principal, authenticationScheme: IdentityConstants.BearerScheme);
+            var command = new RefreshTokenCommand(request.RefreshToken);
+            var result = await sender.Send(command);
+            return result.ToMinimalApiResult();
         });
+
+        group.MapPut("/update", async ([FromBody] UpdateUserProfileRequest request,
+            ISender sender) =>
+        {
+            var command = request.Adapt<UpdateUserProfileCommand>();
+            var result = await sender.Send(command);
+            return result.ToMinimalApiResult();
+        }).RequireAuthorization();
 
         return routes;
     }
-
 }

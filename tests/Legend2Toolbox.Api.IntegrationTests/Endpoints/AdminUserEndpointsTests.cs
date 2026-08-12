@@ -32,7 +32,6 @@ public class AdminUserEndpointsTests : IClassFixture<CustomWebApplicationFactory
     }
 
 
-
     [Theory]
     [InlineData("GET", "/api/admin/users")]
     [InlineData("PUT", "/api/admin/users/123/lock")]
@@ -73,7 +72,6 @@ public class AdminUserEndpointsTests : IClassFixture<CustomWebApplicationFactory
     }
 
 
-
     [Fact]
     public async Task UpdateUser_ShouldReturnOk_WhenUserIsSuperAdmin()
     {
@@ -105,7 +103,8 @@ public class AdminUserEndpointsTests : IClassFixture<CustomWebApplicationFactory
         var email = $"{username}@test.com";
         var password = "Password123!";
 
-        await client.PostAsJsonAsync("/api/auth/register", new { Username = username, Email = email, Password = password });
+        await client.PostAsJsonAsync("/api/auth/register",
+            new { Username = username, Email = email, Password = password });
 
         using (var scope = _factory.Services.CreateScope())
         {
@@ -115,14 +114,13 @@ public class AdminUserEndpointsTests : IClassFixture<CustomWebApplicationFactory
             {
                 var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
                 if (!await roleManager.RoleExistsAsync(role))
-                {
                     await roleManager.CreateAsync(new ApplicationRole { Name = role });
-                }
                 await userManager.AddToRoleAsync(user, role);
             }
         }
 
-        var loginResponse = await client.PostAsJsonAsync("/api/auth/login", new { Username = username, Password = password });
+        var loginResponse =
+            await client.PostAsJsonAsync("/api/auth/login", new { Username = username, Password = password });
         var tokenData = await loginResponse.Content.ReadFromJsonAsync<TokenResponse>();
 
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenData!.AccessToken);

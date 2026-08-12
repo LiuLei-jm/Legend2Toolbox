@@ -4,18 +4,19 @@ public static class PathHelper
 {
     public static string GetExeCurrentPath()
     {
-        string? exePath = Environment.ProcessPath;
+        var exePath = Environment.ProcessPath;
         return !string.IsNullOrEmpty(exePath)
             ? Path.GetDirectoryName(exePath) ?? AppContext.BaseDirectory
             : AppContext.BaseDirectory;
     }
+
     public static bool IsValidFilePath(string filePath)
     {
         try
         {
             if (string.IsNullOrWhiteSpace(filePath)) return false;
-            string fullPath = Path.GetFullPath(filePath);
-            string appDirectory = GetExeCurrentPath();
+            var fullPath = Path.GetFullPath(filePath);
+            var appDirectory = GetExeCurrentPath();
             if (fullPath.StartsWith(appDirectory, StringComparison.OrdinalIgnoreCase)) return true;
             if (Path.IsPathRooted(fullPath)
                 && fullPath.Length >= 2

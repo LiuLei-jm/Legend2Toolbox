@@ -1,4 +1,8 @@
 ﻿// 项目内常用命名空间
+global using System.Text;
+global using System.IdentityModel.Tokens.Jwt;
+global using System.Security.Cryptography;
+global using Legend2Toolbox.Infrastructure.Services.Interfaces;
 global using Legend2Toolbox.Application.Common.Interfaces;
 global using Legend2Toolbox.Application.Common.Models;
 global using Legend2Toolbox.Application.Feature.Admin;

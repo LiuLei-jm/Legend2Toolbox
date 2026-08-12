@@ -1,6 +1,7 @@
 ﻿namespace Legend2Toolbox.Application.Feature.CardNumber;
 
 public record CardNumberPathResult(string BasePath, string FileName, bool AllowCustomPaths);
+
 public record GetCardNumberPathQuery : IRequest<Result<CardNumberPathResult>>;
 
 public class GetCardNumberPathQueryHandler : IRequestHandler<GetCardNumberPathQuery, Result<CardNumberPathResult>>
@@ -14,13 +15,15 @@ public class GetCardNumberPathQueryHandler : IRequestHandler<GetCardNumberPathQu
         _currentUserService = currentUserService;
     }
 
-    public async Task<Result<CardNumberPathResult>> Handle(GetCardNumberPathQuery request, CancellationToken cancellationToken)
+    public async Task<Result<CardNumberPathResult>> Handle(GetCardNumberPathQuery request,
+        CancellationToken cancellationToken)
     {
-        if (!Guid.TryParse(_currentUserService.UserId, out Guid userId)) return Result<CardNumberPathResult>.Failure(ErrorMessages.Auth.InvalidUserId);
+        if (!Guid.TryParse(_currentUserService.UserId, out var userId))
+            return Result<CardNumberPathResult>.Failure(ErrorMessages.Auth.InvalidUserId);
         var response = await _context.CardNumberPaths.FirstOrDefaultAsync(c => c.UserId == userId, cancellationToken);
         if (response is null) return Result<CardNumberPathResult>.Failure(ErrorMessages.Card.NotFoundCard);
         return Result<CardNumberPathResult>.Success(new CardNumberPathResult(response.BasePath,
-                                                                             response.FileName,
-                                                                             response.AllowCustomPath));
+            response.FileName,
+            response.AllowCustomPath));
     }
 }

@@ -1,8 +1,8 @@
 ﻿namespace Legend2Toolbox.Infrastructure.Persistence.EntitiesConfiguration;
 
-public class SecurityKeyConfiguration : IEntityTypeConfiguration<SecurityKey>
+public class ConnectionKeyConfiguration : IEntityTypeConfiguration<ConnectionKey>
 {
-    public void Configure(EntityTypeBuilder<SecurityKey> builder)
+    public void Configure(EntityTypeBuilder<ConnectionKey> builder)
     {
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Key)
@@ -12,8 +12,8 @@ public class SecurityKeyConfiguration : IEntityTypeConfiguration<SecurityKey>
         builder.HasIndex(x => x.Key)
             .IsUnique();
         builder.HasOne<ApplicationUser>()
-            .WithOne(u => u.SecurityKey)
-            .HasForeignKey<SecurityKey>(x => x.UserId)
+            .WithOne(u => u.ConnectionKey)
+            .HasForeignKey<ConnectionKey>(x => x.UserId)
             .OnDelete(DeleteBehavior.Cascade);
     }
 }

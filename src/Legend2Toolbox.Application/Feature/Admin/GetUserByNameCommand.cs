@@ -1,6 +1,7 @@
 ﻿namespace Legend2Toolbox.Application.Feature.Admin;
 
 public record GetUserByNameCommand(string UserName) : IRequest<Result<UserDto>>;
+
 public class GetUserByNameCommandValidator : AbstractValidator<GetUserByNameCommand>
 {
     public GetUserByNameCommandValidator()
@@ -9,6 +10,7 @@ public class GetUserByNameCommandValidator : AbstractValidator<GetUserByNameComm
             .NotEmpty().WithMessage("用户名不能为空");
     }
 }
+
 public class GetUserByNameCommandHandler : IRequestHandler<GetUserByNameCommand, Result<UserDto>>
 {
     private readonly IIdentityService _identityService;

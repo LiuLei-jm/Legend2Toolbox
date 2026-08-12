@@ -5,8 +5,9 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
     }
+
     public DbSet<CardNumber> CardNumbers => Set<CardNumber>();
-    public DbSet<SecurityKey> SecurityKeys => Set<SecurityKey>();
+    public DbSet<ConnectionKey> ConnectionKeys => Set<ConnectionKey>();
     public DbSet<CardNumberPath> CardNumberPaths => Set<CardNumberPath>();
 
     protected override void OnModelCreating(ModelBuilder builder)

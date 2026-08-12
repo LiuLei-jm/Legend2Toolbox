@@ -1,9 +1,8 @@
-﻿
-namespace Legend2Toolbox.Api.Endpoints.SecurityKey;
+﻿namespace Legend2Toolbox.Api.Endpoints.ConnectionKey;
 
-public static class SecurityKeyEndpoints
+public static class ConnectionKeyEndpoints
 {
-    public static IEndpointRouteBuilder MapSecurityKeyEndpoints(this IEndpointRouteBuilder routes)
+    public static IEndpointRouteBuilder MapConnectionKeyEndpoints(this IEndpointRouteBuilder routes)
     {
         var group = routes.MapGroup("/api/security-key")
             .WithTags("Security key").RequireAuthorization();

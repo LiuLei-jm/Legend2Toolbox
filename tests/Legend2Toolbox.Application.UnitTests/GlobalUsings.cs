@@ -1,4 +1,5 @@
 ﻿// 核心框架
+
 global using FluentAssertions;
 global using FluentValidation;
 global using FluentValidation.Results;

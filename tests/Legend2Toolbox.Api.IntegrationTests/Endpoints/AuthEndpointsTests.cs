@@ -109,7 +109,8 @@ public class AuthEndpointsTests : IClassFixture<CustomWebApplicationFactory<Prog
         var tokenData = await loginResponse.Content.ReadFromJsonAsync<TokenResponse>();
 
         var authClient = _factory.CreateClient();
-        authClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenData!.AccessToken);
+        authClient.DefaultRequestHeaders.Authorization =
+            new AuthenticationHeaderValue("Bearer", tokenData!.AccessToken);
 
         var changePassRequest = new ChangePasswordRequest(oldPassword, newPassword);
         // Act
@@ -144,6 +145,4 @@ public class AuthEndpointsTests : IClassFixture<CustomWebApplicationFactory<Prog
         public int ExpiresIn { get; set; }
         public string RefreshToken { get; set; } = string.Empty;
     }
-
-
 }

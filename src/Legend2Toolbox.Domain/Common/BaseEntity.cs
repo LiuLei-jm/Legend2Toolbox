@@ -11,7 +11,8 @@ public class AuditableEntity : BaseEntity
     public string? CreatedBy { get; protected set; }
     public DateTimeOffset? LastModifiedOn { get; protected set; }
     public string? LastModifiedBy { get; protected set; }
-    public bool IsDeleted { get; protected set; } = false;
+    public bool IsDeleted { get; protected set; }
+
     public void MarkDeleted(string deletedBy)
     {
         IsDeleted = true;

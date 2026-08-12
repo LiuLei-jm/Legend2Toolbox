@@ -5,7 +5,6 @@ public partial class LogViewModel : ObservableRecipient, IRecipient<AppLogMessag
     private const int MaxLogsCount = 1_000;
     private const int CleanupCount = 100;
     private readonly Dispatcher _dispatcher;
-    public ObservableCollection<string> Logs { get; } = [];
 
     public LogViewModel(Dispatcher dispatcher, IMessenger messenger) : base(messenger)
     {
@@ -14,10 +13,7 @@ public partial class LogViewModel : ObservableRecipient, IRecipient<AppLogMessag
         IsActive = true;
     }
 
-    private void OnLogsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-    {
-        ClearLogsCommand.NotifyCanExecuteChanged();
-    }
+    public ObservableCollection<string> Logs { get; } = [];
 
     public void Receive(AppLogMessage message)
     {
@@ -27,19 +23,27 @@ public partial class LogViewModel : ObservableRecipient, IRecipient<AppLogMessag
         {
             Logs.Add(formatted);
             if (Logs.Count > MaxLogsCount)
-            {
-                for (int i = 0; i < CleanupCount; i++)
+                for (var i = 0; i < CleanupCount; i++)
                     Logs.RemoveAt(0);
-            }
         }, DispatcherPriority.Background);
     }
 
-    private bool CanClear() => Logs.Count > 0;
+    private void OnLogsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        ClearLogsCommand.NotifyCanExecuteChanged();
+    }
+
+    private bool CanClear()
+    {
+        return Logs.Count > 0;
+    }
+
     [RelayCommand(CanExecute = nameof(CanClear))]
     private void ClearLogs()
     {
         Logs.Clear();
     }
+
     protected override void OnDeactivated()
     {
         base.OnDeactivated();

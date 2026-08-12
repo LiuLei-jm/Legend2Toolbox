@@ -13,9 +13,11 @@ public class GetCardNumbersQueryHandler : IRequestHandler<GetCardNumbersQuery, R
         _currentUserService = currentUserService;
     }
 
-    public async Task<Result<PagedResult<CardNumberDto>>> Handle(GetCardNumbersQuery request, CancellationToken cancellationToken)
+    public async Task<Result<PagedResult<CardNumberDto>>> Handle(GetCardNumbersQuery request,
+        CancellationToken cancellationToken)
     {
-        if (!Guid.TryParse(_currentUserService.UserId, out var currentUserId)) return Result<PagedResult<CardNumberDto>>.Failure(ErrorMessages.Auth.InvalidUserId);
+        if (!Guid.TryParse(_currentUserService.UserId, out var currentUserId))
+            return Result<PagedResult<CardNumberDto>>.Failure(ErrorMessages.Auth.InvalidUserId);
         var query = _context.CardNumbers.AsNoTracking().Where(c => c.UserId == currentUserId);
         var totalCount = await query.CountAsync(cancellationToken);
         var cardNumberDtos = await query

@@ -2,32 +2,36 @@
 
 public class LoginCommandHandlerTests
 {
-    private readonly IIdentityService _identityServiceMock;
     private readonly LoginCommandHandler _handler;
+    private readonly IIdentityService _identityServiceMock;
 
     public LoginCommandHandlerTests()
     {
         _identityServiceMock = Substitute.For<IIdentityService>();
-        _handler = new LoginCommandHandler(_identityServiceMock); 
+        _handler = new LoginCommandHandler(_identityServiceMock);
     }
 
 
     [Fact]
-    public async Task Handle_ShouldReturnClaimsPrincipal_WhenCredentialsAreValid()
+    public async Task Handle_ShouldReturnAuthResponse_WhenCredentialsAreValid()
     {
         // Arrange
         var command = new LoginCommand("admin", "Password123!");
-        var expectedPrincipal = new ClaimsPrincipal(new ClaimsIdentity("Bearer"));
+        var expectedResponse = new AuthResponse(
+            AccessToken: "mock_access_token",
+            RefreshToken: "mock_refresh_token",
+            ExpiresAt: DateTimeOffset.UtcNow.AddMinutes(15)
+        );
 
-        _identityServiceMock.AuthenticateUserAsync(command)
-            .Returns(Result<ClaimsPrincipal>.Success(expectedPrincipal));
+        _identityServiceMock.LoginUserAsync(command)
+            .Returns(Result<AuthResponse>.Success(expectedResponse));
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
-        result.Value.Should().Be(expectedPrincipal);
+        result.Value.Should().Be(expectedResponse);
     }
 
 
@@ -35,19 +39,17 @@ public class LoginCommandHandlerTests
     public async Task Handle_ShouldReturnFailure_WhenCredentialsAreInvalid()
     {
         // Arrange
-        var query = new LoginCommand("admin", "WrongPassword!");
+        var command = new LoginCommand("admin", "WrongPassword!");
         var expectedError = "用户名或密码错误";
 
-        _identityServiceMock.AuthenticateUserAsync(query)
-            .Returns(Result<ClaimsPrincipal>.Failure(expectedError));
+        _identityServiceMock.LoginUserAsync(command)
+            .Returns(Result<AuthResponse>.Failure(expectedError));
 
         // Act
-        var result = await _handler.Handle(query, CancellationToken.None);
+        var result = await _handler.Handle(command, CancellationToken.None);
 
         // Assert
         result.IsFailure.Should().BeTrue();
         result.Errors.Should().Contain(expectedError);
     }
-
-
 }

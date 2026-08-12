@@ -11,14 +11,15 @@ public class GlobalExceptionHandler : IExceptionHandler
         _logger = logger;
     }
 
-    public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
+    public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception,
+        CancellationToken cancellationToken)
     {
         var traceId = Activity.Current?.Id ?? httpContext.TraceIdentifier;
 
 
-        int statusCode = StatusCodes.Status500InternalServerError;
-        string title = "服务器内部错误";
-        string clientMessage = "服务器发生意外错误，请联系管理员.";
+        var statusCode = StatusCodes.Status500InternalServerError;
+        var title = "服务器内部错误";
+        var clientMessage = "服务器发生意外错误，请联系管理员.";
 
         switch (exception)
         {
@@ -54,7 +55,8 @@ public class GlobalExceptionHandler : IExceptionHandler
                 statusCode = StatusCodes.Status400BadRequest;
                 title = "数据操作约束";
                 clientMessage = AnalyzeDatabaseException(dbEx);
-                _logger.LogError(dbEx, "【数据库操作失败】[TraceId: {TraceId}] 内部详细错误: {innerMessage}", traceId, dbEx.InnerException?.Message);
+                _logger.LogError(dbEx, "【数据库操作失败】[TraceId: {TraceId}] 内部详细错误: {innerMessage}", traceId,
+                    dbEx.InnerException?.Message);
                 break;
 
             case ValidationException valEx:
@@ -63,8 +65,8 @@ public class GlobalExceptionHandler : IExceptionHandler
                 var validationErrors = valEx.Errors
                     .GroupBy(e => e.PropertyName)
                     .ToDictionary(
-                    g => g.Key,
-                    g => g.Select(e => e.ErrorMessage).ToArray());
+                        g => g.Key,
+                        g => g.Select(e => e.ErrorMessage).ToArray());
                 _logger.LogWarning("【参数校验失败】[TraceId: {TraceId}] - 详情：{@Error}", traceId, validationErrors);
 
                 httpContext.Response.StatusCode = statusCode;
@@ -84,6 +86,7 @@ public class GlobalExceptionHandler : IExceptionHandler
                 _logger.LogCritical(exception, "【系统致命崩溃】[TraceId: {TraceId}]", traceId);
                 break;
         }
+
         ;
 
         var problemDetails = new ProblemDetails

@@ -10,3 +10,10 @@ public record ForgotPasswordRequest(string Email, string ClientResetUrl);
 
 public record ResetPasswordRequest(string Email, string Token, string NewPassword);
 
+public record RefreshTokenRequest(string RefreshToken);
+
+public record UpdateUserProfileRequest(
+    string NickName,
+    string Email,
+    string PhoneNumber
+);

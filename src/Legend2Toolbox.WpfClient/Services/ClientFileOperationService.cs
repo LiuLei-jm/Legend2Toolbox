@@ -2,15 +2,19 @@
 
 public class ClientFileOperationService : IClientFileOperationService
 {
-    private readonly IAppLogger<ClientFileOperationService> _logger;
-    private readonly IValidator<AppendContentCommand> _fileWriteValidator;
-    private readonly IValidator<RemoveContentCommand> _fileDeleteValidator;
     private readonly IValidator<RemoveContentListCommand> _fileDeleteListValidator;
-    private readonly IValidator<SyncContentListCommand> _fileSyncListValidator;
+    private readonly IValidator<RemoveContentCommand> _fileDeleteValidator;
 
 
     private readonly SemaphoreSlim _fileLock = new(1, 1);
-    public ClientFileOperationService(IAppLogger<ClientFileOperationService> logger, IValidator<AppendContentCommand> fileWriteValidator, IValidator<RemoveContentCommand> fileDeleteValidator, IValidator<RemoveContentListCommand> fileDeleteListValidator, IValidator<SyncContentListCommand> fileSyncListValidator)
+    private readonly IValidator<SyncContentListCommand> _fileSyncListValidator;
+    private readonly IValidator<AppendContentCommand> _fileWriteValidator;
+    private readonly IAppLogger<ClientFileOperationService> _logger;
+
+    public ClientFileOperationService(IAppLogger<ClientFileOperationService> logger,
+        IValidator<AppendContentCommand> fileWriteValidator, IValidator<RemoveContentCommand> fileDeleteValidator,
+        IValidator<RemoveContentListCommand> fileDeleteListValidator,
+        IValidator<SyncContentListCommand> fileSyncListValidator)
     {
         _logger = logger;
         _fileWriteValidator = fileWriteValidator;
@@ -27,20 +31,23 @@ public class ClientFileOperationService : IClientFileOperationService
             _logger.LogError($"文件写入命令校验失败：{string.Join(", ", validationResult.Errors)}");
             return;
         }
+
         await _fileLock.WaitAsync();
         try
         {
-            string? directoryPath = Path.GetDirectoryName(command.FilePath);
+            var directoryPath = Path.GetDirectoryName(command.FilePath);
             if (!string.IsNullOrEmpty(directoryPath) && !Directory.Exists(directoryPath))
             {
                 Directory.CreateDirectory(directoryPath);
                 _logger.LogInfo($"创建目录：{directoryPath}");
             }
+
             if (!File.Exists(command.FilePath))
             {
                 await File.WriteAllTextAsync(command.FilePath, string.Empty);
                 _logger.LogInfo($"创建文件: {command.FilePath}");
             }
+
             var originalContent = await File.ReadAllLinesAsync(command.FilePath);
             var contentToAppend = command.Content.Trim();
 
@@ -72,6 +79,7 @@ public class ClientFileOperationService : IClientFileOperationService
             _logger.LogError($"文件删除命令校验失败：{string.Join(", ", validationResult.Errors)}");
             return;
         }
+
         await _fileLock.WaitAsync();
         try
         {
@@ -80,6 +88,7 @@ public class ClientFileOperationService : IClientFileOperationService
                 _logger.LogError($"文件不存在，无法删除内容：{command.FilePath}");
                 return;
             }
+
             var originalContentLines = await File.ReadAllLinesAsync(command.FilePath);
             if (originalContentLines.Length == 0) return;
 
@@ -109,6 +118,7 @@ public class ClientFileOperationService : IClientFileOperationService
             _logger.LogError($"文件批量删除命令校验失败：{string.Join(", ", validationResult.Errors)}");
             return;
         }
+
         if (command.ContentList == null || command.ContentList.Count == 0) return;
 
         await _fileLock.WaitAsync();
@@ -119,12 +129,13 @@ public class ClientFileOperationService : IClientFileOperationService
                 _logger.LogError($"文件不存在，无法删除内容：{command.FilePath}");
                 return;
             }
+
             var originalContentLines = await File.ReadAllLinesAsync(command.FilePath);
             if (originalContentLines.Length == 0) return;
 
             var targetSet = new HashSet<string>(command.ContentList.Select(c => c.Trim()));
             List<string> filteredLines = [];
-            bool isFileChanged = false;
+            var isFileChanged = false;
 
             foreach (var line in originalContentLines)
             {
@@ -139,6 +150,7 @@ public class ClientFileOperationService : IClientFileOperationService
                     filteredLines.Add(line);
                 }
             }
+
             if (isFileChanged)
             {
                 await File.WriteAllLinesAsync(command.FilePath, filteredLines);
@@ -163,29 +175,32 @@ public class ClientFileOperationService : IClientFileOperationService
             _logger.LogError($"文件同步命令校验失败：{string.Join(", ", validationResult.Errors)}");
             return;
         }
+
         if (command.ContentList == null || command.ContentList.Count == 0) return;
 
         await _fileLock.WaitAsync();
         try
         {
-            string? directoryPath = Path.GetDirectoryName(command.FilePath);
+            var directoryPath = Path.GetDirectoryName(command.FilePath);
             if (!string.IsNullOrEmpty(directoryPath) && !Directory.Exists(directoryPath))
             {
                 Directory.CreateDirectory(directoryPath);
                 _logger.LogInfo($"创建目录：{directoryPath}");
             }
+
             if (!File.Exists(command.FilePath))
             {
                 await File.WriteAllLinesAsync(command.FilePath, command.ContentList.Select(c => c.Trim()));
                 _logger.LogError($"文件不存在，已自动创建并同步：{command.ContentList.Count} 条卡号.");
                 return;
             }
+
             var originalContentLines = await File.ReadAllLinesAsync(command.FilePath);
             if (originalContentLines.Length == 0) return;
 
             var targetSet = new HashSet<string>(command.ContentList.Select(c => c.Trim()));
             List<string> filteredLines = [];
-            bool isFileChanged = false;
+            var isFileChanged = false;
 
             foreach (var line in originalContentLines)
             {
@@ -213,6 +228,7 @@ public class ClientFileOperationService : IClientFileOperationService
                     isFileChanged = true;
                 }
             }
+
             if (isFileChanged)
             {
                 await File.WriteAllLinesAsync(command.FilePath, filteredLines);

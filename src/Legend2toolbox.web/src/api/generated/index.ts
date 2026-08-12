@@ -13,11 +13,13 @@ export type { CreateCardNumberRequest } from './models/CreateCardNumberRequest';
 export type { ForgotPasswordRequest } from './models/ForgotPasswordRequest';
 export type { GetUserByNameRequest } from './models/GetUserByNameRequest';
 export type { LoginRequest } from './models/LoginRequest';
+export type { RefreshTokenRequest } from './models/RefreshTokenRequest';
 export type { RegisterRequest } from './models/RegisterRequest';
 export type { ResetPasswordRequest } from './models/ResetPasswordRequest';
 export type { ToggleLockRequest } from './models/ToggleLockRequest';
 export type { UpdateCardNumberPathRequest } from './models/UpdateCardNumberPathRequest';
 export type { UpdateCardNumberRequest } from './models/UpdateCardNumberRequest';
+export type { UpdateUserProfileRequest } from './models/UpdateUserProfileRequest';
 export type { UpdateUserRequest } from './models/UpdateUserRequest';
 
 export { AdminUserManagementService } from './services/AdminUserManagementService';

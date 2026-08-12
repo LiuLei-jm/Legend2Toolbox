@@ -12,8 +12,8 @@ public class DeleteCardNumberCommandValidator : AbstractValidator<DeleteCardNumb
 
 public class DeleteCardNumberCommandHandler : IRequestHandler<DeleteCardNumberCommand, Result>
 {
-    private readonly ICurrentUserService _currentUserService;
     private readonly IApplicationDbContext _context;
+    private readonly ICurrentUserService _currentUserService;
     private readonly IPublisher _publisher;
 
     public DeleteCardNumberCommandHandler(
@@ -32,7 +32,8 @@ public class DeleteCardNumberCommandHandler : IRequestHandler<DeleteCardNumberCo
             return Result.Failure(ErrorMessages.Auth.InvalidUserId);
         var card = await _context.CardNumbers.FirstOrDefaultAsync(c => c.Id == request.CardId, cancellationToken);
         if (card is null) return Result.Failure(ErrorMessages.Card.NotFoundCard);
-        if (_currentUserService.UserName is null || card.UserId != currentUserId) return Result.Failure(ErrorMessages.Auth.NoPermissionToOperate);
+        if (_currentUserService.UserName is null || card.UserId != currentUserId)
+            return Result.Failure(ErrorMessages.Auth.NoPermissionToOperate);
         card.Remove(_currentUserService.UserName);
         await _context.SaveChangesAsync(cancellationToken);
         await _publisher.Publish(new CardNumberDeletedEvent(

@@ -2,9 +2,9 @@
 
 public interface IConnectionManager
 {
-    void AddConnection(string securityKey, string connectionId, string deviceName, string userName);
+    void AddConnection(string connectionKey, string connectionId, string deviceName, string userName);
     void RemoveConnection(string connectionId);
-    IEnumerable<ConnectionInfo> GetConnection(string securityKey);
-    public int GetConnectionCount(string securityKey);
+    IEnumerable<ConnectionInfo> GetConnection(string connectionKey);
+    public int GetConnectionCount(string connectionKey);
     IEnumerable<ConnectionInfo> GetAllConnections();
 }

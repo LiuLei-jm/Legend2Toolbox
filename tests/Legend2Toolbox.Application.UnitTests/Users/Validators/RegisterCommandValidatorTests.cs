@@ -45,7 +45,6 @@ public class RegisterCommandValidatorTests
     }
 
 
-
     [Theory]
     [InlineData("")]
     [InlineData("12345")]
@@ -60,7 +59,6 @@ public class RegisterCommandValidatorTests
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.Password);
     }
-
 
 
     [Fact]

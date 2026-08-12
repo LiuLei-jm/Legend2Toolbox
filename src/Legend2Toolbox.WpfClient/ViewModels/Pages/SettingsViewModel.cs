@@ -4,31 +4,37 @@ public partial class SettingsViewModel : ObservableObject
 {
     private readonly IClientConfigurationService _configService;
     private readonly ISignalRClientService _signalRService;
-    private CancellationTokenSource? _cts;
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(SaveConfigCommand))]
-    private string _serverUrl = string.Empty;
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(SaveConfigCommand))]
-    private string _deviceName = string.Empty;
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(SaveConfigCommand))]
+
+    [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(SaveConfigCommand))]
     private string _apiKey = string.Empty;
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(SaveConfigCommand))]
+
+    [ObservableProperty] private string _connectionButtonContent = "连接";
+
+    private CancellationTokenSource? _cts;
+
+    [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(SaveConfigCommand))]
+    private string _deviceName = string.Empty;
+
+    [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(SaveConfigCommand))]
     private bool _isInputsEnabled = true;
-    [ObservableProperty]
-    private string _connectionButtonContent = "连接";
-    private bool CanSave() => IsInputsEnabled
-        && !string.IsNullOrEmpty(ServerUrl)
-        && !string.IsNullOrEmpty(DeviceName)
-        && !string.IsNullOrEmpty(ApiKey);
+
+    [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(SaveConfigCommand))]
+    private string _serverUrl = string.Empty;
 
     public SettingsViewModel(IClientConfigurationService configService, ISignalRClientService signalRService)
     {
         _configService = configService;
         _signalRService = signalRService;
     }
+
+    private bool CanSave()
+    {
+        return IsInputsEnabled
+               && !string.IsNullOrEmpty(ServerUrl)
+               && !string.IsNullOrEmpty(DeviceName)
+               && !string.IsNullOrEmpty(ApiKey);
+    }
+
     [RelayCommand]
     private async Task LoadInitialDataAsync()
     {
@@ -42,6 +48,7 @@ public partial class SettingsViewModel : ObservableObject
                 await ToggleConnectionAsync();
         }
     }
+
     [RelayCommand]
     private async Task ToggleConnectionAsync()
     {
@@ -63,11 +70,12 @@ public partial class SettingsViewModel : ObservableObject
             {
                 ServerUrl = ServerUrl,
                 DeviceName = DeviceName,
-                ApiKey = ApiKey,
+                ApiKey = ApiKey
             };
             _ = _signalRService.StartAsync(config, _cts.Token);
         }
     }
+
     [RelayCommand(CanExecute = nameof(CanSave))]
     private async Task SaveConfigAsync()
     {
@@ -75,7 +83,7 @@ public partial class SettingsViewModel : ObservableObject
         {
             ServerUrl = ServerUrl,
             DeviceName = DeviceName,
-            ApiKey = ApiKey,
+            ApiKey = ApiKey
         };
         await _configService.SaveConfigAsync(config);
         WeakReferenceMessenger.Default.Send(new AppLogMessage("配置保存成功"));

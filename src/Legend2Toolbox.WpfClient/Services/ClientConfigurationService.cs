@@ -12,20 +12,22 @@ public class ClientConfigurationService : IClientConfigurationService
 
     public async Task<ConnectionConfig?> LoadConfigAsync()
     {
-        string configFilePath = Path.Combine(PathHelper.GetExeCurrentPath(), ConfigFileName);
+        var configFilePath = Path.Combine(PathHelper.GetExeCurrentPath(), ConfigFileName);
         if (!File.Exists(configFilePath))
         {
             _logger.LogInfo("配置文件不存在：{configFilePath}");
             return null!;
         }
+
         try
         {
-            string jsonString = await File.ReadAllTextAsync(configFilePath);
+            var jsonString = await File.ReadAllTextAsync(configFilePath);
             if (string.IsNullOrWhiteSpace(jsonString))
             {
                 _logger.LogInfo("配置文件为空.");
                 return null;
             }
+
             var config = JsonSerializer.Deserialize<ConnectionConfig>(jsonString);
             _logger.LogInfo("配置加载成功.");
             return config;
@@ -42,8 +44,8 @@ public class ClientConfigurationService : IClientConfigurationService
         try
         {
             var options = new JsonSerializerOptions { WriteIndented = true };
-            string jsonString = JsonSerializer.Serialize(config, options);
-            string configFilePath = Path.Combine(PathHelper.GetExeCurrentPath(), ConfigFileName);
+            var jsonString = JsonSerializer.Serialize(config, options);
+            var configFilePath = Path.Combine(PathHelper.GetExeCurrentPath(), ConfigFileName);
             await File.WriteAllTextAsync(configFilePath, jsonString);
             _logger.LogInfo($"配置已成功保存到 {configFilePath} 文件.");
         }

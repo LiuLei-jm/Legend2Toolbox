@@ -5,8 +5,10 @@
 import type { ChangePasswordRequest } from '../models/ChangePasswordRequest';
 import type { ForgotPasswordRequest } from '../models/ForgotPasswordRequest';
 import type { LoginRequest } from '../models/LoginRequest';
+import type { RefreshTokenRequest } from '../models/RefreshTokenRequest';
 import type { RegisterRequest } from '../models/RegisterRequest';
 import type { ResetPasswordRequest } from '../models/ResetPasswordRequest';
+import type { UpdateUserProfileRequest } from '../models/UpdateUserProfileRequest';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -97,13 +99,33 @@ export class AuthorizationService {
         });
     }
     /**
+     * @param requestBody
      * @returns any OK
      * @throws ApiError
      */
-    public static postApiAuthRefresh(): CancelablePromise<any> {
+    public static postApiAuthRefresh(
+        requestBody: RefreshTokenRequest,
+    ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/auth/refresh',
+            body: requestBody,
+            mediaType: 'application/json',
+        });
+    }
+    /**
+     * @param requestBody
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static putApiAuthUpdate(
+        requestBody: UpdateUserProfileRequest,
+    ): CancelablePromise<any> {
+        return __request(OpenAPI, {
+            method: 'PUT',
+            url: '/api/auth/update',
+            body: requestBody,
+            mediaType: 'application/json',
         });
     }
 }

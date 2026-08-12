@@ -2,9 +2,6 @@
 
 public class ValidationBehaviorTests
 {
-    public record DummyRequest : IRequest<string>;
-
-
     [Fact]
     public async Task Handle_ShouldThrowValidationException_WhenValidationFails()
     {
@@ -48,6 +45,5 @@ public class ValidationBehaviorTests
         result.Should().Be("Success Result");
     }
 
-
-
+    public record DummyRequest : IRequest<string>;
 }

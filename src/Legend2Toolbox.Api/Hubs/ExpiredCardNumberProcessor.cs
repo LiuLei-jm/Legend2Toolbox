@@ -18,7 +18,6 @@ public class ExpiredCardNumberProcessor : BackgroundService
         try
         {
             while (await timer.WaitForNextTickAsync(stoppingToken))
-            {
                 try
                 {
                     await ProcessExpiredCardsAsync(stoppingToken);
@@ -27,7 +26,6 @@ public class ExpiredCardNumberProcessor : BackgroundService
                 {
                     _logger.LogWarning(ex, "卡号过期处理服务发生严重异常崩溃.");
                 }
-            }
         }
         catch (OperationCanceledException)
         {
@@ -46,8 +44,9 @@ public class ExpiredCardNumberProcessor : BackgroundService
         var thresholdTime = utcNow.AddMinutes(-30);
 
         var expiredCards = await context.CardNumbers.Where(c => c.EndTime < utcNow
-        && !c.IsExpiredNotificationSent
-        && (c.LastCheckedForConnection == null || c.LastCheckedForConnection <= thresholdTime))
+                                                                && !c.IsExpiredNotificationSent
+                                                                && (c.LastCheckedForConnection == null ||
+                                                                    c.LastCheckedForConnection <= thresholdTime))
             .Select(c => new { c.Id, c.UserId, c.Cdk })
             .ToListAsync(stoppingToken);
 
@@ -64,7 +63,7 @@ public class ExpiredCardNumberProcessor : BackgroundService
             .Select(u => new
             {
                 UserId = u.Id,
-                SecurityKey = u.SecurityKey != null ? u.SecurityKey.Key : null,
+                ConnectionKey = u.ConnectionKey != null ? u.ConnectionKey.Key : null,
                 CardPath = u.CardNumberPath != null ? u.CardNumberPath.FullPath : null
             }).ToDictionaryAsync(u => u.UserId, stoppingToken);
 
@@ -74,17 +73,19 @@ public class ExpiredCardNumberProcessor : BackgroundService
             var cards = userGroup.Value;
             var cardIds = cards.Select(c => c.Id).ToList();
 
-            if (!userSettings.TryGetValue(userId, out var setting) || setting.SecurityKey is null)
+            if (!userSettings.TryGetValue(userId, out var setting) || setting.ConnectionKey is null)
             {
-                _logger.LogWarning("用户ID {UserId} 没有对应的 SecurityKey", userId);
+                _logger.LogWarning("用户ID {UserId} 没有对应的 ConnectionKey", userId);
                 continue;
             }
+
             if (setting.CardPath is null)
             {
                 _logger.LogWarning("用户ID {UserId} 没有配置 CardNumberPath", userId);
                 continue;
             }
-            var connectionIds = connectionManager.GetConnection(setting.SecurityKey)
+
+            var connectionIds = connectionManager.GetConnection(setting.ConnectionKey)
                 .Select(c => c.ConnectionId).ToList();
 
             if (!connectionIds.Any())
@@ -100,7 +101,7 @@ public class ExpiredCardNumberProcessor : BackgroundService
             var request = new SendDeleteListRequest(
                 setting.CardPath,
                 deleteCdks
-                );
+            );
 
             await hubContext.Clients.Clients(connectionIds)
                 .SendAsync(SignalRInteraction.RemoveList, request, stoppingToken);
@@ -108,9 +109,9 @@ public class ExpiredCardNumberProcessor : BackgroundService
             await context.CardNumbers
                 .Where(c => cardIds.Contains(c.Id))
                 .ExecuteUpdateAsync(s => s
-                .SetProperty(x => x.LastCheckedForConnection, utcNow)
-                .SetProperty(x => x.LastModifiedOn, utcNow)
-                .SetProperty(x => x.IsExpiredNotificationSent, true), stoppingToken);
+                    .SetProperty(x => x.LastCheckedForConnection, utcNow)
+                    .SetProperty(x => x.LastModifiedOn, utcNow)
+                    .SetProperty(x => x.IsExpiredNotificationSent, true), stoppingToken);
             _logger.LogInformation("向 {UserId} 成功推送了 {Count} 张过期卡号.", userId, cards.Count);
         }
     }

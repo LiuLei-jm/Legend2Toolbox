@@ -40,7 +40,6 @@ public class LoginCommandValidatorTests
     }
 
 
-
     [Fact]
     public void Validator_ShouldAreValid_WhenAllFieldsAreCorrect()
     {
@@ -53,7 +52,4 @@ public class LoginCommandValidatorTests
         // Assert
         result.IsValid.Should().BeTrue();
     }
-
-
-
 }

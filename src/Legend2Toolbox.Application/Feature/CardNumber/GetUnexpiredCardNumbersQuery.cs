@@ -1,8 +1,11 @@
 ﻿namespace Legend2Toolbox.Application.Feature.CardNumber;
 
-public record GetUnexpiredCardNumbersQuery(int PageNumber = 1, int PageSize = 10) : IRequest<Result<PagedResult<CardNumberDto>>>;
+public record GetUnexpiredCardNumbersQuery(int PageNumber = 1, int PageSize = 10)
+    : IRequest<Result<PagedResult<CardNumberDto>>>;
 
-public class GetUnexpiredCardNumbersQueryHandler : IRequestHandler<GetUnexpiredCardNumbersQuery, Result<PagedResult<CardNumberDto>>>
+public class
+    GetUnexpiredCardNumbersQueryHandler : IRequestHandler<GetUnexpiredCardNumbersQuery,
+    Result<PagedResult<CardNumberDto>>>
 {
     private readonly IApplicationDbContext _context;
     private readonly ICurrentUserService _currentUserService;
@@ -13,11 +16,14 @@ public class GetUnexpiredCardNumbersQueryHandler : IRequestHandler<GetUnexpiredC
         _currentUserService = currentUserService;
     }
 
-    public async Task<Result<PagedResult<CardNumberDto>>> Handle(GetUnexpiredCardNumbersQuery request, CancellationToken cancellationToken)
+    public async Task<Result<PagedResult<CardNumberDto>>> Handle(GetUnexpiredCardNumbersQuery request,
+        CancellationToken cancellationToken)
     {
-        if (!Guid.TryParse(_currentUserService.UserId, out var currentUserId)) return Result<PagedResult<CardNumberDto>>.Failure(ErrorMessages.Auth.InvalidUserId);
-        var query = _context.CardNumbers.AsNoTracking().Where(c => c.UserId == currentUserId && c.EndTime > DateTimeOffset.UtcNow);
-        var totalCount = await query.CountAsync(cancellationToken: cancellationToken);
+        if (!Guid.TryParse(_currentUserService.UserId, out var currentUserId))
+            return Result<PagedResult<CardNumberDto>>.Failure(ErrorMessages.Auth.InvalidUserId);
+        var query = _context.CardNumbers.AsNoTracking()
+            .Where(c => c.UserId == currentUserId && c.EndTime > DateTimeOffset.UtcNow);
+        var totalCount = await query.CountAsync(cancellationToken);
         var cardNumberDtos = await query
             .OrderByDescending(c => c.CreatedOn)
             .Skip((request.PageNumber - 1) * request.PageSize)
@@ -26,8 +32,8 @@ public class GetUnexpiredCardNumbersQueryHandler : IRequestHandler<GetUnexpiredC
             .ToListAsync(cancellationToken);
 
         return Result<PagedResult<CardNumberDto>>.Success(new PagedResult<CardNumberDto>(cardNumberDtos,
-                                                                                         request.PageNumber,
-                                                                                         request.PageSize,
-                                                                                         totalCount));
+            request.PageNumber,
+            request.PageSize,
+            totalCount));
     }
 }

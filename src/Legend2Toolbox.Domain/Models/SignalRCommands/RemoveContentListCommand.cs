@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Legend2Toolbox.Domain.Models.SignalRCommands;
+﻿namespace Legend2Toolbox.Domain.Models.SignalRCommands;
 
 public class RemoveContentListCommand
 {

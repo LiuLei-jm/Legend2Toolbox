@@ -4,48 +4,56 @@
     <div class="bg-shape shape-2"></div>
 
     <div class="register-container">
-      <el-card class="glass-card" :body-style="{ padding: '24px 28px' }">
+      <el-card :body-style="{ padding: '32px 24px' }" class="glass-card">
         <div class="header-section">
           <div class="logo-box">
-            <el-icon :size="16" color="#409EFF">
-              <Platform />
+            <el-icon :size="24" color="#409EFF">
+              <Platform/>
             </el-icon>
           </div>
           <h2 class="title">注册账号</h2>
         </div>
 
         <!-- 注册表单 -->
-        <el-form ref="registerFormRef" :model="formData" :rules="formRules" label-width="80px" size="default"
-          @keyup.enter="handleRegister" class="modern-form">
+        <el-form ref="registerFormRef" :model="formData" :rules="formRules" class="modern-form"
+                 label-position="top"
+                 size="large" @keyup.enter="handleRegister">
           <el-form-item label="用户名" prop="username">
-            <el-input v-model="formData.username" placeholder="请输入用户名" clearable :prefix-icon="User" />
+            <el-input v-model="formData.username" :prefix-icon="User" clearable
+                      placeholder="请输入用户名"/>
           </el-form-item>
 
           <el-form-item label="邮箱" prop="email">
-            <el-input v-model="formData.email" placeholder="请输入邮箱" clearable :prefix-icon="Message" />
+            <el-input v-model="formData.email" :prefix-icon="Message" clearable
+                      placeholder="请输入邮箱"/>
           </el-form-item>
 
           <el-form-item label="密码" prop="password">
-            <el-input v-model="formData.password" type="password" placeholder="请输入密码" show-password
-              :prefix-icon="Lock" />
+            <el-input v-model="formData.password" :prefix-icon="Lock" placeholder="请输入密码"
+                      show-password
+                      type="password"/>
           </el-form-item>
 
           <el-form-item label="确认密码" prop="confirmPassword">
-            <el-input v-model="formData.confirmPassword" type="password" placeholder="请再次输入密码" show-password
-              :prefix-icon="Key" />
+            <el-input v-model="formData.confirmPassword" :prefix-icon="Key"
+                      placeholder="请再次输入密码" show-password
+                      type="password"/>
           </el-form-item>
 
-          <el-form-item label-width="0" class="btn-form-item">
-            <el-button type="primary" class="submit-btn" :loading="isLoading" @click="handleRegister">
+          <el-form-item class="btn-form-item">
+            <el-button :loading="isLoading" class="submit-btn" type="primary"
+                       @click="handleRegister">
               立即注册
             </el-button>
           </el-form-item>
 
           <div class="login-link">
             已有账号？
-            <el-link type="primary" underline="hover" @click="goToLogin">去登录 <el-icon class="el-icon--right">
-                <ArrowRight />
-              </el-icon></el-link>
+            <el-link type="primary" underline="hover" @click="goToLogin">去登录
+              <el-icon class="el-icon--right">
+                <ArrowRight/>
+              </el-icon>
+            </el-link>
           </div>
         </el-form>
       </el-card>
@@ -53,17 +61,17 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { ref, reactive } from "vue";
-import { ElMessage } from "element-plus";
-import type { FormInstance, FormRules } from "element-plus";
-import type { RuleItem } from 'async-validator'
-import { useAuthStore } from "@/stores/auth"
-import { useRouter} from 'vue-router'
+<script lang="ts" setup>
+import {reactive, ref} from "vue";
+import type {FormInstance, FormRules} from "element-plus";
+import {ElMessage} from "element-plus";
+import type {RuleItem} from 'async-validator'
+import {useAuthStore} from "@/stores/auth"
+import {useRouter} from 'vue-router'
 
-import { User, Message, Lock, Key, Platform, ArrowRight } from "@element-plus/icons-vue";
+import {ArrowRight, Key, Lock, Message, Platform, User} from "@element-plus/icons-vue";
 
-import type { RegisterRequest } from "@/api/generated/models/RegisterRequest";
+import type {RegisterRequest} from "@/api/generated/models/RegisterRequest";
 
 const authStore = useAuthStore();
 const registerFormRef = ref<FormInstance>();
@@ -90,18 +98,18 @@ const validateConfirmPassword = (rule: RuleItem, value: string, callback: (error
 
 const formRules = reactive<FormRules>({
   username: [
-    { required: true, message: "请输入用户名", trigger: "blur" },
-    { min: 3, max: 20, message: "长度在 3 到 20 个字符", trigger: "blur" },
+    {required: true, message: "请输入用户名", trigger: "blur"},
+    {min: 3, max: 20, message: "长度在 3 到 20 个字符", trigger: "blur"},
   ],
   email: [
-    { required: true, message: "请输入邮箱地址", trigger: "blur" },
-    { type: "email", message: "请输入正确的邮箱地址", trigger: "blur" },
+    {required: true, message: "请输入邮箱地址", trigger: "blur"},
+    {type: "email", message: "请输入正确的邮箱地址", trigger: "blur"},
   ],
   password: [
-    { required: true, message: "请输入密码", trigger: "blur" },
-    { min: 6, message: "密码长度不能小于 6 位", trigger: "blur" },
+    {required: true, message: "请输入密码", trigger: "blur"},
+    {min: 6, message: "密码长度不能小于 6 位", trigger: "blur"},
   ],
-  confirmPassword: [{ required: true, validator: validateConfirmPassword, trigger: "blur" }],
+  confirmPassword: [{required: true, validator: validateConfirmPassword, trigger: "blur"}],
 });
 
 const handleRegister = async () => {
@@ -124,8 +132,7 @@ const handleRegister = async () => {
     }
   } catch (error) {
     console.error("注册过程发生错误：", error);
-  }
-  finally {
+  } finally {
     isLoading.value = false;
   }
 };
@@ -142,7 +149,7 @@ const goToLogin = () => {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  padding: 20px;
+  padding: 16;
   box-sizing: border-box;
   background-color: #f3f4f6;
   overflow: hidden;
@@ -156,85 +163,99 @@ const goToLogin = () => {
 }
 
 .shape-1 {
-  width: 350px;
-  height: 350px;
+  width: 300px;
+  height: 300px;
   background: rgba(64, 158, 255, 0.25);
-  top: -80px;
-  left: -80px;
+  top: -50px;
+  left: -50px;
 }
 
 .shape-2 {
-  width: 350px;
-  height: 350px;
+  width: 250px;
+  height: 250px;
   background: rgba(142, 68, 173, 0.18);
-  bottom: -40px;
-  right: -40px;
+  bottom: -50px;
+  right: -50px;
 }
 
 .register-container {
   position: relative;
   z-index: 1;
   width: 100%;
-  max-width: 400px;
+  max-width: 420px;
 }
 
 .glass-card {
   width: 100%;
   border: none;
-  border-radius: 12px;
+  border-radius: 16px;
   background: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(12px);
-  box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.08);
 }
 
 .header-section {
   text-align: center;
-  margin-bottom: 20px;
-}
-
-.modern-form {
-  width: 100%;
+  margin-bottom: 24px;
 }
 
 .logo-box {
-  width: 40px;
-  height: 40px;
-  margin: 0 auto 8px;
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 12px;
   background: #ecf5ff;
-  border-radius: 8px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .title {
-  margin: 0;
-  font-size: 18px;
+  margin: 0 0 4px 0;
+  font-size: 20px;
+  font-weight: 600;
   color: #1f2937;
 }
 
+.subtitle {
+  margin: 0;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.modern-form {
+  width: 100%;
+}
+
 .btn-form-item {
-  margin-top: 10px;
-  margin-bottom: 12px !important;
+  margin-top: 12px;
+  margin-bottom: 16px !important;
 }
 
 .submit-btn {
   width: 100%;
   height: 40px;
-  border-radius: 6px;
-  font-size: 14px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 500;
 }
 
 .login-link {
   text-align: center;
-  margin-top: 20px;
+  margin-top: 16px;
   font-size: 13px;
   color: #6b7280;
 }
 
 /* Reduce spacing between form items */
-:deep(.el-form-item:not(:last-child)) {
-  margin-bottom: 12px;
+:deep(.el-form-item) {
+  margin-bottom: 18px;
+}
+
+:deep(.el-form-item__label) {
+  padding-bottom: 4px;
+  font-weight: 500;
+  color: #374151;
 }
 
 /* Adjust icon sizes */
@@ -246,8 +267,4 @@ const goToLogin = () => {
   font-size: 14px !important;
 }
 
-/* Make input icons smaller */
-:deep(.el-input__prefix .el-icon) {
-  font-size: 14px !important;
-}
 </style>

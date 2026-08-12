@@ -2,8 +2,8 @@
 
 public class RegisterCommandHandlerTests
 {
-    private readonly IIdentityService _identityServiceMock;
     private readonly RegisterCommandHandler _handler;
+    private readonly IIdentityService _identityServiceMock;
 
     public RegisterCommandHandlerTests()
     {

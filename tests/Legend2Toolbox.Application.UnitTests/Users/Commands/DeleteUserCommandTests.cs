@@ -1,17 +1,10 @@
-﻿using Legend2Toolbox.Application.Feature.Admin;
-using Legend2Toolbox.Domain.Constants;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Legend2Toolbox.Application.UnitTests.Users.Commands;
+﻿namespace Legend2Toolbox.Application.UnitTests.Users.Commands;
 
 public class DeleteUserCommandTests
 {
-    private readonly IIdentityService _identityServiceMock;
     private readonly DeleteUserCommandHandler _handler;
+    private readonly IIdentityService _identityServiceMock;
+
     public DeleteUserCommandTests()
     {
         _identityServiceMock = Substitute.For<IIdentityService>();
@@ -21,13 +14,13 @@ public class DeleteUserCommandTests
 
     [Fact]
     public async Task Handler_ShouldReturnSuccess_WhenUserIsDeletedSuccessFully
-    ()
+        ()
     {
         // Arrange
         var command = new DeleteUserCommand("normal_user_123");
 
         _identityServiceMock.DeleteUserAsync(command.UserId).Returns(Result.Success());
-        
+
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);
 
@@ -35,7 +28,6 @@ public class DeleteUserCommandTests
         result.IsSuccess.Should().BeTrue();
         result.Errors.Should().BeEmpty();
     }
-
 
 
     [Fact]
@@ -54,6 +46,4 @@ public class DeleteUserCommandTests
         result.IsFailure.Should().BeTrue();
         result.Errors.Should().Contain(expectedError);
     }
-
-
 }

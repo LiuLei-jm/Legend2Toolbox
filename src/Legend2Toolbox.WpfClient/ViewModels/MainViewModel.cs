@@ -4,20 +4,12 @@ public partial class MainViewModel : ObservableObject
 {
     private readonly LogViewModel _logViewModel = null!;
     private readonly SettingsViewModel _settingsViewModel = null!;
-    [ObservableProperty]
-    private object _currentView;
-    [ObservableProperty]
-    private bool _isLogSelected;
-    partial void OnIsLogSelectedChanged(bool value)
-    {
-        if (value) CurrentView = _logViewModel;
-    }
-    [ObservableProperty]
-    private bool _isSettingsSelected;
-    partial void OnIsSettingsSelectedChanged(bool value)
-    {
-        if (value) CurrentView = _settingsViewModel;
-    }
+
+    [ObservableProperty] private object _currentView;
+
+    [ObservableProperty] private bool _isLogSelected;
+
+    [ObservableProperty] private bool _isSettingsSelected;
 
     public MainViewModel(LogViewModel logViewModel, SettingsViewModel settingsViewModel)
     {
@@ -29,4 +21,13 @@ public partial class MainViewModel : ObservableObject
         CurrentView = _logViewModel;
     }
 
+    partial void OnIsLogSelectedChanged(bool value)
+    {
+        if (value) CurrentView = _logViewModel;
+    }
+
+    partial void OnIsSettingsSelectedChanged(bool value)
+    {
+        if (value) CurrentView = _settingsViewModel;
+    }
 }

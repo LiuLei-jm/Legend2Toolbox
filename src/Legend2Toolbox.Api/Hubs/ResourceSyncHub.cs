@@ -1,14 +1,14 @@
-﻿
-namespace Legend2Toolbox.Api.Hubs;
+﻿namespace Legend2Toolbox.Api.Hubs;
 
 public class ResourceSyncHub : Hub
 {
-    private readonly ILogger<ResourceSyncHub> _logger;
     private readonly IConnectionManager _connectionManager;
-    private readonly IServiceScopeFactory _scopeFactory;
     private readonly IHubContext<ResourceSyncHub> _hubContext;
+    private readonly ILogger<ResourceSyncHub> _logger;
+    private readonly IServiceScopeFactory _scopeFactory;
 
-    public ResourceSyncHub(ILogger<ResourceSyncHub> logger, IConnectionManager connectionManager, IServiceScopeFactory scopeFactory, IHubContext<ResourceSyncHub> hubContext)
+    public ResourceSyncHub(ILogger<ResourceSyncHub> logger, IConnectionManager connectionManager,
+        IServiceScopeFactory scopeFactory, IHubContext<ResourceSyncHub> hubContext)
     {
         _logger = logger;
         _connectionManager = connectionManager;
@@ -18,10 +18,10 @@ public class ResourceSyncHub : Hub
 
     public override async Task OnConnectedAsync()
     {
-        var securityKey = Context.GetHttpContext()?.Request.Query["Key"].ToString();
+        var key = Context.GetHttpContext()?.Request.Query["Key"].ToString();
         var deviceName = Context.GetHttpContext()?.Request.Query["DeviceName"].ToString();
 
-        if (string.IsNullOrEmpty(securityKey))
+        if (string.IsNullOrEmpty(key))
         {
             _logger.LogWarning("客户端未使用 API 密钥连接，连接已终止。连接ID : {ConnectionId}", Context.ConnectionId);
             Context.Abort();
@@ -37,40 +37,39 @@ public class ResourceSyncHub : Hub
             var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
             var user = await context.Users
-                .Include(u => u.SecurityKey)
+                .Include(u => u.ConnectionKey)
                 .Include(u => u.CardNumberPath)
                 .AsNoTracking()
-                .FirstOrDefaultAsync(u => u.SecurityKey!.Key == securityKey);
+                .FirstOrDefaultAsync(u => u.ConnectionKey!.Key == key);
             if (user is null)
             {
                 _logger.LogWarning("没有此用户，连接已终止。连接ID: {ConnectionId}", Context.ConnectionId);
                 Context.Abort();
                 return;
             }
+
             userId = user.Id;
             userName = user.UserName!;
             cardNumberPath = user.CardNumberPath?.FullPath;
         }
 
         if (string.IsNullOrEmpty(deviceName)) deviceName = Context.ConnectionId;
-        _connectionManager.AddConnection(securityKey, Context.ConnectionId, deviceName, userName);
+        _connectionManager.AddConnection(key, Context.ConnectionId, deviceName, userName);
         _logger.LogInformation("用户: {UserName} 建立 Hub 连接, 连接ID: {ConnectionId}", userName, Context.ConnectionId);
 
         await base.OnConnectedAsync();
         if (!string.IsNullOrEmpty(cardNumberPath))
-        {
             _ = Task.Run(async () =>
             {
                 try
                 {
-                    await SyncUnexpiredCardNumberSafelyAsync(securityKey, userId, cardNumberPath);
+                    await SyncUnexpiredCardNumberSafelyAsync(key, userId, cardNumberPath);
                 }
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "后台同步卡号时发生捕获异常");
                 }
             });
-        }
     }
 
     public override Task OnDisconnectedAsync(Exception? ex)
@@ -80,7 +79,7 @@ public class ResourceSyncHub : Hub
         return base.OnDisconnectedAsync(ex);
     }
 
-    private async Task SyncUnexpiredCardNumberSafelyAsync(string securityKey, Guid userId, string cardNumberPath)
+    private async Task SyncUnexpiredCardNumberSafelyAsync(string connectionKey, Guid userId, string cardNumberPath)
     {
         try
         {
@@ -91,24 +90,24 @@ public class ResourceSyncHub : Hub
 
             var unexpiredCards = await context.CardNumbers
                 .Where(c => c.UserId == userId
-                && c.EndTime > utcNow)
+                            && c.EndTime > utcNow)
                 .OrderBy(c => c.CreatedOn)
                 .Select(c => c.Cdk)
                 .ToListAsync();
 
             if (!unexpiredCards.Any()) return;
 
-            var connectionIds = _connectionManager.GetConnection(securityKey).Select(c => c.ConnectionId).ToList();
+            var connectionIds = _connectionManager.GetConnection(connectionKey).Select(c => c.ConnectionId).ToList();
 
             if (!connectionIds.Any()) return;
 
             var request = new SendSyncUnexpiredCardsListRequest(cardNumberPath,
                 unexpiredCards);
 
-            await _hubContext.Clients.Clients(connectionIds).SendAsync(SignalRInteraction.SyncUnexpiredCardsList, request, CancellationToken.None);
+            await _hubContext.Clients.Clients(connectionIds).SendAsync(SignalRInteraction.SyncUnexpiredCardsList,
+                request, CancellationToken.None);
 
             _logger.LogInformation("向用户发送了 {Count} 条同步卡号通知.", unexpiredCards.Count);
-
         }
         catch (OperationCanceledException)
         {

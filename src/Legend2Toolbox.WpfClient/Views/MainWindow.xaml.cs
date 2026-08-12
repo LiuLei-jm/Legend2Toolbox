@@ -1,21 +1,22 @@
-﻿using System.Windows.Input;
-using Forms = System.Windows.Forms;
+﻿using System.ComponentModel;
+using System.Windows.Input;
 
 namespace Legend2Toolbox.WpfClient;
 
 /// <summary>
-/// Interaction logic for MainWindow.xaml
+///     Interaction logic for MainWindow.xaml
 /// </summary>
 public partial class MainWindow : Window
 {
-    private Forms.NotifyIcon _notifyIcon;
+    private readonly NotifyIcon _notifyIcon;
+
     public MainWindow(MainViewModel mainViewModel)
     {
         InitializeComponent();
         DataContext = mainViewModel;
-        _notifyIcon = new Forms.NotifyIcon
+        _notifyIcon = new NotifyIcon
         {
-            Icon = new System.Drawing.Icon("Resources/favicon.ico"),
+            Icon = new Icon("Resources/favicon.ico"),
             Visible = true,
             Text = "功能网关"
         };
@@ -27,7 +28,7 @@ public partial class MainWindow : Window
         };
     }
 
-    private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+    private void Window_Closing(object sender, CancelEventArgs e)
     {
         _notifyIcon.Dispose();
     }
@@ -37,7 +38,7 @@ public partial class MainWindow : Window
         if (WindowState == WindowState.Minimized) Hide();
     }
 
-    private void TitleBar_MouseLiftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    private void TitleBar_MouseLiftButtonDown(object sender, MouseButtonEventArgs e)
     {
         if (e.ChangedButton == MouseButton.Left) DragMove();
     }

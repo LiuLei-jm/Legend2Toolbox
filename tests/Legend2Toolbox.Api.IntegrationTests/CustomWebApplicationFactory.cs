@@ -1,7 +1,7 @@
-﻿
-namespace Legend2Toolbox.Api.IntegrationTests;
+﻿namespace Legend2Toolbox.Api.IntegrationTests;
 
-public class CustomWebApplicationFactory<TProgram> : WebApplicationFactory<TProgram>, IAsyncLifetime where TProgram : class
+public class CustomWebApplicationFactory<TProgram> : WebApplicationFactory<TProgram>, IAsyncLifetime
+    where TProgram : class
 {
     private readonly PostgreSqlContainer _dbContainer = new PostgreSqlBuilder("postgres:15.1")
         .WithPassword("Legend@2026!")
@@ -12,12 +12,18 @@ public class CustomWebApplicationFactory<TProgram> : WebApplicationFactory<TProg
         await _dbContainer.StartAsync();
     }
 
+
+    async Task IAsyncLifetime.DisposeAsync()
+    {
+        await _dbContainer.DisposeAsync();
+    }
+
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.ConfigureTestServices(async services =>
         {
-            var descriptor = services.SingleOrDefault(
-                d => d.ServiceType == typeof(DbContextOptions<ApplicationDbContext>));
+            var descriptor =
+                services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<ApplicationDbContext>));
             if (descriptor != null) services.Remove(descriptor);
 
             var dbConnectionDescriptor = services.SingleOrDefault(d => d.ServiceType == typeof(DbConnection));
@@ -33,11 +39,5 @@ public class CustomWebApplicationFactory<TProgram> : WebApplicationFactory<TProg
             var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
             db.Database.EnsureCreated();
         });
-    }
-
-
-    async Task IAsyncLifetime.DisposeAsync()
-    {
-        await _dbContainer.DisposeAsync();
     }
 }

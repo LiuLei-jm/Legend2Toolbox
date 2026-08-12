@@ -10,7 +10,7 @@ public class AssignRoleCommandValidator : AbstractValidator<AssignRoleCommand>
         var validRoles = string.Join(", ", Enum.GetNames<Roles>());
         RuleFor(x => x.RoleName).NotEmpty()
             .WithMessage("角色名不能为空")
-            .IsEnumName(typeof(Roles), caseSensitive: false)
+            .IsEnumName(typeof(Roles), false)
             .WithName($"无效的角色名。可选范围：[{validRoles}]");
     }
 }

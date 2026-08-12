@@ -1,4 +1,5 @@
 ﻿// 项目内部常用命名空间
+
 global using FluentValidation;
 global using Legend2Toolbox.Application.Behaviors;
 global using Legend2Toolbox.Application.Common.Interfaces;

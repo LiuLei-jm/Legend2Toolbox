@@ -1,12 +1,13 @@
 ﻿using Legend2Toolbox.Domain.Common;
-using System.Buffers;
-using System.Diagnostics;
-using System.Security.Cryptography.X509Certificates;
 
 namespace Legend2Toolbox.Domain.Entities;
 
 public class CardNumber : AuditableEntity
 {
+    private CardNumber()
+    {
+    }
+
     public string Owner { get; private set; } = string.Empty;
     public DateTimeOffset StartTime { get; private set; }
     public int DurationInDays { get; private set; }
@@ -22,8 +23,8 @@ public class CardNumber : AuditableEntity
 
     public bool IsExpired => DateTimeOffset.UtcNow > EndTime;
 
-    private CardNumber() { }
-    public static CardNumber Create(string customerName, int durationInDays, double faceValue, decimal amount, string cdk, Guid userId, string createdBy, string? notes = null)
+    public static CardNumber Create(string customerName, int durationInDays, double faceValue, decimal amount,
+        string cdk, Guid userId, string createdBy, string? notes = null)
     {
         var startTime = DateTimeOffset.UtcNow;
         return new CardNumber
@@ -43,7 +44,9 @@ public class CardNumber : AuditableEntity
             IsExpiredNotificationSent = false
         };
     }
-    public void Update(string owner, int durationInDays, double faceValue, decimal amount, DateTimeOffset startTime, string? notes, string modifiedBy)
+
+    public void Update(string owner, int durationInDays, double faceValue, decimal amount, DateTimeOffset startTime,
+        string? notes, string modifiedBy)
     {
         Owner = owner;
         DurationInDays = durationInDays;
@@ -76,6 +79,7 @@ public class CardNumber : AuditableEntity
         var now = DateTimeOffset.UtcNow;
         return StartTime <= now && EndTime > now;
     }
+
     public TimeSpan GetRemainingTime()
     {
         return IsExpired ? TimeSpan.Zero : EndTime - DateTimeOffset.UtcNow;

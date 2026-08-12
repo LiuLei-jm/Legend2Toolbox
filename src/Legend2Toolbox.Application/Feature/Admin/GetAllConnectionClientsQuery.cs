@@ -2,7 +2,9 @@
 
 public record GetAllConnectionClientsQuery : IRequest<Result<IEnumerable<ConnectionInfo>>>;
 
-public class GetAllConnectionClientsQueryHandler : IRequestHandler<GetAllConnectionClientsQuery, Result<IEnumerable<ConnectionInfo>>>
+public class
+    GetAllConnectionClientsQueryHandler : IRequestHandler<GetAllConnectionClientsQuery,
+    Result<IEnumerable<ConnectionInfo>>>
 {
     private readonly IConnectionManager _connectionManager;
 
@@ -11,7 +13,8 @@ public class GetAllConnectionClientsQueryHandler : IRequestHandler<GetAllConnect
         _connectionManager = connectionManager;
     }
 
-    public async Task<Result<IEnumerable<ConnectionInfo>>> Handle(GetAllConnectionClientsQuery request, CancellationToken cancellationToken)
+    public async Task<Result<IEnumerable<ConnectionInfo>>> Handle(GetAllConnectionClientsQuery request,
+        CancellationToken cancellationToken)
     {
         var allConnections = _connectionManager.GetAllConnections();
         return Result<IEnumerable<ConnectionInfo>>.Success(allConnections);

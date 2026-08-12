@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Legend2Toolbox.Application.UnitTests.Users.Commands;
+﻿namespace Legend2Toolbox.Application.UnitTests.Users.Commands;
 
 public class UpdateUserCommandHandlerTests
 {
-    private readonly IIdentityService _identityServiceMock;
     private readonly UpdateUserCommandHandler _handler;
+    private readonly IIdentityService _identityServiceMock;
+
     public UpdateUserCommandHandlerTests()
     {
         _identityServiceMock = Substitute.For<IIdentityService>();
@@ -33,7 +28,6 @@ public class UpdateUserCommandHandlerTests
     }
 
 
-
     [Fact]
     public async Task Handle_SHouldReturnFailure_WhenEmailOrUsernameAlradyExists()
     {
@@ -50,6 +44,4 @@ public class UpdateUserCommandHandlerTests
         result.IsFailure.Should().BeTrue();
         result.Errors.Should().Contain(expectedError);
     }
-
-
 }

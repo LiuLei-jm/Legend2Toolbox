@@ -9,4 +9,4 @@ public record CardNumberDto(
     decimal Amount,
     string Cdk,
     bool IsExpired
-    );
+);

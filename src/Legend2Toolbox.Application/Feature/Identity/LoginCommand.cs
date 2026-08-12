@@ -1,6 +1,6 @@
 ﻿namespace Legend2Toolbox.Application.Feature.Identity;
 
-public record LoginCommand(string Username, string Password) : IRequest<Result<ClaimsPrincipal>>;
+public record LoginCommand(string Username, string Password) : IRequest<Result<AuthResponse>>;
 
 public class LoginCommandValidator : AbstractValidator<LoginCommand>
 {
@@ -11,7 +11,7 @@ public class LoginCommandValidator : AbstractValidator<LoginCommand>
     }
 }
 
-public class LoginCommandHandler : IRequestHandler<LoginCommand, Result<ClaimsPrincipal>>
+public class LoginCommandHandler : IRequestHandler<LoginCommand, Result<AuthResponse>>
 {
     private readonly IIdentityService _identityService;
 
@@ -20,8 +20,8 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, Result<ClaimsPr
         _identityService = identityService;
     }
 
-    public async Task<Result<ClaimsPrincipal>> Handle(LoginCommand request, CancellationToken cancellationToken)
+    public async Task<Result<AuthResponse>> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
-        return await _identityService.AuthenticateUserAsync(request);
+        return await _identityService.LoginUserAsync(request);
     }
 }

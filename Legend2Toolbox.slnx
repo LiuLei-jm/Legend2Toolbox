@@ -1,18 +1,18 @@
 <Solution>
-  <Folder Name="/src/">
-    <Project Path="src/Legend2Toolbox.Api/Legend2Toolbox.Api.csproj" />
-    <Project Path="src/Legend2Toolbox.Application/Legend2Toolbox.Application.csproj" />
-    <Project Path="src/Legend2Toolbox.Domain/Legend2Toolbox.Domain.csproj" />
-    <Project Path="src/Legend2Toolbox.Infrastructure/Legend2Toolbox.Infrastructure.csproj" />
-    <Project Path="src/Legend2Toolbox.Shared/Legend2Toolbox.Shared.csproj" />
-    <Project Path="src/Legend2Toolbox.Web/legend2toolbox.web.esproj" DisplayName="Legend2toolbox.web">
-      <Build />
-      <Deploy />
-    </Project>
-    <Project Path="src/Legend2Toolbox.WpfClient/Legend2Toolbox.WpfClient.csproj" />
-  </Folder>
-  <Folder Name="/tests/">
-    <Project Path="tests/Legend2Toolbox.Api.IntegrationTests/Legend2Toolbox.Api.IntegrationTests.csproj" />
-    <Project Path="tests/Legend2Toolbox.Application.UnitTests/Legend2Toolbox.Application.UnitTests.csproj" />
-  </Folder>
+    <Folder Name="/src/">
+        <Project Path="src/Legend2Toolbox.Api/Legend2Toolbox.Api.csproj"/>
+        <Project Path="src/Legend2Toolbox.Application/Legend2Toolbox.Application.csproj"/>
+        <Project Path="src/Legend2Toolbox.Domain/Legend2Toolbox.Domain.csproj"/>
+        <Project Path="src/Legend2Toolbox.Infrastructure/Legend2Toolbox.Infrastructure.csproj"/>
+        <Project Path="src/Legend2Toolbox.Shared/Legend2Toolbox.Shared.csproj"/>
+        <Project Path="src/Legend2Toolbox.Web/legend2toolbox.web.esproj" DisplayName="Legend2toolbox.web">
+            <Build/>
+            <Deploy/>
+        </Project>
+        <Project Path="src/Legend2Toolbox.WpfClient/Legend2Toolbox.WpfClient.csproj"/>
+    </Folder>
+    <Folder Name="/tests/">
+        <Project Path="tests/Legend2Toolbox.Api.IntegrationTests/Legend2Toolbox.Api.IntegrationTests.csproj"/>
+        <Project Path="tests/Legend2Toolbox.Application.UnitTests/Legend2Toolbox.Application.UnitTests.csproj"/>
+    </Folder>
 </Solution>

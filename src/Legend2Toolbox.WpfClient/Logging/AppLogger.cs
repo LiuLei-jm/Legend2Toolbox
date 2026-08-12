@@ -1,5 +1,4 @@
-﻿
-namespace Legend2Toolbox.WpfClient.Logging;
+﻿namespace Legend2Toolbox.WpfClient.Logging;
 
 public class AppLogger<T> : IAppLogger<T>
 {
@@ -15,7 +14,7 @@ public class AppLogger<T> : IAppLogger<T>
     public void LogError(string message, Exception? ex = null)
     {
         _logger.LogError(ex, message);
-        _messenger.Send(new AppLogMessage(message, isError: true));
+        _messenger.Send(new AppLogMessage(message, true));
     }
 
     public void LogInfo(string message)

@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Legend2Toolbox.Application.UnitTests.Users.Commands;
+﻿namespace Legend2Toolbox.Application.UnitTests.Users.Commands;
 
 public class ForgotPassworCommandHandlerTests
 {
-    private readonly IIdentityService _identityServiceMock;
     private readonly ForgotPasswordCommandHandler _handler;
+    private readonly IIdentityService _identityServiceMock;
+
     public ForgotPassworCommandHandlerTests()
     {
         _identityServiceMock = Substitute.For<IIdentityService>();
@@ -31,6 +26,4 @@ public class ForgotPassworCommandHandlerTests
         result.IsSuccess.Should().BeTrue();
         result.Errors.Should().BeEmpty();
     }
-
-
 }

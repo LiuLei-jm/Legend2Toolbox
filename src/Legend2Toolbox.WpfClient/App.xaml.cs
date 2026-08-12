@@ -3,17 +3,16 @@
 namespace Legend2Toolbox.WpfClient;
 
 /// <summary>
-/// Interaction logic for App.xaml
+///     Interaction logic for App.xaml
 /// </summary>
 public partial class App : ApplicationContext
 {
-    public static IHost AppHost { get; private set; } = default!;
     public App()
     {
         Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Information()
             .WriteTo.File(
-                path: "logs/client-log-.txt",
+                "logs/client-log-.txt",
                 rollingInterval: RollingInterval.Day,
                 retainedFileCountLimit: 30
             )
@@ -38,6 +37,9 @@ public partial class App : ApplicationContext
             })
             .Build();
     }
+
+    public static IHost AppHost { get; private set; } = default!;
+
     protected override async void OnStartup(StartupEventArgs startupArgs)
     {
         base.OnStartup(startupArgs);
@@ -45,6 +47,7 @@ public partial class App : ApplicationContext
         var mainWindow = AppHost.Services.GetRequiredService<MainWindow>();
         mainWindow.Show();
     }
+
     protected override async void OnExit(ExitEventArgs exitArgs)
     {
         base.OnExit(exitArgs);
@@ -53,4 +56,3 @@ public partial class App : ApplicationContext
         Log.CloseAndFlush();
     }
 }
-

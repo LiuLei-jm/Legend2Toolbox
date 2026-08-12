@@ -1,14 +1,15 @@
-﻿using Legend2Toolbox.Domain.Common;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
+using Legend2Toolbox.Domain.Common;
 
 namespace Legend2Toolbox.Domain.Entities;
 
-public class SecurityKey : AuditableEntity
+public class ConnectionKey : AuditableEntity
 {
-    public string Key { get; private set; } = string.Empty;
-    public Guid UserId { get; set; }
-    private SecurityKey() { }
-    public SecurityKey(Guid userId, string? user)
+    private ConnectionKey()
+    {
+    }
+
+    public ConnectionKey(Guid userId, string? user)
     {
         Key = GenerateSecurityKey();
         CreatedOn = DateTimeOffset.UtcNow;
@@ -16,12 +17,15 @@ public class SecurityKey : AuditableEntity
         UserId = userId;
     }
 
-    public static SecurityKey Create(Guid userId, string? user)
+    public string Key { get; private set; } = string.Empty;
+    public Guid UserId { get; set; }
+
+    public static ConnectionKey Create(Guid userId, string? user)
     {
-        return new SecurityKey(
+        return new ConnectionKey(
             userId,
             user
-            );
+        );
     }
 
     public void RegenerateKey(string user)
@@ -38,6 +42,7 @@ public class SecurityKey : AuditableEntity
         {
             rng.GetBytes(bytes);
         }
+
         return Convert.ToBase64String(bytes)
             .Replace('+', '-')
             .Replace('/', '_')

@@ -1,12 +1,12 @@
-<script setup lang="ts">
-import { RouterView } from 'vue-router'
-import { useAuthStore } from '@/stores/auth'
-import { onMounted } from 'vue'
+<script lang="ts" setup>
+import {RouterView} from 'vue-router'
+import {useAuthStore} from '@/stores/auth'
+import {onMounted} from 'vue'
 
 const authStore = useAuthStore()
 
 onMounted(() => {
-  if (authStore.accessToken && !authStore.user) {
+  if (authStore.accessToken && !authStore.userInfo) {
     authStore.getUserInfo().catch(() => {
       authStore.logout()
     })
@@ -16,7 +16,7 @@ onMounted(() => {
 
 <template>
   <div class="app-container">
-    <RouterView />
+    <RouterView/>
   </div>
 </template>
 

@@ -7,6 +7,7 @@ public record CreateCardNumberRequest(
     decimal Amount,
     DateTimeOffset StartTime,
     string? Notes);
+
 public record UpdateCardNumberRequest(
     string Owner,
     int DurationInDays,
@@ -14,8 +15,8 @@ public record UpdateCardNumberRequest(
     decimal Amount,
     DateTimeOffset StartTime,
     string? Notes);
+
 public record UpdateCardNumberPathRequest(
     string BasePath,
     string FileName,
     bool AllowCustomPath);
-
