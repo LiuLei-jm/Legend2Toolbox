@@ -1,4 +1,7 @@
 ﻿// 项目内常用命名空间
+global using MailKit.Security;
+global using MimeKit;
+global using MimeKit.Text;
 global using System.Text;
 global using System.IdentityModel.Tokens.Jwt;
 global using System.Security.Cryptography;

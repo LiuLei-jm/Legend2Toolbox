@@ -8,20 +8,14 @@ public class ConnectionManager : IConnectionManager
     private readonly ConcurrentDictionary<string, ConcurrentDictionary<string, ConnectionInfo>> _connections = new();
 
 
-    public void AddConnection(string connectionKey, string connectionId, string deviceName, string userName)
+    public void AddConnection(string connectionKey, ConnectionInfo connectionInfo)
     {
-        _connectionIdToKey.TryAdd(connectionId, connectionKey);
+        _connectionIdToKey.TryAdd(connectionInfo.ConnectionId, connectionKey);
 
         var userConnections =
             _connections.GetOrAdd(connectionKey, _ => new ConcurrentDictionary<string, ConnectionInfo>());
 
-        userConnections.TryAdd(connectionId, new ConnectionInfo
-        {
-            ConnectionId = connectionId,
-            UserName = userName,
-            DeviceName = deviceName,
-            ConnectionAt = DateTimeOffset.UtcNow
-        });
+        userConnections.TryAdd(connectionInfo.ConnectionId, connectionInfo);
     }
 
     public IEnumerable<ConnectionInfo> GetAllConnections()

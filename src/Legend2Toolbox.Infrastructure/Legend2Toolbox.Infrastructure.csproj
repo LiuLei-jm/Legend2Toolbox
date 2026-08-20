@@ -2,6 +2,7 @@
 
     <ItemGroup>
         <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1"/>
+        <PackageReference Include="MailKit" Version="4.17.0" />
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.28"/>
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.28"/>
         <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.28"/>

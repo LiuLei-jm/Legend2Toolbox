@@ -5,7 +5,7 @@ export const handleApiError = (error: unknown, fallbackMessage: string = '操作
 
   const errorData = apiError?.body ?? apiError?.response?.data;
   
-  console.log('handleApiError errorData:', errorData)
+  // console.log('handleApiError errorData:', errorData)
   
   if(!errorData){
     ElMessage.error(fallbackMessage)

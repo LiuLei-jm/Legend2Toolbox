@@ -17,8 +17,7 @@ public partial class LogViewModel : ObservableRecipient, IRecipient<AppLogMessag
 
     public void Receive(AppLogMessage message)
     {
-        var prefix = message.IsError ? "[ERROR]" : "[INFO]";
-        var formatted = $"[{DateTimeOffset.Now:yyyy-MM-dd HH:mm:ss.fff}] {prefix} {message.Message}";
+        var formatted = $"[{DateTimeOffset.Now:yyyy-MM-dd HH:mm:ss.fff}] {message.Message}";
         _dispatcher.InvokeAsync(() =>
         {
             Logs.Add(formatted);

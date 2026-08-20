@@ -112,7 +112,7 @@ public class ExpiredCardNumberProcessor : BackgroundService
                     .SetProperty(x => x.LastCheckedForConnection, utcNow)
                     .SetProperty(x => x.LastModifiedOn, utcNow)
                     .SetProperty(x => x.IsExpiredNotificationSent, true), stoppingToken);
-            _logger.LogInformation("向 {UserId} 成功推送了 {Count} 张过期卡号.", userId, cards.Count);
+            _logger.LogInformation("向用户ID {UserId} 成功推送了 {Count} 张过期卡号.", userId, cards.Count);
         }
     }
 }

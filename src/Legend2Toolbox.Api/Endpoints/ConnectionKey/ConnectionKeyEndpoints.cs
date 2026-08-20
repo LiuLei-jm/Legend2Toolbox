@@ -4,8 +4,8 @@ public static class ConnectionKeyEndpoints
 {
     public static IEndpointRouteBuilder MapConnectionKeyEndpoints(this IEndpointRouteBuilder routes)
     {
-        var group = routes.MapGroup("/api/security-key")
-            .WithTags("Security key").RequireAuthorization();
+        var group = routes.MapGroup("/api/connection-key")
+            .WithTags("Connection key").RequireAuthorization();
         group.MapPost("/", async ([FromServices] ISender sender) =>
         {
             var command = new GenerateKeyCommand();

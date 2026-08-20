@@ -47,6 +47,7 @@ import {useRouter} from 'vue-router'
 import {ElMessage} from 'element-plus'
 import {ArrowDown, Expand, Fold, SwitchButton, User, UserFilled} from '@element-plus/icons-vue'
 import {useAuthStore} from '@/stores/auth'
+import { handleApiError} from '@/utils/errorHandler'
 
 const authStore = useAuthStore()
 const router = useRouter()
@@ -76,7 +77,7 @@ const handleCommand = async (command: string) => {
       authStore.logout()
       router.push({name: 'Login'})
     } catch (error) {
-      console.error('退出登录失败:', error)
+      handleApiError(error,'退出登录失败:')
       // 兜底强制跳转
       router.push({name: 'Login'})
     }

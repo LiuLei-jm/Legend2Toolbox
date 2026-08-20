@@ -58,6 +58,7 @@ import {ElMessage} from 'element-plus'
 import {useAuthStore} from '@/stores/auth'
 import {ArrowRight, Lock, Platform, User} from '@element-plus/icons-vue'
 import type {LoginRequest} from '@/api/generated/models/LoginRequest'
+import {handleApiError} from '@/utils/errorHandler'
 
 const router = useRouter();
 const route = useRoute();
@@ -82,7 +83,6 @@ const handleLogin = async () => {
     const valid = await loginFormRef.value.validate();
     if (!valid) return;
     isLoading.value = true;
-
     const requestData: LoginRequest = {
       username: formData.username,
       password: formData.password,
@@ -94,14 +94,14 @@ const handleLogin = async () => {
       router.push(redirectPath);
     }
   } catch (error) {
-    console.error("登录失败:", error)
+    handleApiError(error,"登录失败:")
   } finally {
     isLoading.value = false;
   }
 }
 
 const handleForgotPassword = async () => {
-  ElMessage.info("请联系管理员重置密码");
+  router.push({name: 'ForgotPassword'})
 }
 const goToRegister = async () => {
   router.push({name: 'Register'});

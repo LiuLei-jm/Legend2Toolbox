@@ -25,20 +25,40 @@ public static class CardNumberEndpoints
             var result = await sender.Send(command);
             return result.ToMinimalApiResult();
         });
+        group.MapPost("/reissue", async ([FromBody] ReissueCardRequest request, [FromServices] ISender sender) =>
+        {
+            var command = request.Adapt<ReissueCardCommand>();
+            var result = await sender.Send(command);
+            return result.ToMinimalApiResult();
+        });
+        group.MapPost("/cleanup", async ([FromBody] CleanUpCardRequest request, [FromServices] ISender sender) =>
+        {
+            var command = request.Adapt<CleanUpCardCommand>();
+            var result = await sender.Send(command);
+            return result.ToMinimalApiResult();
+        });
 
         group.MapGet("/cards", async ([FromQuery] int? pageNumber,
             [FromQuery] int? pageSize,
+            [FromQuery] string? owner,
+            [FromQuery] string? cdk,
+            [FromQuery] string? startTime,
+            [FromQuery] string? endTime,
             [FromServices] ISender sender) =>
         {
-            var query = new GetCardNumbersQuery(pageNumber ?? 1, pageSize ?? 10);
+            var query = new GetCardNumbersQuery(owner,cdk,startTime,endTime,pageNumber ?? 1, pageSize ?? 10);
             var result = await sender.Send(query);
             return result.ToMinimalApiResult();
         });
         group.MapGet("/unexpiredcards", async ([FromQuery] int? pageNumber,
             [FromQuery] int? pageSize,
+            [FromQuery] string? owner,
+            [FromQuery] string? cdk,
+            [FromQuery] string? startTime,
+            [FromQuery] string? endTime,
             [FromServices] ISender sender) =>
         {
-            var query = new GetUnexpiredCardNumbersQuery(pageNumber ?? 1, pageSize ?? 10);
+            var query = new GetUnexpiredCardNumbersQuery(owner,cdk,startTime,endTime,pageNumber ?? 1, pageSize ?? 10);
             var result = await sender.Send(query);
             return result.ToMinimalApiResult();
         });

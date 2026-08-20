@@ -6,6 +6,7 @@ public record CardNumberDto(
     int DurationInDays,
     DateTimeOffset StartTime,
     DateTimeOffset EndTime,
+    double FaceValue,
     decimal Amount,
     string Cdk,
     bool IsExpired

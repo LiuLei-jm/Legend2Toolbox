@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Legend2Toolbox.Infrastructure.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -147,6 +148,9 @@ public static class DependencyInjection
         services.AddSignalR();
         services.AddSingleton<IConnectionManager, ConnectionManager>();
         services.AddHostedService<ExpiredCardNumberProcessor>();
+        services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
+        services.AddSingleton<EmailSettings>(sp =>
+        sp.GetRequiredService<IOptions<EmailSettings>>().Value);
         return services;
     }
 }

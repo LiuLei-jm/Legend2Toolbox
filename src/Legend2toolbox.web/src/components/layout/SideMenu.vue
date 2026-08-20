@@ -2,55 +2,60 @@
   <el-aside :width="isCollapse ? '64px' : '220px'" class="side-menu-container">
     <div class="logo-area">
       <el-icon class="logo-icon">
-        <Box/>
+        <Box />
       </el-icon>
-      <h1 v-show="!isCollapse" class="logo-title">会员管理系统</h1>
+      <h1 v-show="!isCollapse" class="logo-title">传奇工具集合</h1>
     </div>
 
-    <el-menu
-      :collapse="isCollapse"
-      :collapse-transition="false"
-      :default-active="$route.path"
-      :router="true"
-      active-text-color="#409EFF"
-      background-color="#304156"
-      class="side-el-menu"
-      text-color="#bfcbd9">
+    <el-menu :collapse="isCollapse" :collapse-transition="false" :default-active="$route.path" :router="true"
+      active-text-color="#409EFF" background-color="#304156" class="side-el-menu" text-color="#bfcbd9"
+      >
 
-      <el-menu-item index="/home/dashboard">
+      <el-menu-item index="/card-number">
         <el-icon>
-          <DataBoard/>
+          <Ticket />
         </el-icon>
-        <template #title>系统概览</template>
+        <template #title>卡号管理</template>
       </el-menu-item>
 
-      <el-sub-menu index="member-group">
+      <el-menu-item index="/connection-key">
+        <el-icon>
+          <Key />
+        </el-icon>
+        <template #title>通讯密钥</template>
+      </el-menu-item>
+
+      <el-sub-menu v-if="hasSuperAdminRole" :default-active="$route.path" router>
         <template #title>
-          <el-icon>
-            <User/>
-          </el-icon>
-          <span>会员中心</span>
+          <el-icon><Setting /></el-icon>
+          <span>控制台</span>
         </template>
-        <el-menu-item index="/home/members">会员列表</el-menu-item>
-        <el-menu-item index="/home/member-levels">等级管理</el-menu-item>
+        
+        <el-menu-item  index="/admin/users">
+          <el-icon><User /></el-icon>
+          <span>用户管理</span>
+        </el-menu-item>
       </el-sub-menu>
 
-      <el-menu-item index="/home/settings">
-        <el-icon>
-          <Setting/>
-        </el-icon>
-        <template #title>系统设置</template>
-      </el-menu-item>
     </el-menu>
   </el-aside>
 </template>
 
 <script lang='ts' setup>
-import {Box, DataBoard, Setting, User} from '@element-plus/icons-vue'
+import { Box, Key, Ticket,  User ,Setting} from '@element-plus/icons-vue'
+import {useAuthStore} from '@/stores/auth'
+import {computed} from 'vue'
+
+const authStore = useAuthStore()
 
 defineProps<{
   isCollapse: boolean
 }>()
+
+const hasSuperAdminRole = computed(() =>{
+  return authStore.userInfo?.roles.includes('SuperAdmin')
+});
+
 </script>
 
 <style scoped>

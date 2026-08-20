@@ -92,7 +92,7 @@ public class ClientFileOperationService : IClientFileOperationService
             var originalContentLines = await File.ReadAllLinesAsync(command.FilePath);
             if (originalContentLines.Length == 0) return;
 
-            var targetContent = command.ContentToRemove.Trim();
+            var targetContent = command.Content.Trim();
             if (!originalContentLines.Any(line => line.Trim() == targetContent))
                 return;
 
@@ -142,7 +142,7 @@ public class ClientFileOperationService : IClientFileOperationService
                 var lineTrimmed = line.Trim();
                 if (targetSet.Contains(lineTrimmed))
                 {
-                    _logger.LogInfo($"删除卡号: {lineTrimmed}");
+                    _logger.LogInfo($"删除卡号：{lineTrimmed}");
                     isFileChanged = true;
                 }
                 else

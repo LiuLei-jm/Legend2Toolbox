@@ -415,6 +415,46 @@
         }
       }
     },
+    "/api/card/reissue": {
+      "post": {
+        "tags": ["Card Number"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReissueCardRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/card/cleanup": {
+      "post": {
+        "tags": ["Card Number"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CleanUpCardRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/card/cards": {
       "get": {
         "tags": ["Card Number"],
@@ -433,6 +473,34 @@
             "schema": {
               "type": "integer",
               "format": "int32"
+            }
+          },
+          {
+            "name": "owner",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cdk",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "startTime",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "endTime",
+            "in": "query",
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -461,6 +529,34 @@
             "schema": {
               "type": "integer",
               "format": "int32"
+            }
+          },
+          {
+            "name": "owner",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cdk",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "startTime",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "endTime",
+            "in": "query",
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -501,9 +597,9 @@
         }
       }
     },
-    "/api/security-key": {
+    "/api/connection-key": {
       "post": {
-        "tags": ["Security key"],
+        "tags": ["Connection key"],
         "responses": {
           "200": {
             "description": "OK"
@@ -511,7 +607,7 @@
         }
       },
       "get": {
-        "tags": ["Security key"],
+        "tags": ["Connection key"],
         "responses": {
           "200": {
             "description": "OK"
@@ -519,9 +615,9 @@
         }
       }
     },
-    "/api/security-key/clients": {
+    "/api/connection-key/clients": {
       "get": {
-        "tags": ["Security key"],
+        "tags": ["Connection key"],
         "responses": {
           "200": {
             "description": "OK"
@@ -556,6 +652,20 @@
         },
         "additionalProperties": false
       },
+      "CleanUpCardRequest": {
+        "type": "object",
+        "properties": {
+          "cardId": {
+            "type": "string",
+            "nullable": true
+          },
+          "cdk": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "CreateCardNumberRequest": {
         "type": "object",
         "properties": {
@@ -574,10 +684,6 @@
           "amount": {
             "type": "number",
             "format": "double"
-          },
-          "startTime": {
-            "type": "string",
-            "format": "date-time"
           },
           "notes": {
             "type": "string",
@@ -646,6 +752,20 @@
             "nullable": true
           },
           "password": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ReissueCardRequest": {
+        "type": "object",
+        "properties": {
+          "cardId": {
+            "type": "string",
+            "nullable": true
+          },
+          "cdk": {
             "type": "string",
             "nullable": true
           }

@@ -5,35 +5,35 @@
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
-export class SecurityKeyService {
+export class ConnectionKeyService {
     /**
      * @returns any OK
      * @throws ApiError
      */
-    public static postApiSecurityKey(): CancelablePromise<any> {
+    public static postApiConnectionKey(): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/security-key',
+            url: '/api/connection-key',
         });
     }
     /**
      * @returns any OK
      * @throws ApiError
      */
-    public static getApiSecurityKey(): CancelablePromise<any> {
+    public static getApiConnectionKey(): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/security-key',
+            url: '/api/connection-key',
         });
     }
     /**
      * @returns any OK
      * @throws ApiError
      */
-    public static getApiSecurityKeyClients(): CancelablePromise<any> {
+    public static getApiConnectionKeyClients(): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/security-key/clients',
+            url: '/api/connection-key/clients',
         });
     }
 }

@@ -18,7 +18,7 @@ public static class DependencyInjection
         services.AddScoped<IIdentityService, IdentityService>();
         services.AddScoped<ITokenService,TokenService>();
         services.AddScoped<ICurrentUserService, CurrentUserService>();
-        services.AddTransient<IEmailSender, EmailSender>();
+        services.AddTransient<IEmailSender, SmtpEmailSender>();
         return services;
     }
 }

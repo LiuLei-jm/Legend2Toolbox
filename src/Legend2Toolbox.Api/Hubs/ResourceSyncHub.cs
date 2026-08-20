@@ -1,4 +1,6 @@
-﻿namespace Legend2Toolbox.Api.Hubs;
+﻿using ConnectionInfo = Legend2Toolbox.Domain.Models.ConnectionInfo;
+
+namespace Legend2Toolbox.Api.Hubs;
 
 public class ResourceSyncHub : Hub
 {
@@ -18,14 +20,35 @@ public class ResourceSyncHub : Hub
 
     public override async Task OnConnectedAsync()
     {
-        var key = Context.GetHttpContext()?.Request.Query["Key"].ToString();
-        var deviceName = Context.GetHttpContext()?.Request.Query["DeviceName"].ToString();
+        var httpContext = Context.GetHttpContext();
+        var key = httpContext?.Request.Query["Key"].ToString();
+        var deviceName = httpContext?.Request.Query["DeviceName"].ToString();
+
+        var ipAddress = string.Empty;
+        if(httpContext != null)
+        {
+            if(httpContext.Request.Headers.TryGetValue("X-Forwarded-For", out var forwardedHeader))
+            {
+                ipAddress = forwardedHeader.FirstOrDefault()?.Split(',')[0].Trim();
+            }
+            if (string.IsNullOrEmpty(ipAddress))
+            {
+                var remoteIp = httpContext.Connection.RemoteIpAddress;
+                if(remoteIp != null)
+                {
+                    if (remoteIp.IsIPv4MappedToIPv6)
+                    {
+                        remoteIp = remoteIp.MapToIPv4();
+                    }
+                    ipAddress = remoteIp.ToString();
+                }
+            }
+        }
 
         if (string.IsNullOrEmpty(key))
         {
             _logger.LogWarning("客户端未使用 API 密钥连接，连接已终止。连接ID : {ConnectionId}", Context.ConnectionId);
-            Context.Abort();
-            return;
+            throw new HubException("MissingConnectionKey");
         }
 
         Guid userId;
@@ -41,11 +64,11 @@ public class ResourceSyncHub : Hub
                 .Include(u => u.CardNumberPath)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(u => u.ConnectionKey!.Key == key);
+
             if (user is null)
             {
                 _logger.LogWarning("没有此用户，连接已终止。连接ID: {ConnectionId}", Context.ConnectionId);
-                Context.Abort();
-                return;
+                throw new HubException("InvalidConnectionKey");
             }
 
             userId = user.Id;
@@ -54,7 +77,15 @@ public class ResourceSyncHub : Hub
         }
 
         if (string.IsNullOrEmpty(deviceName)) deviceName = Context.ConnectionId;
-        _connectionManager.AddConnection(key, Context.ConnectionId, deviceName, userName);
+        var connectionInfo = new ConnectionInfo
+        {
+            ConnectionId = Context.ConnectionId,
+            UserName = userName,
+            IpAddress = ipAddress,
+            DeviceName = deviceName,
+            ConnectionAt = DateTimeOffset.UtcNow
+        };
+        _connectionManager.AddConnection(key, connectionInfo);
         _logger.LogInformation("用户: {UserName} 建立 Hub 连接, 连接ID: {ConnectionId}", userName, Context.ConnectionId);
 
         await base.OnConnectedAsync();

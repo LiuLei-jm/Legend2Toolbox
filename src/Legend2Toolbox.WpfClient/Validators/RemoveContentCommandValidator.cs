@@ -7,7 +7,7 @@ public class RemoveContentCommandValidator : AbstractValidator<RemoveContentComm
         RuleFor(x => x.FilePath)
             .NotEmpty().WithMessage("文件路径不能为空.")
             .Must(PathHelper.IsValidFilePath).WithMessage("无效的文件路径格式.");
-        RuleFor(x => x.ContentToRemove)
+        RuleFor(x => x.Content)
             .NotEmpty().WithMessage("删除内容不能为空.");
     }
 }

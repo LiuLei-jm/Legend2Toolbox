@@ -88,7 +88,7 @@ public class IdentityService : IIdentityService
                        $"<p>如果您并未发起过此申请，请忽略本邮件。</p>" +
                        $"<p>{token}</p>";
 
-        await _emailSender.SendEmailAsync(user.Email!, "【Legend工具箱】账户密码重置申请", mailBody);
+        await _emailSender.SendEmailAsync(user.Email!, "【Legend2Toolbox】账户密码重置申请", mailBody);
         return Result.Success();
     }
 

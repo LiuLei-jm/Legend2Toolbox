@@ -11,6 +11,8 @@ public class SignalRClientService : ISignalRClientService, IAsyncDisposable, IDi
     private HubConnection? _hubConnection;
     private bool _isDisposed;
 
+    public event Action<string>? OnConnectionRejected;
+
     public SignalRClientService(IClientFileOperationService fileService, IAppLogger<SignalRClientService> logger)
     {
         _fileService = fileService;
@@ -95,7 +97,7 @@ public class SignalRClientService : ISignalRClientService, IAsyncDisposable, IDi
 
     private async Task ConnectInLoopAsync(ConnectionConfig config, CancellationToken token)
     {
-        var retryDelayMs = 30000;
+        const int retryDelayMs = 30_000;
         while (!token.IsCancellationRequested)
         {
             await StopInternalAsync().ConfigureAwait(false);
@@ -105,21 +107,31 @@ public class SignalRClientService : ISignalRClientService, IAsyncDisposable, IDi
             {
                 //string urlWithKey = $"{config.ServerUrl}/filePushHub?apiKey={Uri.EscapeDataString(config.ApiKey)}&deviceName={config.DeviceName}";
                 var urlWithKey =
-                    $"{config.ServerUrl}/sync?Key={Uri.EscapeDataString(config.ApiKey)}&deviceName={config.DeviceName}";
+                    $"{config.ServerUrl}/sync?" +
+                    $"key={Uri.EscapeDataString(config.ApiKey)}" +
+                    $"&deviceName={Uri.EscapeDataString(config.DeviceName)}";
+
                 _hubConnection = new HubConnectionBuilder()
                     .WithUrl(urlWithKey)
                     .WithAutomaticReconnect(new[]
                     {
-                        TimeSpan.FromSeconds(0), TimeSpan.FromSeconds(2), TimeSpan.FromSeconds(10),
+                        TimeSpan.Zero, TimeSpan.FromSeconds(2), TimeSpan.FromSeconds(10),
                         TimeSpan.FromSeconds(30)
                     })
                     .Build();
 
                 _hubConnection.Closed += error =>
                 {
-                    if (!token.IsCancellationRequested)
-                        _logger.LogDebug($"与服务器连接断开: {error?.Message}");
-                    connectionTcs.TrySetResult(null);
+                    if (error != null && (error.Message.Contains("InvalidConnectionKey") || error.Message.Contains("MissingConnectionKey")))
+                    {
+                        connectionTcs.TrySetException(error);
+                    }
+                    else
+                    {
+                        if (!token.IsCancellationRequested)
+                            _logger.LogDebug($"与服务器连接断开: {error?.Message}");
+                        connectionTcs.TrySetResult(null);
+                    }
                     return Task.CompletedTask;
                 };
 
@@ -139,13 +151,19 @@ public class SignalRClientService : ISignalRClientService, IAsyncDisposable, IDi
 
                 _logger.LogDebug("正在尝试连接服务器...");
                 await _hubConnection.StartAsync(token).ConfigureAwait(false);
-                _logger.LogInfo("成功连接服务器！等待指令...");
+                _logger.LogInfo("SignalR 传输连接已建立，等待服务器确认身份...");
 
                 await connectionTcs.Task.ConfigureAwait(false);
             }
             catch (OperationCanceledException)
             {
                 _logger.LogInfo("连接过程已取消...");
+                break;
+            }
+            catch (Exception ex) when (ex.Message.Contains("InvalidConnectionKey") || ex.Message.Contains("MissingConnectionKey"))
+            {
+                _logger.LogError("服务器拒绝了连接请求，可能是 API Key 无效或缺失。请检查配置。", ex);
+                OnConnectionRejected?.Invoke("连接密钥无效或缺失，请重新配置密钥。");
                 break;
             }
             catch (Exception ex)

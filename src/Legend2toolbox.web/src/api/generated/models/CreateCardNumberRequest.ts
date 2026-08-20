@@ -7,7 +7,6 @@ export type CreateCardNumberRequest = {
     durationInDays?: number;
     faceValue?: number;
     amount?: number;
-    startTime?: string;
     notes?: string | null;
 };
 

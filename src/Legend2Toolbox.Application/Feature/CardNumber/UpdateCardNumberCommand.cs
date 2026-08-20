@@ -46,12 +46,14 @@ public class UpdateCardNumberCommandHandler : IRequestHandler<UpdateCardNumberCo
         if (!isAdmin && !isOwner)
             return Result.Failure(ErrorMessages.Auth.NoPermissionToOperate);
 
+        var utcTime = request.StartTime.ToUniversalTime();
+
         card.Update(
             request.Owner,
             request.DurationInDays,
             request.FaceValue,
             request.Amount,
-            request.StartTime,
+            utcTime,
             request.Notes,
             _currentUserService.UserName ?? "System");
 

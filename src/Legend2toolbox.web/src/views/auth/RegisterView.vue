@@ -68,6 +68,7 @@ import {ElMessage} from "element-plus";
 import type {RuleItem} from 'async-validator'
 import {useAuthStore} from "@/stores/auth"
 import {useRouter} from 'vue-router'
+import { handleApiError } from "@/utils/errorHandler";
 
 import {ArrowRight, Key, Lock, Message, Platform, User} from "@element-plus/icons-vue";
 
@@ -131,7 +132,7 @@ const handleRegister = async () => {
       goToLogin();
     }
   } catch (error) {
-    console.error("注册过程发生错误：", error);
+    handleApiError(error,"注册过程发生错误：");
   } finally {
     isLoading.value = false;
   }

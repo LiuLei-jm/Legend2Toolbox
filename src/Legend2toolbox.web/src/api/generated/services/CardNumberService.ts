@@ -2,7 +2,9 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { CleanUpCardRequest } from '../models/CleanUpCardRequest';
 import type { CreateCardNumberRequest } from '../models/CreateCardNumberRequest';
+import type { ReissueCardRequest } from '../models/ReissueCardRequest';
 import type { UpdateCardNumberPathRequest } from '../models/UpdateCardNumberPathRequest';
 import type { UpdateCardNumberRequest } from '../models/UpdateCardNumberRequest';
 import type { CancelablePromise } from '../core/CancelablePromise';
@@ -61,14 +63,52 @@ export class CardNumberService {
         });
     }
     /**
+     * @param requestBody
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static postApiCardReissue(
+        requestBody: ReissueCardRequest,
+    ): CancelablePromise<any> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/card/reissue',
+            body: requestBody,
+            mediaType: 'application/json',
+        });
+    }
+    /**
+     * @param requestBody
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static postApiCardCleanup(
+        requestBody: CleanUpCardRequest,
+    ): CancelablePromise<any> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/card/cleanup',
+            body: requestBody,
+            mediaType: 'application/json',
+        });
+    }
+    /**
      * @param pageNumber
      * @param pageSize
+     * @param owner
+     * @param cdk
+     * @param startTime
+     * @param endTime
      * @returns any OK
      * @throws ApiError
      */
     public static getApiCardCards(
         pageNumber?: number,
         pageSize?: number,
+        owner?: string,
+        cdk?: string,
+        startTime?: string,
+        endTime?: string,
     ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'GET',
@@ -76,18 +116,30 @@ export class CardNumberService {
             query: {
                 'pageNumber': pageNumber,
                 'pageSize': pageSize,
+                'owner': owner,
+                'cdk': cdk,
+                'startTime': startTime,
+                'endTime': endTime,
             },
         });
     }
     /**
      * @param pageNumber
      * @param pageSize
+     * @param owner
+     * @param cdk
+     * @param startTime
+     * @param endTime
      * @returns any OK
      * @throws ApiError
      */
     public static getApiCardUnexpiredcards(
         pageNumber?: number,
         pageSize?: number,
+        owner?: string,
+        cdk?: string,
+        startTime?: string,
+        endTime?: string,
     ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'GET',
@@ -95,6 +147,10 @@ export class CardNumberService {
             query: {
                 'pageNumber': pageNumber,
                 'pageSize': pageSize,
+                'owner': owner,
+                'cdk': cdk,
+                'startTime': startTime,
+                'endTime': endTime,
             },
         });
     }

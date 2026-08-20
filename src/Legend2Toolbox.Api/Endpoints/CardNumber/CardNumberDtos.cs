@@ -5,7 +5,6 @@ public record CreateCardNumberRequest(
     int DurationInDays,
     double FaceValue,
     decimal Amount,
-    DateTimeOffset StartTime,
     string? Notes);
 
 public record UpdateCardNumberRequest(
@@ -20,3 +19,11 @@ public record UpdateCardNumberPathRequest(
     string BasePath,
     string FileName,
     bool AllowCustomPath);
+
+public record ReissueCardRequest(
+    string CardId,
+    string Cdk);
+
+public record CleanUpCardRequest(
+    string CardId,
+    string Cdk);

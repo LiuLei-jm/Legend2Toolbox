@@ -4,4 +4,5 @@ public interface ISignalRClientService
 {
     Task StartAsync(ConnectionConfig config, CancellationToken token);
     Task StopAsync();
+    public event Action<string>? OnConnectionRejected;
 }

@@ -26,7 +26,7 @@ interface AuthState {
 export const useAuthStore = defineStore("auth", {
   state: (): AuthState => ({
     accessToken: localStorage.getItem('access_token') || null,
-    refreshToken: localStorage.getItem('refrush_token') || null,
+    refreshToken: localStorage.getItem('refresh_token') || null,
     expiresAt: localStorage.getItem('expires_at') || null,
     userInfo: JSON.parse(localStorage.getItem('user') || 'null'),
   }),
@@ -40,11 +40,21 @@ export const useAuthStore = defineStore("auth", {
 
       if (!this.expiresAt) return;
 
-      const expiresTimeMs = new Date(this.expiresAt).getTime();
+      const formattedDateStr = this.expiresAt.includes('Z') || this.expiresAt.includes('+')
+      ? this.expiresAt
+      : this.expiresAt.replace(' ', 'T') + 'Z';
+      const expiresTimeMs = new Date(formattedDateStr).getTime();
       const now = Date.now();
+      
+      if(isNaN(expiresTimeMs)){
+        console.error('expiresAt 时间格式无法解析：', this.expiresAt)
+        return;
+      }
 
       const bufferTime = 60 * 1000;
       const timeUntilRefresh = expiresTimeMs - now - bufferTime;
+      
+      console.log(`[Token Timer] 距离下一次自动刷新还剩：${Math.round(timeUntilRefresh / 1000)} 秒`)
 
       if (timeUntilRefresh <= 0) {
         this.refreshTokenAction();
@@ -168,7 +178,7 @@ export const useAuthStore = defineStore("auth", {
         if (this.refreshToken)
           localStorage.setItem('refresh_token', this.refreshToken);
         if (this.expiresAt)
-          localStorage.setItem('refresh_token', this.expiresAt);
+          localStorage.setItem('expires_at', this.expiresAt);
 
         console.log("静默刷新 Token 成功!")
         this.startAutoRefresh();
