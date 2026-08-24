@@ -81,7 +81,7 @@ public class ResourceSyncHub : Hub
         {
             ConnectionId = Context.ConnectionId,
             UserName = userName,
-            IpAddress = ipAddress,
+            IpAddress = ipAddress ?? string.Empty,
             DeviceName = deviceName,
             ConnectionAt = DateTimeOffset.UtcNow
         };

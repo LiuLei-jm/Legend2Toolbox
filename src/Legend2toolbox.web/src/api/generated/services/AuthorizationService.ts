@@ -14,6 +14,16 @@ import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 export class AuthorizationService {
     /**
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static getApiAuthRoles(): CancelablePromise<any> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/auth/roles',
+        });
+    }
+    /**
      * @param requestBody
      * @returns any OK
      * @throws ApiError

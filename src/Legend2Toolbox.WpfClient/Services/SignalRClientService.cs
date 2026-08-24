@@ -106,10 +106,17 @@ public class SignalRClientService : ISignalRClientService, IAsyncDisposable, IDi
             try
             {
                 //string urlWithKey = $"{config.ServerUrl}/filePushHub?apiKey={Uri.EscapeDataString(config.ApiKey)}&deviceName={config.DeviceName}";
+
                 var urlWithKey =
                     $"{config.ServerUrl}/sync?" +
                     $"key={Uri.EscapeDataString(config.ApiKey)}" +
                     $"&deviceName={Uri.EscapeDataString(config.DeviceName)}";
+
+                //var serverUrl = "https://localhost:7113";
+                //var urlWithKey =
+                //    $"{serverUrl}/sync?" +
+                //    $"key={Uri.EscapeDataString(config.ApiKey)}" +
+                //    $"&deviceName={Uri.EscapeDataString(config.DeviceName)}";
 
                 _hubConnection = new HubConnectionBuilder()
                     .WithUrl(urlWithKey)

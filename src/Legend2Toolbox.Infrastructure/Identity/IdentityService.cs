@@ -59,7 +59,7 @@ public class IdentityService : IIdentityService
 
         await _userManager.UpdateAsync(user);
 
-        return Result<AuthResponse>.Success(new AuthResponse(accessToken, refreshToken,expiresAt));
+        return Result<AuthResponse>.Success(new AuthResponse(accessToken, refreshToken, expiresAt));
     }
 
     public async Task<Result> ChangePasswordAsync(ChangePasswordCommand request)
@@ -137,21 +137,42 @@ public class IdentityService : IIdentityService
         var user = await _userManager.FindByIdAsync(request.UserId);
         if (user == null) return Result.Failure(ErrorMessages.Auth.AccountNotExist);
 
-        if (!await _userManager.IsInRoleAsync(user, request.RoleName))
+        var currentRoles = await _userManager.GetRolesAsync(user);
+
+        var removeRoles = currentRoles.Where(r => !request.RoleNames.Contains(r)).ToList();
+
+        if (removeRoles.Count > 0)
         {
-            var result = await _userManager.AddToRoleAsync(user, request.RoleName);
-            if (!result.Succeeded) return Result.Failure(result.Errors.Select(e => e.Description).ToArray());
+            var removeResult = await _userManager.RemoveFromRolesAsync(user, removeRoles);
+            if (!removeResult.Succeeded)
+            {
+                return Result.Failure(removeResult.Errors.Select(e => e.Description).ToArray());
+            }
+        }
+
+        var addRoles = request.RoleNames
+            .Where(r => !currentRoles.Contains(r))
+            .ToList();
+
+        if(addRoles.Count > 0)
+        {
+            var addResult = await _userManager.AddToRolesAsync(user, addRoles);
+
+            if (!addResult.Succeeded)
+            {
+                return Result.Failure(addResult.Errors.Select(e => e.Description).ToArray());
+            }
         }
 
         return Result.Success();
     }
 
-    public async Task<Result> ToggleUserLockAsync(ToggleUserLockCommand request)
+    public async Task<Result<bool>> ToggleUserLockAsync(ToggleUserLockCommand request)
     {
         var user = await _userManager.FindByIdAsync(request.UserId);
-        if (user == null) return Result.Failure(ErrorMessages.Auth.AccountNotExist);
+        if (user == null) return Result<bool>.Failure(ErrorMessages.Auth.AccountNotExist);
         if (user.UserName == AdminInfo.AdminUserName)
-            return Result.Failure(ErrorMessages.Auth.CannotPerformedOnSuperAdmin);
+            return Result<bool>.Failure(ErrorMessages.Auth.CannotPerformedOnSuperAdmin);
 
         IdentityResult result;
         if (request.LockUser)
@@ -164,8 +185,8 @@ public class IdentityService : IIdentityService
             await _userManager.ResetAccessFailedCountAsync(user);
         }
 
-        if (!result.Succeeded) return Result.Failure(result.Errors.Select(e => e.Description).ToArray());
-        return Result.Success();
+        if (!result.Succeeded) return Result<bool>.Failure(result.Errors.Select(e => e.Description).ToArray());
+        return Result<bool>.Success(request.LockUser);
     }
 
     public async Task<Result> UpdateUserProfileAsync(UpdateUserProfileCommand request)

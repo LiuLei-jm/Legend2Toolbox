@@ -3,6 +3,6 @@
 /* tslint:disable */
 /* eslint-disable */
 export type AssignRoleRequest = {
-    roleName?: string | null;
+    roleNames?: Array<string> | null;
 };
 

@@ -25,7 +25,7 @@
         <template #title>通讯密钥</template>
       </el-menu-item>
 
-      <el-sub-menu v-if="hasSuperAdminRole" :default-active="$route.path" router>
+      <el-sub-menu v-if="hasSuperAdminRole"  index="/admin">
         <template #title>
           <el-icon><Setting /></el-icon>
           <span>控制台</span>

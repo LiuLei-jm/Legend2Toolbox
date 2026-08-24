@@ -193,6 +193,16 @@
         }
       }
     },
+    "/api/auth/roles": {
+      "get": {
+        "tags": ["Authorization"],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/auth/register": {
       "post": {
         "tags": ["Authorization"],
@@ -631,8 +641,11 @@
       "AssignRoleRequest": {
         "type": "object",
         "properties": {
-          "roleName": {
-            "type": "string",
+          "roleNames": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
             "nullable": true
           }
         },

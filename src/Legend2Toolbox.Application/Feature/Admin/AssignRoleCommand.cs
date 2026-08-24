@@ -1,6 +1,6 @@
 ﻿namespace Legend2Toolbox.Application.Feature.Admin;
 
-public record AssignRoleCommand(string UserId, string RoleName) : IRequest<Result>;
+public record AssignRoleCommand(string UserId, List<string> RoleNames) : IRequest<Result>;
 
 public class AssignRoleCommandValidator : AbstractValidator<AssignRoleCommand>
 {
@@ -8,10 +8,11 @@ public class AssignRoleCommandValidator : AbstractValidator<AssignRoleCommand>
     {
         RuleFor(x => x.UserId).NotEmpty().WithMessage("用户ID不能为空");
         var validRoles = string.Join(", ", Enum.GetNames<Roles>());
-        RuleFor(x => x.RoleName).NotEmpty()
-            .WithMessage("角色名不能为空")
+        RuleFor(x => x.RoleNames)
+            .NotEmpty().WithMessage("角色列表不能为空");
+        RuleForEach(x => x.RoleNames)
             .IsEnumName(typeof(Roles), false)
-            .WithName($"无效的角色名。可选范围：[{validRoles}]");
+            .WithMessage($"无效的角色名称。 可选范围：[{validRoles}]");
     }
 }
 

@@ -1,5 +1,5 @@
 <template>
-    <el-dialog :title="isEdit ? '修改卡号' : '新建卡号'" :model-value="visible"
+    <el-dialog :title="isEdit ? '修改卡号' : '新建卡号'" :model-value="dialogVisible"
         @update:model-value="$emit('update:visible', $event)" width="500px" @open="initForm" @close="resetForm">
         <el-form :model="form" :rules="rules" ref="formRef" label-width="100px">
             <el-form-item label="客户名" prop="owner">
@@ -8,15 +8,14 @@
             <el-form-item label="持续天数" prop="durationInDays">
                 <el-input-number v-model="form.durationInDays" :min="1" style="width: 100%" />
             </el-form-item>
-            <el-form-item  label="面值" prop="faceValue">
+            <el-form-item label="面值" prop="faceValue">
                 <el-input-number v-model="form.faceValue" :min="0" :precision="1" style="width: 100%" />
             </el-form-item>
-            <el-form-item  label="实际金额" prop="amount">
+            <el-form-item label="实际金额" prop="amount">
                 <el-input-number v-model="form.amount" :min="0" :precision="1" style="width:100%" />
             </el-form-item>
             <el-form-item v-if="isEdit" label="开始时间" prop="startTime">
-                <el-date-picker v-model="form.startTime" type="datetime" placeholder="选择开始时间" 
-                 style="width: 100%" />
+                <el-date-picker v-model="form.startTime" type="datetime" placeholder="选择开始时间" style="width: 100%" />
             </el-form-item>
             <el-form-item label="备注">
                 <el-input v-model="form.notes" type="textarea" placeholder="请输入备注信息" />
@@ -33,21 +32,26 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive } from 'vue'
+import { ref, reactive, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 import type { FormInstance, FormRules } from 'element-plus'
 import { CardNumberService } from '@/api/generated/services/CardNumberService'
 import type { CreateCardNumberRequest } from '@/api/generated/models/CreateCardNumberRequest'
 import type { UpdateCardNumberRequest } from '@/api/generated/models/UpdateCardNumberRequest'
 import { handleApiError } from '@/utils/errorHandler'
+import type { CardItem } from '@/types/cardItem'
 
 const props = defineProps<{
     visible: boolean
     isEdit: boolean
-    initialData?: any
+    initialData?: CardItem
 }>()
 
 const emit = defineEmits(['update:visible', 'success'])
+const dialogVisible = computed({
+    get: () => props.visible,
+    set: (val) => emit('update:visible', val)
+})
 
 const formRef = ref<FormInstance>()
 const submitLoading = ref(false)

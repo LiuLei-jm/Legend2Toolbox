@@ -1,5 +1,5 @@
 <template>
-    <el-dialog title="配置卡号文件路径" :model-value="visible" @update:model-value="$emit('update:visible', $event)"
+    <el-dialog title="配置卡号文件路径" :model-value="dialogVisible" @update:model-value="$emit('update:visible', $event)"
         width="500px" @open="fetchCurrentPath" @close="resetForm">
         <el-form :model="form" :rules="rules" ref="formRef" label-width="120px" v-loading="loading">
             <el-form-item label="基础路径" prop="basePath">
@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive } from 'vue'
+import { ref, reactive,computed } from 'vue'
 import { ElMessage } from 'element-plus'
 import type { FormInstance, FormRules } from 'element-plus'
 import { CardNumberService } from '@/api/generated/services/CardNumberService'
@@ -34,6 +34,12 @@ const props = defineProps<{
     visible: boolean
 }>()
 
+const dialogVisible = computed ({
+    get: () =>props.visible,
+    set : (val) => emit('update:visible', val) 
+}
+
+) 
 const formRef = ref<FormInstance>()
 const loading = ref(false)
 const submitLoading = ref(false)

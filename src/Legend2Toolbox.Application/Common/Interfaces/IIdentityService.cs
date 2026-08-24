@@ -14,7 +14,7 @@ public interface IIdentityService
     Task<Result<PagedResult<UserDto>>> GetAllUsersAsync(int pageNumber, int pageSize);
     Task<Result<UserDto>> GetUserByNameAsync(string name);
     Task<Result> AssignRoleAsync(AssignRoleCommand request);
-    Task<Result> ToggleUserLockAsync(ToggleUserLockCommand request);
+    Task<Result<bool>> ToggleUserLockAsync(ToggleUserLockCommand request);
     Task<Result> UpdateUserAsync(UpdateUserCommand request);
     Task<Result> RemoveUserAsync(RemoveUserCommand request);
     Task<Result> DeleteUserAsync(string userId);

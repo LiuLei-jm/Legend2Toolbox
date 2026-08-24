@@ -3,7 +3,7 @@
 public record UserDto(
     string Id,
     string Username,
-    string Eamil,
+    string Email,
     IList<string> Roles,
     bool IsLockedOut,
     DateTimeOffset? LockoutEnd,

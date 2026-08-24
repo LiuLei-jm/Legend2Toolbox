@@ -1,6 +1,6 @@
 ﻿namespace Legend2Toolbox.Application.Feature.Admin;
 
-public record ToggleUserLockCommand(string UserId, bool LockUser) : IRequest<Result>;
+public record ToggleUserLockCommand(string UserId, bool LockUser) : IRequest<Result<bool>>;
 
 public class ToggleUserLockCommandValidator : AbstractValidator<ToggleUserLockCommand>
 {
@@ -10,7 +10,7 @@ public class ToggleUserLockCommandValidator : AbstractValidator<ToggleUserLockCo
     }
 }
 
-public class ToggleUserLockCommandHandler : IRequestHandler<ToggleUserLockCommand, Result>
+public class ToggleUserLockCommandHandler : IRequestHandler<ToggleUserLockCommand, Result<bool>>
 {
     private readonly IIdentityService _identityService;
 
@@ -19,7 +19,7 @@ public class ToggleUserLockCommandHandler : IRequestHandler<ToggleUserLockComman
         _identityService = identityService;
     }
 
-    public async Task<Result> Handle(ToggleUserLockCommand request, CancellationToken cancellationToken)
+    public async Task<Result<bool>> Handle(ToggleUserLockCommand request, CancellationToken cancellationToken)
     {
         return await _identityService.ToggleUserLockAsync(request);
     }

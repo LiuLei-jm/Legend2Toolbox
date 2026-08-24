@@ -1,4 +1,7 @@
-﻿namespace Legend2Toolbox.Api.Endpoints.Admin;
+﻿using Legend2Toolbox.Domain.Enums;
+using Legend2Toolbox.Shared.Extensions;
+
+namespace Legend2Toolbox.Api.Endpoints.Admin;
 
 public static class AdminUserEndpoints
 {
@@ -7,6 +10,7 @@ public static class AdminUserEndpoints
         var group = routes.MapGroup("/api/admin/users")
             .WithTags("Admin User Management")
             .RequireAuthorization(policy => policy.RequireRole("SuperAdmin"));
+
         group.MapGet("/clients", async ([FromServices] ISender sender) =>
         {
             var query = new GetAllConnectionClientsQuery();
@@ -43,7 +47,7 @@ public static class AdminUserEndpoints
             [FromBody] AssignRoleRequest request,
             [FromServices] ISender sender) =>
         {
-            var command = new AssignRoleCommand(userId, request.RoleName);
+            var command = new AssignRoleCommand(userId, request.RoleNames);
             var result = await sender.Send(command);
             return result.ToMinimalApiResult();
         });

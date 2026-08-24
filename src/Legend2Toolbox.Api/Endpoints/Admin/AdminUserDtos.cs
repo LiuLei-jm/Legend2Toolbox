@@ -2,7 +2,7 @@
 
 public record ToggleLockRequest(bool LockUser);
 
-public record AssignRoleRequest(string RoleName);
+public record AssignRoleRequest(List<string> RoleNames);
 
 public record UpdateUserRequest(string Username, string Email);
 

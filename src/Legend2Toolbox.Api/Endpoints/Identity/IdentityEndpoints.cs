@@ -1,10 +1,23 @@
-﻿namespace Legend2Toolbox.Api.Endpoints.Identity;
+﻿using Legend2Toolbox.Domain.Enums;
+using Legend2Toolbox.Shared.Extensions;
+
+namespace Legend2Toolbox.Api.Endpoints.Identity;
 
 public static class IdentityEndpoints
 {
     public static IEndpointRouteBuilder MapCustomIdentityEndpoints(this IEndpointRouteBuilder routes)
     {
         var group = routes.MapGroup("/api/auth").WithTags("Authorization");
+        group.MapGet("/roles", () =>
+        {
+            var roles = Enum.GetValues<Roles>()
+            .Select(r => new
+            {
+                Value = r.ToString(),
+                Label = r.GetDisplayName()
+            });
+            return Results.Ok(roles);
+        }).RequireAuthorization();
 
         group.MapPost("/register", async (
             [FromBody] RegisterRequest request,

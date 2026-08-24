@@ -16,11 +16,16 @@ export const registerClearAllStores = (callback: () => void) => {
 
 let refreshTimer: ReturnType<typeof setTimeout> | null = null;
 
+interface RoleInfo {
+  value?: string
+  label?: string
+}
 interface AuthState {
   accessToken: string | null
   refreshToken: string | null
   expiresAt: string | null
   userInfo: UserInfo | null
+  roleList: RoleInfo[]
 }
 
 export const useAuthStore = defineStore("auth", {
@@ -29,6 +34,7 @@ export const useAuthStore = defineStore("auth", {
     refreshToken: localStorage.getItem('refresh_token') || null,
     expiresAt: localStorage.getItem('expires_at') || null,
     userInfo: JSON.parse(localStorage.getItem('user') || 'null'),
+    roleList: []
   }),
   getters: {
     isAuthenticated: (state => !!state.accessToken),
@@ -41,26 +47,26 @@ export const useAuthStore = defineStore("auth", {
       if (!this.expiresAt) return;
 
       const formattedDateStr = this.expiresAt.includes('Z') || this.expiresAt.includes('+')
-      ? this.expiresAt
-      : this.expiresAt.replace(' ', 'T') + 'Z';
+        ? this.expiresAt
+        : this.expiresAt.replace(' ', 'T') + 'Z';
       const expiresTimeMs = new Date(formattedDateStr).getTime();
       const now = Date.now();
-      
-      if(isNaN(expiresTimeMs)){
+
+      if (isNaN(expiresTimeMs)) {
         console.error('expiresAt 时间格式无法解析：', this.expiresAt)
         return;
       }
 
       const bufferTime = 60 * 1000;
       const timeUntilRefresh = expiresTimeMs - now - bufferTime;
-      
-      console.log(`[Token Timer] 距离下一次自动刷新还剩：${Math.round(timeUntilRefresh / 1000)} 秒`)
+
+      // console.log(`[Token Timer] 距离下一次自动刷新还剩：${Math.round(timeUntilRefresh / 1000)} 秒`)
 
       if (timeUntilRefresh <= 0) {
         this.refreshTokenAction();
       } else {
         refreshTimer = setTimeout(() => {
-          console.log("Token即将过期，触发主动防御式刷新...")
+          // console.log("Token即将过期，触发主动防御式刷新...")
           this.refreshTokenAction()
         }, timeUntilRefresh)
       }
@@ -138,7 +144,7 @@ export const useAuthStore = defineStore("auth", {
         localStorage.setItem('user', JSON.stringify(this.userInfo))
         return true
       } catch (error) {
-        handleApiError(error,'获取用户信息出错')
+        handleApiError(error, '获取用户信息出错')
         return false
       }
     },
@@ -180,14 +186,27 @@ export const useAuthStore = defineStore("auth", {
         if (this.expiresAt)
           localStorage.setItem('expires_at', this.expiresAt);
 
-        console.log("静默刷新 Token 成功!")
+        // console.log("静默刷新 Token 成功!")
         this.startAutoRefresh();
 
         return true;
       } catch (error) {
-        handleApiError(error,'安全会话已过期，请重新登录')
+        handleApiError(error, '安全会话已过期，请重新登录')
         this.logout();
         return false;
+      }
+    },
+
+    async fetchRoleList(force = false) {
+      if (this.roleList.length > 0 && !force) {
+        return this.roleList
+      }
+      try {
+        const res = await AuthorizationService.getApiAuthRoles()
+        this.roleList = Array.isArray(res) ? res : res.items || []
+        return this.roleList
+      } catch (error) {
+        handleApiError(error, '获取角色列表失败')
       }
     }
   }
