@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-
-namespace Legend2Toolbox.Application.Feature.Identity;
+﻿namespace Legend2Toolbox.Application.Feature.Identity;
 
 public record UpdateUserProfileCommand(string NickName, string Email, string PhoneNumber) : IRequest<Result>;
 

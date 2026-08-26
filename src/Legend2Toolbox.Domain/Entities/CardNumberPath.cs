@@ -1,6 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using Legend2Toolbox.Domain.Common;
+﻿using Legend2Toolbox.Domain.Common;
 using Legend2Toolbox.Domain.Constants;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Legend2Toolbox.Domain.Entities;
 

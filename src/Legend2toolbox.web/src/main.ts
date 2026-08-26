@@ -15,7 +15,7 @@ const pinia = createPinia()
 app.use(pinia)
 app.use(router)
 
-OpenAPI.BASE = 'https://localhost:7113';
+OpenAPI.BASE = 'https://mir.lovemumu.top:5800';
 OpenAPI.TOKEN = async () => {
   return localStorage.getItem('access_token') || '';
 }

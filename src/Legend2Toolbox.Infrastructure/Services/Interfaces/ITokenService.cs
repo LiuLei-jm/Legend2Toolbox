@@ -2,7 +2,7 @@
 
 public interface ITokenService
 {
-   Task<(string AccessToken, DateTimeOffset ExpiresAt)> GenerateAccessTokenAsync(ApplicationUser user);
-   string GenerateRefreshToken();
-   ClaimsPrincipal? GetPrincipalFromExpiredToken(string token);
+    Task<(string AccessToken, DateTimeOffset ExpiresAt)> GenerateAccessTokenAsync(ApplicationUser user);
+    string GenerateRefreshToken();
+    ClaimsPrincipal? GetPrincipalFromExpiredToken(string token);
 }

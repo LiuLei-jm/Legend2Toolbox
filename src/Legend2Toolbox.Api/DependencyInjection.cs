@@ -13,14 +13,15 @@ public static class DependencyInjection
         services.AddMediatR(cfg => { cfg.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly); });
 
         var jwtSettings = configuration.GetSection("JwtSettings");
-        var secretKey = jwtSettings["Secret"] ?? throw new InvalidOperationException("JWT Secret is missing"); 
+        var secretKey = jwtSettings["Secret"] ?? throw new InvalidOperationException("JWT Secret is missing");
         var key = Encoding.UTF8.GetBytes(secretKey);
         services.AddAuthentication(options =>
         {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
             options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
         }).
-        AddJwtBearer(options => {
+        AddJwtBearer(options =>
+        {
             options.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateAudience = true,
@@ -136,10 +137,10 @@ public static class DependencyInjection
         {
             options.AddDefaultPolicy(builder =>
             {
-                builder.WithOrigins("http://localhost:30457", "http://localhost:4173")
+                builder.AllowAnyOrigin()
                     .AllowAnyHeader()
-                    .AllowAnyMethod()
-                    .AllowCredentials();
+                    .AllowAnyMethod();
+                //.AllowCredentials();
             });
         });
 

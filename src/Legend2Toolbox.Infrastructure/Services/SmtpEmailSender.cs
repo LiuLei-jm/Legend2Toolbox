@@ -1,5 +1,4 @@
-﻿using System.Net.Mail;
-using SmtpClient = MailKit.Net.Smtp.SmtpClient;
+﻿using SmtpClient = MailKit.Net.Smtp.SmtpClient;
 
 namespace Legend2Toolbox.Infrastructure.Services;
 
@@ -17,7 +16,7 @@ public class SmtpEmailSender : IEmailSender
     public async Task SendEmailAsync(string to, string subject, string body)
     {
         var email = new MimeMessage();
-        email.From.Add(new MailboxAddress(_emailSettings.SenderName,_emailSettings.SenderEmail));
+        email.From.Add(new MailboxAddress(_emailSettings.SenderName, _emailSettings.SenderEmail));
         email.To.Add(MailboxAddress.Parse(to));
         email.Subject = subject;
 

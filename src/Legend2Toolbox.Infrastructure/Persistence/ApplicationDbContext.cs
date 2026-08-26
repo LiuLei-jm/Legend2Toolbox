@@ -20,5 +20,19 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
         builder.Entity<IdentityRoleClaim<Guid>>().ToTable("RoleClaims");
         builder.Entity<IdentityUserToken<Guid>>().ToTable("UserTokens");
         builder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+        if (Database.IsSqlite())
+        {
+            foreach (var entityType in builder.Model.GetEntityTypes())
+            {
+                var properties = entityType.ClrType.GetProperties()
+                    .Where(p => p.PropertyType == typeof(DateTimeOffset) || p.PropertyType == typeof(DateTimeOffset?));
+                foreach (var property in properties)
+                {
+                    builder.Entity(entityType.ClrType)
+                        .Property(property.Name)
+                        .HasConversion<string>();
+                }
+            }
+        }
     }
 }

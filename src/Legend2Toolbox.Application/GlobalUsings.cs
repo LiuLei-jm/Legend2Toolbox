@@ -19,4 +19,3 @@ global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.Extensions.Logging;
 // 系统与常用基础库
 global using System.Diagnostics;
-global using System.Security.Claims;

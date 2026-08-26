@@ -25,16 +25,16 @@ public class ResourceSyncHub : Hub
         var deviceName = httpContext?.Request.Query["DeviceName"].ToString();
 
         var ipAddress = string.Empty;
-        if(httpContext != null)
+        if (httpContext != null)
         {
-            if(httpContext.Request.Headers.TryGetValue("X-Forwarded-For", out var forwardedHeader))
+            if (httpContext.Request.Headers.TryGetValue("X-Forwarded-For", out var forwardedHeader))
             {
                 ipAddress = forwardedHeader.FirstOrDefault()?.Split(',')[0].Trim();
             }
             if (string.IsNullOrEmpty(ipAddress))
             {
                 var remoteIp = httpContext.Connection.RemoteIpAddress;
-                if(remoteIp != null)
+                if (remoteIp != null)
                 {
                     if (remoteIp.IsIPv4MappedToIPv6)
                     {

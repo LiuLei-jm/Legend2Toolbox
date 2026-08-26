@@ -46,7 +46,7 @@ public static class CardNumberEndpoints
             [FromQuery] string? endTime,
             [FromServices] ISender sender) =>
         {
-            var query = new GetCardNumbersQuery(owner,cdk,startTime,endTime,pageNumber ?? 1, pageSize ?? 10);
+            var query = new GetCardNumbersQuery(owner, cdk, startTime, endTime, pageNumber ?? 1, pageSize ?? 10);
             var result = await sender.Send(query);
             return result.ToMinimalApiResult();
         });
@@ -58,7 +58,7 @@ public static class CardNumberEndpoints
             [FromQuery] string? endTime,
             [FromServices] ISender sender) =>
         {
-            var query = new GetUnexpiredCardNumbersQuery(owner,cdk,startTime,endTime,pageNumber ?? 1, pageSize ?? 10);
+            var query = new GetUnexpiredCardNumbersQuery(owner, cdk, startTime, endTime, pageNumber ?? 1, pageSize ?? 10);
             var result = await sender.Send(query);
             return result.ToMinimalApiResult();
         });

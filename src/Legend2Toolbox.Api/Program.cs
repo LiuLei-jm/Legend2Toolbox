@@ -18,6 +18,28 @@ try
 
     var app = builder.Build();
 
+    if (app.Environment.IsDevelopment())
+    {
+        using var scope = app.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        db.Database.Migrate();
+    }
+    else
+    {
+        using var scope = app.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+        try
+        {
+            db.Database.Migrate();
+        }
+        catch (Exception ex)
+        {
+            Directory.CreateDirectory(@"D:\Logs\ToolboxAPI");
+            File.WriteAllText(@"D:\Logs\ToolboxAPI\db-migration-error.txt", ex.ToString());
+            throw;
+        }
+    }
     // Configure the HTTP request pipeline.
     app.UseExceptionHandler();
     if (app.Environment.IsDevelopment())

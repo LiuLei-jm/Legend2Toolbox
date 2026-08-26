@@ -1,11 +1,4 @@
 ﻿// 项目内常用命名空间
-global using MailKit.Security;
-global using MimeKit;
-global using MimeKit.Text;
-global using System.Text;
-global using System.IdentityModel.Tokens.Jwt;
-global using System.Security.Cryptography;
-global using Legend2Toolbox.Infrastructure.Services.Interfaces;
 global using Legend2Toolbox.Application.Common.Interfaces;
 global using Legend2Toolbox.Application.Common.Models;
 global using Legend2Toolbox.Application.Feature.Admin;
@@ -17,6 +10,8 @@ global using Legend2Toolbox.Domain.Models;
 global using Legend2Toolbox.Infrastructure.Identity;
 global using Legend2Toolbox.Infrastructure.Persistence;
 global using Legend2Toolbox.Infrastructure.Services;
+global using Legend2Toolbox.Infrastructure.Services.Interfaces;
+global using MailKit.Security;
 // 核心框架
 global using Microsoft.AspNetCore.Http;
 global using Microsoft.AspNetCore.Identity;
@@ -26,6 +21,11 @@ global using Microsoft.EntityFrameworkCore.Metadata.Builders;
 global using Microsoft.Extensions.Configuration;
 global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.Extensions.Logging;
+global using MimeKit;
+global using MimeKit.Text;
+global using System.IdentityModel.Tokens.Jwt;
 // 系统与常用基础库
 global using System.Security.Claims;
+global using System.Security.Cryptography;
+global using System.Text;
 global using System.Web;

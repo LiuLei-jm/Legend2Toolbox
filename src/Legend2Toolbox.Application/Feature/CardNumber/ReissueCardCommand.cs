@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Legend2Toolbox.Application.Feature.CardNumber;
 
-namespace Legend2Toolbox.Application.Feature.CardNumber;
-
-public record ReissueCardCommand(string CardId,string  Cdk) : IRequest<Result>;
+public record ReissueCardCommand(string CardId, string Cdk) : IRequest<Result>;
 
 public class ReissueCardCommandHandler : IRequestHandler<ReissueCardCommand, Result>
 {
@@ -24,7 +18,7 @@ public class ReissueCardCommandHandler : IRequestHandler<ReissueCardCommand, Res
     public async Task<Result> Handle(ReissueCardCommand request, CancellationToken cancellationToken)
     {
         if (!Guid.TryParse(_currentUserService.UserId, out var currentUserId)) return Result.Failure(ErrorMessages.Auth.InvalidUserId);
-        if(!Guid.TryParse(request.CardId, out var cardGuid)) return Result.Failure(ErrorMessages.Card.NotFoundCard);
+        if (!Guid.TryParse(request.CardId, out var cardGuid)) return Result.Failure(ErrorMessages.Card.NotFoundCard);
         _logger.LogInformation("用户: {UserName} 补发卡号 {Cdk} .", _currentUserService.UserName, request.Cdk);
         await _publisher.Publish(new CardNumberCreatedEvent(
             cardGuid,

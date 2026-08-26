@@ -1,5 +1,5 @@
-﻿using System.Security.Cryptography;
-using Legend2Toolbox.Domain.Common;
+﻿using Legend2Toolbox.Domain.Common;
+using System.Security.Cryptography;
 
 namespace Legend2Toolbox.Domain.Entities;
 

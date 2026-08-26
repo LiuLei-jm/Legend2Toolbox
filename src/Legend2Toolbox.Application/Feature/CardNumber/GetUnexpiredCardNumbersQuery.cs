@@ -21,8 +21,9 @@ public class
     {
         if (!Guid.TryParse(_currentUserService.UserId, out var currentUserId))
             return Result<PagedResult<CardNumberDto>>.Failure(ErrorMessages.Auth.InvalidUserId);
+        var utcNow = DateTimeOffset.UtcNow;
         var query = _context.CardNumbers.AsNoTracking()
-            .Where(c => c.UserId == currentUserId && c.EndTime > DateTimeOffset.UtcNow);
+            .Where(c => c.UserId == currentUserId && c.EndTime > utcNow);
 
         if (!string.IsNullOrWhiteSpace(request.Owner))
         {

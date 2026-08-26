@@ -154,7 +154,7 @@ public class IdentityService : IIdentityService
             .Where(r => !currentRoles.Contains(r))
             .ToList();
 
-        if(addRoles.Count > 0)
+        if (addRoles.Count > 0)
         {
             var addResult = await _userManager.AddToRolesAsync(user, addRoles);
 

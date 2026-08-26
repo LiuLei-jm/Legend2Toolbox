@@ -1,7 +1,4 @@
-﻿using Legend2Toolbox.Domain.Enums;
-using Legend2Toolbox.Shared.Extensions;
-
-namespace Legend2Toolbox.Api.Endpoints.Admin;
+﻿namespace Legend2Toolbox.Api.Endpoints.Admin;
 
 public static class AdminUserEndpoints
 {

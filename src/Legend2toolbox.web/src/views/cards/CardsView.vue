@@ -13,16 +13,16 @@
                         start-placeholder="开始日期" end-placeholder="结束日期" value-format="YYYY-MM-DD" />
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" @click="handleSearch" icon="Search">查询</el-button>
-                    <el-button @click="resetSearch" icon="Refresh">重置</el-button>
+                    <el-button type="primary" @click="handleSearch" :icon="Search">查询</el-button>
+                    <el-button @click="resetSearch" :icon="Refresh">重置</el-button>
                 </el-form-item>
             </el-form>
         </el-card>
 
         <el-card shadow="never" class="table-card" style="margin-top: 15px">
             <div class="toolbar" style="margin-bottom: 20px; display: flex; gap: 10px;">
-                <el-button type="primary" icon="Plus" @click="openCreateDialog">新建卡号</el-button>
-                <el-button type="success" icon="Settings" @click="pathDialogVisible = true">配置路径</el-button>
+                <el-button type="primary" :icon="Plus" @click="openCreateDialog">新建卡号</el-button>
+                <el-button type="success" :icon="Setting" @click="pathDialogVisible = true">配置路径</el-button>
                 <el-switch v-model="showOnlyUnexpired" active-text="仅看未过期" inactive-text="全部卡号" @change="fetchData(1)"
                     style="margin-left: auto;" />
             </div>
@@ -42,6 +42,11 @@
                     </template>
                 </el-table-column>
                 <el-table-column prop="durationInDays" label="天数" width="80" align="center" />
+                <el-table-column prop="startTime" label="开始时间" width="180" align="center">
+                    <template #default="{ row }">
+                        {{ formatDate(row.startTime) }}
+                    </template>
+                </el-table-column>
                 <el-table-column prop="endTime" label="到期时间" width="180" align="center">
                     <template #default="{ row }">
                         {{ formatDate(row.endTime) }}
@@ -112,12 +117,13 @@
 <script setup lang='ts'>
 import { ref, reactive, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { DocumentCopy } from '@element-plus/icons-vue'
+import { Plus, Setting, Search, Refresh, DocumentCopy } from '@element-plus/icons-vue'
 import { CardNumberService } from '@/api/generated/services/CardNumberService'
 import type { ReissueCardRequest } from '@/api/generated/models/ReissueCardRequest'
 import type { CleanUpCardRequest } from '@/api/generated/models/CleanUpCardRequest'
 import type { CardItem } from '@/types/cardItem'
 import { handleApiError } from '@/utils/errorHandler'
+
 
 import PathConfigDialog from './components/PathConfigDialog.vue'
 import CardFormDialog from './components/CardFormDialog.vue'

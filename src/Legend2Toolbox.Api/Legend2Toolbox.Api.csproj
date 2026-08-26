@@ -28,10 +28,4 @@
         <ProjectReference Include="..\Legend2Toolbox.Infrastructure\Legend2Toolbox.Infrastructure.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-        <None Update="data.db">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-    </ItemGroup>
-
 </Project>

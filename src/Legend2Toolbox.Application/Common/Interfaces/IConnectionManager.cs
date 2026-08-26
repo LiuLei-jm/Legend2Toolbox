@@ -2,7 +2,7 @@
 
 public interface IConnectionManager
 {
-    void AddConnection(string connectionKey,ConnectionInfo connectionInfo);
+    void AddConnection(string connectionKey, ConnectionInfo connectionInfo);
     void RemoveConnection(string connectionId);
     IEnumerable<ConnectionInfo> GetConnection(string connectionKey);
     public int GetConnectionCount(string connectionKey);

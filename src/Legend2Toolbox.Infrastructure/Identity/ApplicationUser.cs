@@ -7,7 +7,7 @@ public class ApplicationUser : IdentityUser<Guid>
     public bool IsDeleted { get; set; }
     public DateTimeOffset? LastLoginAt { get; set; }
 
-    public string? RefreshToken { get; set; } 
+    public string? RefreshToken { get; set; }
     public DateTimeOffset? RefreshTokenExpiryTime { get; set; }
     public virtual ConnectionKey? ConnectionKey { get; set; }
     public virtual ICollection<CardNumber> CardNumbers { get; set; } = [];

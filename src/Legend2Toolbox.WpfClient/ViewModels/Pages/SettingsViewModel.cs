@@ -5,20 +5,24 @@ public partial class SettingsViewModel : ObservableObject
     private readonly IClientConfigurationService _configService;
     private readonly ISignalRClientService _signalRService;
 
-    [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(SaveConfigCommand))]
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveConfigCommand))]
     private string _apiKey = string.Empty;
 
     [ObservableProperty] private string _connectionButtonContent = "连接";
 
     private CancellationTokenSource? _cts;
 
-    [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(SaveConfigCommand))]
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveConfigCommand))]
     private string _deviceName = string.Empty;
 
-    [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(SaveConfigCommand))]
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveConfigCommand))]
     private bool _isInputsEnabled = true;
 
-    [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(SaveConfigCommand))]
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveConfigCommand))]
     private string _serverUrl = string.Empty;
 
     public SettingsViewModel(IClientConfigurationService configService, ISignalRClientService signalRService)
