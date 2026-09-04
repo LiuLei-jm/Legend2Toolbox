@@ -1,21 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <ItemGroup>
-        <None Remove="Feature\Identity\RefreshTokenCommand.cs~RF2566de13.TMP"/>
+        <None Remove="Feature\Identity\RefreshTokenCommand.cs~RF2566de13.TMP" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1"/>
-        <PackageReference Include="Mapster" Version="10.0.11"/>
-        <PackageReference Include="MediatR" Version="12.4.1"/>
-        <PackageReference Include="Microsoft.AspNetCore.SignalR.Core" Version="1.2.11"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.28"/>
-        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.3"/>
+        <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
+        <PackageReference Include="Mapster" Version="10.0.11" />
+        <PackageReference Include="MediatR" Version="12.4.1" />
+        <PackageReference Include="Microsoft.AspNetCore.SignalR.Core" Version="1.2.11" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.28" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.3" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Legend2Toolbox.Domain\Legend2Toolbox.Domain.csproj"/>
-        <ProjectReference Include="..\Legend2Toolbox.Shared\Legend2Toolbox.Shared.csproj"/>
+        <ProjectReference Include="..\Legend2Toolbox.Domain\Legend2Toolbox.Domain.csproj" />
+        <ProjectReference Include="..\Legend2Toolbox.Shared\Legend2Toolbox.Shared.csproj" />
     </ItemGroup>
 
     <PropertyGroup>

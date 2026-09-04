@@ -12,7 +12,7 @@
         <el-form label-width="100px" label-position="left">
           <el-form-item label="当前密钥">
             <div class="key-input-group">
-              <el-input v-model="keyInfo.key" :type="showKey ? 'text' : 'password'" readonly placeholder="暂无密钥，请点击生成"
+              <el-input id="key" name="key" v-model="keyInfo.key" :type="showKey ? 'text' : 'password'" readonly placeholder="暂无密钥，请点击生成"
                 style="max-width:420px;">
                 <template #append>
                   <el-button :icon="showKey ? View : Hide" @click="showKey = !showKey" />
@@ -114,10 +114,10 @@ interface ConnectionClient {
 const keyInfo = ref<ConnectionKeyInfo>({})
 const clients = ref<ConnectionClient[]>([])
 
-const keyLoading = ref(false)
-const clientsLoading = ref(false)
-const generating = ref(false)
-const showKey = ref(false)
+const keyLoading = ref<boolean>(false)
+const clientsLoading = ref<boolean>(false)
+const generating = ref<boolean>(false)
+const showKey = ref<boolean>(false)
 
 const fetchConnectionKey = async () => {
   keyLoading.value = true

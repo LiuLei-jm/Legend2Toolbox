@@ -3,7 +3,6 @@
 public record GenerateKeyCommand : IRequest<Result<SecurityKeyResponse>>;
 
 public record SecurityKeyResponse(string Key, DateTimeOffset CreatedOn, DateTimeOffset? LastModifiedOn);
-
 public class GenerateKeyCommandHandler : IRequestHandler<GenerateKeyCommand, Result<SecurityKeyResponse>>
 {
     private readonly IApplicationDbContext _context;
@@ -20,11 +19,11 @@ public class GenerateKeyCommandHandler : IRequestHandler<GenerateKeyCommand, Res
     {
         var userId = _currentUserService.UserId;
         var isValid = Guid.TryParse(userId, out var userGuid);
-        if (!isValid) return Result<SecurityKeyResponse>.Failure(ErrorMessages.Auth.InvalidUserId);
+        if (!isValid) return Result<SecurityKeyResponse>.Failure(ErrorMessages.AuthError.InvalidUserId);
         var existingKey = await _context.ConnectionKeys.FirstOrDefaultAsync(k => k.UserId == userGuid, cancellationToken);
         if (existingKey is null)
         {
-            existingKey = Domain.Entities.ConnectionKey.Create(userGuid, _currentUserService.UserName);
+            existingKey = Domain.Entities.Cards.ConnectionKey.Create(userGuid, _currentUserService.UserName);
             await _context.ConnectionKeys.AddAsync(existingKey, cancellationToken);
         }
         else

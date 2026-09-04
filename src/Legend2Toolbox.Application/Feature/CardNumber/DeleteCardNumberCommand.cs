@@ -29,11 +29,11 @@ public class DeleteCardNumberCommandHandler : IRequestHandler<DeleteCardNumberCo
     public async Task<Result> Handle(DeleteCardNumberCommand request, CancellationToken cancellationToken)
     {
         if (!Guid.TryParse(_currentUserService.UserId, out var currentUserId))
-            return Result.Failure(ErrorMessages.Auth.InvalidUserId);
+            return Result.Failure(ErrorMessages.AuthError.InvalidUserId);
         var card = await _context.CardNumbers.FirstOrDefaultAsync(c => c.Id == request.CardId, cancellationToken);
-        if (card is null) return Result.Failure(ErrorMessages.Card.NotFoundCard);
+        if (card is null) return Result.Failure(ErrorMessages.CardError.NotFoundCard);
         if (_currentUserService.UserName is null || card.UserId != currentUserId)
-            return Result.Failure(ErrorMessages.Auth.NoPermissionToOperate);
+            return Result.Failure(ErrorMessages.AuthError.NoPermissionToOperate);
         card.Remove(_currentUserService.UserName);
         await _context.SaveChangesAsync(cancellationToken);
         await _publisher.Publish(new CardNumberDeletedEvent(

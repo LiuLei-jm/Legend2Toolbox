@@ -13,5 +13,5 @@ export interface AdminUserInfo {
     email: string
     roles: string[]
     isLockedOut: boolean
-    lockoutEnd?: string,
+    lockoutEnd?: string
 }

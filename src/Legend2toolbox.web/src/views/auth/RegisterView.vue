@@ -19,23 +19,23 @@
                  label-position="top"
                  size="large" @keyup.enter="handleRegister">
           <el-form-item label="用户名" prop="username">
-            <el-input v-model="formData.username" :prefix-icon="User" clearable
+            <el-input id="username" name="username" v-model="formData.username" :prefix-icon="User" clearable
                       placeholder="请输入用户名"/>
           </el-form-item>
 
           <el-form-item label="邮箱" prop="email">
-            <el-input v-model="formData.email" :prefix-icon="Message" clearable
+            <el-input id="email" name="email" v-model="formData.email" :prefix-icon="Message" clearable
                       placeholder="请输入邮箱"/>
           </el-form-item>
 
           <el-form-item label="密码" prop="password">
-            <el-input v-model="formData.password" :prefix-icon="Lock" placeholder="请输入密码"
+            <el-input id="password" name="password" v-model="formData.password" :prefix-icon="Lock" placeholder="请输入密码"
                       show-password
                       type="password"/>
           </el-form-item>
 
           <el-form-item label="确认密码" prop="confirmPassword">
-            <el-input v-model="formData.confirmPassword" :prefix-icon="Key"
+            <el-input id="confirmPassword" name="confirmPassword" v-model="formData.confirmPassword" :prefix-icon="Key"
                       placeholder="请再次输入密码" show-password
                       type="password"/>
           </el-form-item>
@@ -76,7 +76,7 @@ import type {RegisterRequest} from "@/api/generated/models/RegisterRequest";
 
 const authStore = useAuthStore();
 const registerFormRef = ref<FormInstance>();
-const isLoading = ref(false);
+const isLoading = ref<boolean>(false);
 
 const router = useRouter();
 

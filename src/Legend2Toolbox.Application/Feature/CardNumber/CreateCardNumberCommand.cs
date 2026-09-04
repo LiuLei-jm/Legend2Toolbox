@@ -45,10 +45,10 @@ public class CreateCardNumberCommandHandler : IRequestHandler<CreateCardNumberCo
     public async Task<Result<Guid>> Handle(CreateCardNumberCommand request, CancellationToken cancellationToken)
     {
         if (!Guid.TryParse(_currentUserService.UserId, out var userId))
-            return Result<Guid>.Failure(ErrorMessages.Auth.InvalidUserId);
+            return Result<Guid>.Failure(ErrorMessages.AuthError.InvalidUserId);
         var userName = _currentUserService.UserName ?? "System";
         var cdk = CdkHelper.GenerateMembershipCard(20, request.FaceValue);
-        var cardNumberEntity = Domain.Entities.CardNumber.Create(request.Owner,
+        var cardNumberEntity = Domain.Entities.Cards.CardNumber.Create(request.Owner,
             request.DurationInDays,
             request.FaceValue,
             request.Amount,

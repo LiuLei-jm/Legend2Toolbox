@@ -9,13 +9,27 @@ import { OpenAPI } from './api/generated/core/OpenAPI';
 import axios from 'axios'
 import { useAuthStore } from '@/stores/auth'
 
+import * as monaco from 'monaco-editor'
+import { loader } from '@guolao/vue-monaco-editor'
+
+loader.config({ monaco })
 
 const app = createApp(App)
 const pinia = createPinia()
 app.use(pinia)
 app.use(router)
 
-OpenAPI.BASE = 'https://mir.lovemumu.top:5800';
+try {
+  const res = await fetch(`/config.json?t=${Date.now()}`)
+  const config = await res.json()
+  if (config.apiBaseUrl) {
+    OpenAPI.BASE = config.apiBaseUrl
+  }
+} catch (error) {
+  console.error('加载 config.json 配置失败', error)
+  OpenAPI.BASE = 'https://localhost:7113';
+}
+
 OpenAPI.TOKEN = async () => {
   return localStorage.getItem('access_token') || '';
 }

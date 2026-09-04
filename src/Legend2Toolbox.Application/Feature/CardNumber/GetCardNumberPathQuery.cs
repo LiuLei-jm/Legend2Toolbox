@@ -19,9 +19,9 @@ public class GetCardNumberPathQueryHandler : IRequestHandler<GetCardNumberPathQu
         CancellationToken cancellationToken)
     {
         if (!Guid.TryParse(_currentUserService.UserId, out var userId))
-            return Result<CardNumberPathResult>.Failure(ErrorMessages.Auth.InvalidUserId);
+            return Result<CardNumberPathResult>.Failure(ErrorMessages.AuthError.InvalidUserId);
         var response = await _context.CardNumberPaths.FirstOrDefaultAsync(c => c.UserId == userId, cancellationToken);
-        if (response is null) return Result<CardNumberPathResult>.Failure(ErrorMessages.Card.NotFoundCard);
+        if (response is null) return Result<CardNumberPathResult>.Failure(ErrorMessages.CardError.NotFoundCard);
         return Result<CardNumberPathResult>.Success(new CardNumberPathResult(response.BasePath,
             response.FileName,
             response.AllowCustomPath));

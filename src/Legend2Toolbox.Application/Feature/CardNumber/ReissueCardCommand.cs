@@ -1,7 +1,14 @@
 ﻿namespace Legend2Toolbox.Application.Feature.CardNumber;
 
 public record ReissueCardCommand(string CardId, string Cdk) : IRequest<Result>;
-
+public class ReissueCardCommandValidator: AbstractValidator<ReissueCardCommand>
+{
+    public ReissueCardCommandValidator()
+    {
+        RuleFor(c => c.CardId).NotEmpty().WithMessage("卡号ID不能为空");
+        RuleFor(c => c.Cdk).NotEmpty().WithMessage("卡号不能为空");
+    }
+}
 public class ReissueCardCommandHandler : IRequestHandler<ReissueCardCommand, Result>
 {
     private readonly ICurrentUserService _currentUserService;
@@ -17,8 +24,8 @@ public class ReissueCardCommandHandler : IRequestHandler<ReissueCardCommand, Res
 
     public async Task<Result> Handle(ReissueCardCommand request, CancellationToken cancellationToken)
     {
-        if (!Guid.TryParse(_currentUserService.UserId, out var currentUserId)) return Result.Failure(ErrorMessages.Auth.InvalidUserId);
-        if (!Guid.TryParse(request.CardId, out var cardGuid)) return Result.Failure(ErrorMessages.Card.NotFoundCard);
+        if (!Guid.TryParse(_currentUserService.UserId, out var currentUserId)) return Result.Failure(ErrorMessages.AuthError.InvalidUserId);
+        if (!Guid.TryParse(request.CardId, out var cardGuid)) return Result.Failure(ErrorMessages.CardError.NotFoundCard);
         _logger.LogInformation("用户: {UserName} 补发卡号 {Cdk} .", _currentUserService.UserName, request.Cdk);
         await _publisher.Publish(new CardNumberCreatedEvent(
             cardGuid,

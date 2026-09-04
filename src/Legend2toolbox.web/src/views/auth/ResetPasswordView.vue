@@ -4,10 +4,10 @@
             <h2>重置新密码</h2>
             <el-form :model="form" :rules="rules" ref="formRef">
                 <el-form-item prop="newPassword" label="新密码">
-                    <el-input v-model="form.newPassword" type="password" placeholder="请输入新密码" show-password />
+                    <el-input id="password" name="password" v-model="form.newPassword" type="password" placeholder="请输入新密码" show-password />
                 </el-form-item>
-                <el-form-item prop="confirmPassword" label="确认密码">
-                    <el-input v-model="form.confirmPassword" type="password" placeholder="请再次输入新密码" show-password />
+                <el-form-item  prop="confirmPassword" label="确认密码">
+                    <el-input id="confirmPassword" name="confirmPassword" v-model="form.confirmPassword" type="password" placeholder="请再次输入新密码" show-password />
                 </el-form-item>
                 <el-form-item>
                     <el-button type="success" :loading="loading" @click="handleResetPassword" style="width:100%;">
@@ -32,7 +32,7 @@ import { handleApiError } from '@/utils/errorHandler'
 const route = useRoute()
 const router = useRouter()
 const formRef = ref<FormInstance>()
-const loading = ref(false)
+const loading = ref<boolean>(false)
 
 const form = reactive({
     email: '',

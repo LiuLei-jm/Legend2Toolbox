@@ -1,4 +1,7 @@
-﻿namespace Legend2Toolbox.Infrastructure.Persistence;
+﻿using Legend2Toolbox.Domain.Entities.Cards;
+using Legend2Toolbox.Domain.Entities.ScriptSets;
+
+namespace Legend2Toolbox.Infrastructure.Persistence;
 
 public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>, IApplicationDbContext
 {
@@ -9,6 +12,16 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<CardNumber> CardNumbers => Set<CardNumber>();
     public DbSet<ConnectionKey> ConnectionKeys => Set<ConnectionKey>();
     public DbSet<CardNumberPath> CardNumberPaths => Set<CardNumberPath>();
+
+    public DbSet<ScriptSet> ScriptSets => Set<ScriptSet>();
+
+    public DbSet<ScriptFile> ScriptFiles => Set<ScriptFile>();
+
+    public DbSet<MaterialFile> MaterialFiles => Set<MaterialFile>();
+
+    public DbSet<ScriptSegment> ScriptSegments => Set<ScriptSegment>();
+
+    public DbSet<ScriptSetDbData> ScriptSetDbDatas => Set<ScriptSetDbData>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

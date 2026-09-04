@@ -48,13 +48,13 @@
                             <el-form ref="infoFormRef" :model="infoForm" :rules="infoRules" class="mt-3"
                                 label-position="top">
                                 <el-form-item label="用户昵称" prop="username">
-                                    <el-input v-model="infoForm.nickname" placeholder="请输入用户昵称" />
+                                    <el-input id="nickname" name="nickname" v-model="infoForm.nickname" placeholder="请输入用户昵称" />
                                 </el-form-item>
                                 <el-form-item label="电子邮箱" prop="email">
-                                    <el-input v-model="infoForm.email" placeholder="请输入电子邮箱" />
+                                    <el-input id="email" name="email" v-model="infoForm.email" placeholder="请输入电子邮箱" />
                                 </el-form-item>
                                 <el-form-item label="联系电话" prop="phone">
-                                    <el-input v-model="infoForm.phoneNumber" placeholder="请输入联系电话" />
+                                    <el-input id="phoneNumber" name="phoneNumber" v-model="infoForm.phoneNumber" placeholder="请输入联系电话" />
                                 </el-form-item>
                                 <el-form-item>
                                     <el-button :loading="infoLoading" type="primary" @click="handleUpdateInfo">
@@ -68,15 +68,15 @@
                             <el-form ref="pwdFormRef" :model="pwdForm" :rules="pwdRules" class="mt-3"
                                 label-position="top">
                                 <el-form-item label="当前密码" prop="oldPassword">
-                                    <el-input v-model="pwdForm.oldPassword" placeholder="请输入当前密码" show-password
+                                    <el-input id="oldPassword" name="oldPassword" v-model="pwdForm.oldPassword" placeholder="请输入当前密码" show-password
                                         type="password" />
                                 </el-form-item>
                                 <el-form-item label="新密码" prop="newPassword">
-                                    <el-input v-model="pwdForm.newPassword" placeholder="请输入新密码" show-password
+                                    <el-input id="newPassword" name="newPassword" v-model="pwdForm.newPassword" placeholder="请输入新密码" show-password
                                         type="password" />
                                 </el-form-item>
                                 <el-form-item label="确认新密码" prop="confirmPassword">
-                                    <el-input v-model="pwdForm.confirmPassword" placeholder="请再次输入当前密码" show-password
+                                    <el-input id="confirmPassword" name="confirmPassword" v-model="pwdForm.confirmPassword" placeholder="请再次输入当前密码" show-password
                                         type="password" />
                                 </el-form-item>
                                 <el-form-item>
@@ -119,9 +119,9 @@ const currentUser = computed<string>(() => {
     return userInfo?.nickname ? userInfo?.nickname : userInfo?.username
 })
 
-const activeTab = ref('info')
-const infoLoading = ref(false)
-const pwdLoading = ref(false)
+const activeTab = ref<string>('info')
+const infoLoading = ref<boolean>(false)
+const pwdLoading = ref<boolean>(false)
 
 const infoFormRef = ref<FormInstance>()
 const pwdFormRef = ref<FormInstance>()

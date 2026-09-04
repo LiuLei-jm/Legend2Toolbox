@@ -2,10 +2,10 @@
   <el-dialog title="编辑用户信息" v-model="dialogVisible" width="450px" @open="initForm" @close="handleClose">
     <el-form :model="formData" :rules="rules" ref="formRef" label-width="80px">
       <el-form-item label="用户名" prop="userName">
-        <el-input v-model="formData.username" placeholder="请输入新用户名" clearable />
+        <el-input id="username" name="username" v-model="formData.username" placeholder="请输入新用户名" clearable />
       </el-form-item>
       <el-form-item label="邮箱" prop="email">
-        <el-input v-model="formData.email" placeholder="请输入新邮箱" clearable />
+        <el-input id="email" name="email" v-model="formData.email" placeholder="请输入新邮箱" clearable />
       </el-form-item>
     </el-form>
     <template #footer>
@@ -35,7 +35,7 @@ const dialogVisible = computed({
   set: (val) => emit('update:visible', val)
 })
 
-const loading= ref(false)
+const loading= ref<boolean>(false)
 const formRef = ref<FormInstance>()
 const formData = reactive({
   username:'',

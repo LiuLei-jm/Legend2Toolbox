@@ -1,6 +1,13 @@
 ﻿namespace Legend2Toolbox.Application.Feature.Admin;
 
 public record RemoveUserCommand(string UserId) : IRequest<Result>;
+public class RemoveUserCommandValidator: AbstractValidator<RemoveUserCommand>
+{
+    public RemoveUserCommandValidator()
+    {
+        RuleFor(c => c.UserId).NotEmpty().WithMessage("用户ID不能为空");
+    }
+}
 
 public class RemoveUserCommandHandler : IRequestHandler<RemoveUserCommand, Result>
 {

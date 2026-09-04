@@ -3,13 +3,13 @@
         <el-card shadow="never" class="filter-card">
             <el-form :inline="true" :model="searchForm" class="filter-form">
                 <el-form-item label="客户名">
-                    <el-input v-model="searchForm.owner" placeholder="请输入客户名称" clearable />
+                    <el-input id="owner" name="owner" v-model="searchForm.owner" placeholder="请输入客户名称" clearable />
                 </el-form-item>
                 <el-form-item label="卡号">
-                    <el-input v-model="searchForm.cdk" placeholder="请输入完整或部分卡号" clearable />
+                    <el-input id="cdk" name="cdk" v-model="searchForm.cdk" placeholder="请输入完整或部分卡号" clearable />
                 </el-form-item>
                 <el-form-item label="创建时间">
-                    <el-date-picker v-model="searchForm.timeRange" type="daterange" range-separator="至"
+                    <el-date-picker :id="['startTime','endTime']" :name="['startTime','endTime']" v-model="searchForm.timeRange" type="daterange" range-separator="至"
                         start-placeholder="开始日期" end-placeholder="结束日期" value-format="YYYY-MM-DD" />
                 </el-form-item>
                 <el-form-item>
@@ -128,7 +128,7 @@ import { handleApiError } from '@/utils/errorHandler'
 import PathConfigDialog from './components/PathConfigDialog.vue'
 import CardFormDialog from './components/CardFormDialog.vue'
 
-const loading = ref(false)
+const loading = ref<boolean>(false)
 const tableData = ref<CardItem[]>([])
 const showOnlyUnexpired = ref(true)
 
@@ -144,9 +144,9 @@ const pagination = reactive({
     total: 0
 })
 
-const pathDialogVisible = ref(false)
-const cardDialogVisible = ref(false)
-const isEditMode = ref(false)
+const pathDialogVisible = ref<boolean>(false)
+const cardDialogVisible = ref<boolean>(false)
+const isEditMode = ref<boolean>(false)
 const selectedCard = ref<CardItem>()
 
 

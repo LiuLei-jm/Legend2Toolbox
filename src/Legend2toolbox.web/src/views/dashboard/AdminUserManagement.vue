@@ -2,7 +2,7 @@
     <div class="user-management-container">
         <el-card shadow="hover">
             <div class="header-actions">
-                <el-input class="search-user-name" v-model="searchUserName" placeholder="请输入人用户名搜索" clearable
+                <el-input id="searchUserName" name="searchUserName" class="search-user-name" v-model="searchUserName" placeholder="请输入人用户名搜索" clearable
                     @clear="handleSearch" @keyup.enter="handleSearch" />
                 <el-button typep="primary" @click="handleSearch">搜索</el-button>
                 <el-button @click="loadUsers">刷新</el-button>
@@ -113,8 +113,8 @@ const totalCount = ref<number>(0)
 const searchUserName = ref<string>('')
 
 const selectedUser = ref<AdminUserInfo>()
-const roleEditVisible = ref(false)
-const updateUserVisible = ref(false)
+const roleEditVisible = ref<boolean>(false)
+const updateUserVisible = ref<boolean>(false)
 
 const loadUsers = async () => {
     loading.value = true;

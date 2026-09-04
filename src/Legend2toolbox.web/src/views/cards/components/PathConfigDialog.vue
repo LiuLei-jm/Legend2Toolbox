@@ -3,10 +3,10 @@
         width="500px" @open="fetchCurrentPath" @close="resetForm">
         <el-form :model="form" :rules="rules" ref="formRef" label-width="120px" v-loading="loading">
             <el-form-item label="基础路径" prop="basePath">
-                <el-input v-model="form.basePath" placeholder="例如：C:\Cards" />
+                <el-input id="basePath" name="basePath" v-model="form.basePath" placeholder="例如：C:\Cards" />
             </el-form-item>
             <el-form-item label="文件路径" prop="fileName">
-                <el-input v-model="form.fileName" placeholder="例如：data\cards.txt" />
+                <el-input id="fileName" name="fileName" v-model="form.fileName" placeholder="例如：data\cards.txt" />
             </el-form-item>
             <el-form-item label="允许自定义路径">
                 <el-switch v-model="form.allowCustomPaths" active-text="允许" inactive-text="禁止" />
@@ -41,8 +41,8 @@ const dialogVisible = computed ({
 
 ) 
 const formRef = ref<FormInstance>()
-const loading = ref(false)
-const submitLoading = ref(false)
+const loading = ref<boolean>(false)
+const submitLoading = ref<boolean>(false)
 
 const form = reactive({
     basePath: '',

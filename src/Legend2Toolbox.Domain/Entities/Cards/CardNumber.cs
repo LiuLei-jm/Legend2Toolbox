@@ -1,13 +1,9 @@
 ﻿using Legend2Toolbox.Domain.Common;
 
-namespace Legend2Toolbox.Domain.Entities;
+namespace Legend2Toolbox.Domain.Entities.Cards;
 
 public class CardNumber : AuditableEntity
 {
-    private CardNumber()
-    {
-    }
-
     public string Owner { get; private set; } = string.Empty;
     public DateTimeOffset StartTime { get; private set; }
     public int DurationInDays { get; private set; }
@@ -21,6 +17,9 @@ public class CardNumber : AuditableEntity
 
     public Guid UserId { get; private set; }
 
+    private CardNumber()
+    {
+    }
     public bool IsExpired => DateTimeOffset.UtcNow > EndTime;
 
     public static CardNumber Create(string customerName, int durationInDays, double faceValue, decimal amount,

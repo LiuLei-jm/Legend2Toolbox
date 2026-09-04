@@ -1,4 +1,6 @@
-﻿namespace Legend2Toolbox.Infrastructure.Persistence.EntitiesConfiguration;
+﻿using Legend2Toolbox.Domain.Entities.Cards;
+
+namespace Legend2Toolbox.Infrastructure.Persistence.EntitiesConfiguration.CardsConfiguration;
 
 public class CardNumberConfiguration : IEntityTypeConfiguration<CardNumber>
 {

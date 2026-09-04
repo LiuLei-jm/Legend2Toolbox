@@ -2,7 +2,7 @@
 
 public static class ErrorMessages
 {
-    public static class Auth
+    public static class AuthError
     {
         public const string InvalidCredentials = "用户名或密码错误.";
         public const string UserLockedOut = "该账号因多次输错密码已被锁定，请在 {0} 分钟后重试.";
@@ -16,13 +16,20 @@ public static class ErrorMessages
         public const string RefreshDenied = "刷新令牌被拒绝";
     }
 
-    public static class SeKey
+    public static class KeyError
     {
         public const string NotFoundValidKey = "未找到有效的KEY";
     }
 
-    public static class Card
+    public static class CardError
     {
         public const string NotFoundCard = "未找到卡号";
+    }
+    public static class ScriptError
+    {
+        public const string NotFoundScriptSet = "未找到脚本套";
+        public const string NotFoundScriptFile = "未找到脚本文件";
+        public const string NotFoundMaterialFile = "未找到素材文件";
+        public const string NotFoundScriptSetDbData = "为找到DB数据";
     }
 }

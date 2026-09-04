@@ -38,9 +38,9 @@ import {onMounted, onUnmounted, ref} from 'vue'
 import SideMenu from '@/components/layout/SideMenu.vue'
 import TopHead from '@/components/layout/TopHead.vue'
 
-const isCollapse = ref(false)
-const isMobile = ref(false)
-const mobileDrawerVisible = ref(false)
+const isCollapse = ref<boolean>(false)
+const isMobile = ref<boolean>(false)
+const mobileDrawerVisible = ref<boolean>(false)
 
 // 检测当前屏幕尺寸是否为移动端
 const checkScreenSize = () => {

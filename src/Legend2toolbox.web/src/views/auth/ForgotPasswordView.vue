@@ -5,7 +5,7 @@
             <p class="sub-title">请输入您绑定的注册邮箱，我们将向您发送重置密码连接</p>
             <el-form :model="form" :rules="rules" ref="formRef" label-position="top">
                 <el-form-item prop="email" label="注册邮箱">
-                    <el-input v-model="form.email" placeholder="请输入绑定的邮箱地址" prefix-icon="Message" />
+                    <el-input id="email" name="email" v-model="form.email" placeholder="请输入绑定的邮箱地址" prefix-icon="Message" />
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" :loading="loading" @click="handleSendEmail" style="width:100%;">
@@ -20,13 +20,12 @@
 <script setup lang='ts'>
 import { ref, reactive } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
-import { ElMessage } from "element-plus"
 import { AuthorizationService } from '@/api/generated/services/AuthorizationService'
 import type { ForgotPasswordRequest } from '@/api/generated/models/ForgotPasswordRequest'
 import { handleApiError } from '@/utils/errorHandler'
 
 const formRef = ref<FormInstance>()
-const loading = ref(false)
+const loading = ref<boolean>(false)
 const form = reactive({
     email: ''
 })

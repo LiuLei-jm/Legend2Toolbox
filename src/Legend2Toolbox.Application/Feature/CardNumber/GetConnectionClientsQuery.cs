@@ -21,11 +21,11 @@ public class
         CancellationToken cancellationToken)
     {
         if (!Guid.TryParse(_currentUserService.UserId, out var currentUserId))
-            return Result<IEnumerable<ConnectionInfo>>.Failure(ErrorMessages.Auth.InvalidUserId);
+            return Result<IEnumerable<ConnectionInfo>>.Failure(ErrorMessages.AuthError.InvalidUserId);
         var securityKeyStr = await _context.ConnectionKeys.AsNoTracking().Where(s => s.UserId == currentUserId)
             .Select(s => s.Key).FirstOrDefaultAsync(cancellationToken);
         if (string.IsNullOrEmpty(securityKeyStr))
-            return Result<IEnumerable<ConnectionInfo>>.Failure(ErrorMessages.SeKey.NotFoundValidKey);
+            return Result<IEnumerable<ConnectionInfo>>.Failure(ErrorMessages.KeyError.NotFoundValidKey);
         var connections = _connectionManager.GetConnection(securityKeyStr);
         return Result<IEnumerable<ConnectionInfo>>.Success(connections);
     }

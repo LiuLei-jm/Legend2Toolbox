@@ -1,7 +1,6 @@
 ﻿namespace Legend2Toolbox.Application.Feature.CardNumber;
 
 public record UpdateCardNumberPathCommand(string BasePath, string FileName, bool AllowCustomPath) : IRequest<Result>;
-
 public class UpdateCardNumberPathCommandValidator : AbstractValidator<UpdateCardNumberPathCommand>
 {
     private static readonly char[] InvalidPathChars = Path.GetInvalidPathChars();
@@ -42,10 +41,10 @@ public class UpdateCardNumberPathCommandHandler : IRequestHandler<UpdateCardNumb
     public async Task<Result> Handle(UpdateCardNumberPathCommand request, CancellationToken cancellationToken)
     {
         if (!Guid.TryParse(_currentUserService.UserId, out var userId))
-            return Result.Failure(ErrorMessages.Auth.InvalidUserId);
+            return Result.Failure(ErrorMessages.AuthError.InvalidUserId);
         var cardNumberPath =
             await _context.CardNumberPaths.FirstOrDefaultAsync(c => c.UserId == userId, cancellationToken);
-        if (cardNumberPath is null) return Result.Failure(ErrorMessages.Card.NotFoundCard);
+        if (cardNumberPath is null) return Result.Failure(ErrorMessages.CardError.NotFoundCard);
         cardNumberPath.Update(request.BasePath, request.FileName, request.AllowCustomPath);
         await _context.SaveChangesAsync(cancellationToken);
         return Result.Success();

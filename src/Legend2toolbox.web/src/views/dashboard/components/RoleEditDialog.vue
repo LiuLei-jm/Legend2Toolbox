@@ -2,7 +2,7 @@
     <el-dialog v-model="dialogVisible" title="分配角色" width="400px" @open="initForm" @close="handleClose">
         <el-form ref="formRef" :model="formData" :rules="rules" label-width="80px" v-loading="fetchingRoles">
             <el-form-item label="当前用户">
-                <el-input :model-value="userInfo?.username" disabled />
+                <el-input id="username" name="username" :model-value="userInfo?.username" disabled />
             </el-form-item>
             <el-form-item label="选择角色" prop="roles">
                 <el-checkbox-group v-model="formData.roles" class="role-radio-group">
@@ -29,7 +29,7 @@
 import { ref, computed } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import { ElMessage } from 'element-plus'
-import {useAuthStore} from '@/stores/auth'
+import { useAuthStore } from '@/stores/auth'
 import { AdminUserManagementService } from '@/api/generated/services/AdminUserManagementService'
 import type { AssignRoleRequest } from '@/api/generated/models/AssignRoleRequest'
 import type { AdminUserInfo } from '@/types/user'
@@ -73,10 +73,10 @@ const rules: FormRules = {
 }
 
 const initForm = async () => {
-    try{
+    try {
         await authStore.fetchRoleList()
-    }catch(error){
-        handleApiError(error,'获取角色列表失败')
+    } catch (error) {
+        handleApiError(error, '获取角色列表失败')
     }
     if (props.userInfo) {
         if (Array.isArray(props.userInfo.roles)) {

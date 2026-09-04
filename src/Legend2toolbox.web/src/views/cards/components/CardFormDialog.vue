@@ -3,22 +3,22 @@
         @update:model-value="$emit('update:visible', $event)" width="500px" @open="initForm" @close="resetForm">
         <el-form :model="form" :rules="rules" ref="formRef" label-width="100px">
             <el-form-item label="客户名" prop="owner">
-                <el-input v-model="form.owner" placeholder="请输入客户名称" />
+                <el-input id="owner" name="owner" v-model="form.owner" placeholder="请输入客户名称" />
             </el-form-item>
             <el-form-item label="持续天数" prop="durationInDays">
-                <el-input-number v-model="form.durationInDays" :min="1" style="width: 100%" />
+                <el-input-number id="durationInDays" name="durationInDays" v-model="form.durationInDays" :min="1" style="width: 100%" />
             </el-form-item>
             <el-form-item label="面值" prop="faceValue">
-                <el-input-number v-model="form.faceValue" :min="0" :precision="1" style="width: 100%" />
+                <el-input-number id="faceValue" name="faceValue" v-model="form.faceValue" :min="0" :precision="1" style="width: 100%" />
             </el-form-item>
             <el-form-item label="实际金额" prop="amount">
-                <el-input-number v-model="form.amount" :min="0" :precision="1" style="width:100%" />
+                <el-input-number id="amount" name="amount" v-model="form.amount" :min="0" :precision="1" style="width:100%" />
             </el-form-item>
             <el-form-item v-if="isEdit" label="开始时间" prop="startTime">
                 <el-date-picker v-model="form.startTime" type="datetime" placeholder="选择开始时间" style="width: 100%" />
             </el-form-item>
             <el-form-item label="备注">
-                <el-input v-model="form.notes" type="textarea" placeholder="请输入备注信息" />
+                <el-input id="notes" name="notes" v-model="form.notes" type="textarea" placeholder="请输入备注信息" />
             </el-form-item>
         </el-form>
 
@@ -54,7 +54,7 @@ const dialogVisible = computed({
 })
 
 const formRef = ref<FormInstance>()
-const submitLoading = ref(false)
+const submitLoading = ref<boolean>(false)
 
 const form = reactive({
     id: '',

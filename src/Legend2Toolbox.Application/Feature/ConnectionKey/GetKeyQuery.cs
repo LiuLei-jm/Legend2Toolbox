@@ -16,9 +16,9 @@ public class GetKeyQueryHandler : IRequestHandler<GetKeyQuery, Result<SecurityKe
     public async Task<Result<SecurityKeyResponse>> Handle(GetKeyQuery request, CancellationToken cancellationToken)
     {
         if (!Guid.TryParse(_currentUserService.UserId, out var userId))
-            return Result<SecurityKeyResponse>.Failure(ErrorMessages.Auth.InvalidUserId);
+            return Result<SecurityKeyResponse>.Failure(ErrorMessages.AuthError.InvalidUserId);
         var key = await _context.ConnectionKeys.FirstOrDefaultAsync(k => k.UserId == userId, cancellationToken);
-        if (key == null) return Result<SecurityKeyResponse>.Failure(ErrorMessages.SeKey.NotFoundValidKey);
+        if (key == null) return Result<SecurityKeyResponse>.Failure(ErrorMessages.KeyError.NotFoundValidKey);
         return Result<SecurityKeyResponse>.Success(new SecurityKeyResponse(
             key.Key, key.CreatedOn, key.LastModifiedOn));
     }

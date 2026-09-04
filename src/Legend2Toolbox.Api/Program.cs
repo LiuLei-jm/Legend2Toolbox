@@ -1,6 +1,7 @@
 using Legend2Toolbox.Api.Endpoints.Admin;
 using Legend2Toolbox.Api.Endpoints.CardNumber;
 using Legend2Toolbox.Api.Endpoints.ConnectionKey;
+using Legend2Toolbox.Api.Endpoints.Script;
 
 try
 {
@@ -58,6 +59,7 @@ try
     app.MapAdminUserEndpoints();
     app.MapConnectionKeyEndpoints();
     app.MapCardNumberEndpoints();
+    app.MapScriptEndpoints();
 
     app.MapHub<ResourceSyncHub>("/sync");
 

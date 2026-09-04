@@ -1,4 +1,6 @@
-﻿namespace Legend2Toolbox.Infrastructure.Persistence;
+﻿using Legend2Toolbox.Domain.Entities.Cards;
+
+namespace Legend2Toolbox.Infrastructure.Persistence;
 
 public static class IdentityDataSeeder
 {

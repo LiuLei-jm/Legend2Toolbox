@@ -1,4 +1,6 @@
-﻿namespace Legend2Toolbox.Infrastructure.Identity;
+﻿using Legend2Toolbox.Domain.Entities.Cards;
+
+namespace Legend2Toolbox.Infrastructure.Identity;
 
 public class ApplicationUser : IdentityUser<Guid>
 {

@@ -32,6 +32,12 @@ const routes: Array<RouteRecordRaw> = [
         meta: {title: '通讯密钥'}
       },
       {
+        path: 'script',
+        name: 'Script',
+        component: () => import('@/views/script/ScriptSetManagement.vue'),
+        meta: {title: '脚本管理'}
+      },
+      {
         path: 'admin/users',
         name: "UserManagement",
         component: () => import('@/views/dashboard/AdminUserManagement.vue'),

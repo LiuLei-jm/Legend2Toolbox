@@ -18,11 +18,11 @@
                  label-position="top"
                  size="large" @keyup.enter="handleLogin">
           <el-form-item label="账号" prop="username">
-            <el-input v-model="formData.username" :prefix-icon="User" clearable
+            <el-input id="username" name="username" v-model="formData.username" :prefix-icon="User" clearable
                       placeholder="请输入用户名"/>
           </el-form-item>
           <el-form-item label="密码" prop="password">
-            <el-input v-model="formData.password" :prefix-icon="Lock" placeholder="请输入密码"
+            <el-input id="password" name="password" v-model="formData.password" :prefix-icon="Lock" placeholder="请输入密码"
                       show-password
                       type="password"/>
           </el-form-item>
@@ -65,7 +65,7 @@ const route = useRoute();
 const authStore = useAuthStore();
 
 const loginFormRef = ref<FormInstance>();
-const isLoading = ref(false);
+const isLoading = ref<boolean>(false);
 
 const formData = reactive({
   username: '',

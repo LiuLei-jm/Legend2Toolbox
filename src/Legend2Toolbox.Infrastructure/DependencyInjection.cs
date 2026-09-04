@@ -6,7 +6,10 @@ public static class DependencyInjection
         IConfiguration configuration)
     {
         var connectionString = configuration.GetConnectionString("Default");
-        services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite(connectionString));
+        services.AddDbContext<ApplicationDbContext>(options =>
+        options.UseSqlite(connectionString,
+            sqlOptions => sqlOptions.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)
+            ));
 
         //var connectionString = configuration.GetConnectionString("PostgresqlConnection");
         //services.AddDbContext<ApplicationDbContext>(options => { options.UseNpgsql(connectionString); });
@@ -16,6 +19,7 @@ public static class DependencyInjection
         services.AddScoped<IIdentityService, IdentityService>();
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<ICurrentUserService, CurrentUserService>();
+        services.AddScoped<IFileStorageService, LocalFileStorageService>();
         services.AddTransient<IEmailSender, SmtpEmailSender>();
         return services;
     }

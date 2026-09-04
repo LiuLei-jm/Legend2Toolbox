@@ -1,4 +1,6 @@
 ﻿
+using Legend2Toolbox.Domain.Entities.Cards;
+
 namespace Legend2Toolbox.Infrastructure.Identity;
 
 public class IdentityService : IIdentityService
@@ -24,12 +26,12 @@ public class IdentityService : IIdentityService
     {
         var user = await _userManager.FindByNameAsync(request.Username);
         if (user == null || !user.IsActive || user.IsDeleted)
-            return Result<AuthResponse>.Failure(ErrorMessages.Auth.InvalidCredentials);
+            return Result<AuthResponse>.Failure(ErrorMessages.AuthError.InvalidCredentials);
         if (await _userManager.IsLockedOutAsync(user))
         {
             var lockoutEnd = await _userManager.GetLockoutEndDateAsync(user);
             var timeLeft = lockoutEnd.HasValue ? lockoutEnd.Value - DateTimeOffset.UtcNow : TimeSpan.Zero;
-            return Result<AuthResponse>.Failure(string.Format(ErrorMessages.Auth.UserLockedOut,
+            return Result<AuthResponse>.Failure(string.Format(ErrorMessages.AuthError.UserLockedOut,
                 Math.Ceiling(timeLeft.TotalMinutes)));
         }
 
@@ -40,11 +42,11 @@ public class IdentityService : IIdentityService
             {
                 var lockoutEnd = await _userManager.GetLockoutEndDateAsync(user);
                 var timeLeft = lockoutEnd.HasValue ? lockoutEnd.Value - DateTimeOffset.UtcNow : TimeSpan.Zero;
-                return Result<AuthResponse>.Failure(string.Format(ErrorMessages.Auth.UserLockedOut,
+                return Result<AuthResponse>.Failure(string.Format(ErrorMessages.AuthError.UserLockedOut,
                     Math.Ceiling(timeLeft.TotalMinutes)));
             }
 
-            return Result<AuthResponse>.Failure(ErrorMessages.Auth.InvalidCredentials);
+            return Result<AuthResponse>.Failure(ErrorMessages.AuthError.InvalidCredentials);
         }
 
         await _userManager.ResetAccessFailedCountAsync(user);
@@ -65,9 +67,9 @@ public class IdentityService : IIdentityService
     public async Task<Result> ChangePasswordAsync(ChangePasswordCommand request)
     {
         var userId = _currentUserService.UserId;
-        if (userId == null) throw new UnauthorizedAccessException(ErrorMessages.Auth.TokenExpired);
+        if (userId == null) throw new UnauthorizedAccessException(ErrorMessages.AuthError.TokenExpired);
         var user = await _userManager.FindByIdAsync(userId);
-        if (user is null) throw new UnauthorizedAccessException(ErrorMessages.Auth.TokenExpired);
+        if (user is null) throw new UnauthorizedAccessException(ErrorMessages.AuthError.TokenExpired);
         var result = await _userManager.ChangePasswordAsync(user, request.OldPassword, request.NewPassword);
         if (result.Succeeded) return Result.Success();
         return Result.Failure([.. result.Errors.Select(e => e.Description)]);
@@ -95,7 +97,7 @@ public class IdentityService : IIdentityService
     public async Task<Result> RegisterUserAsync(RegisterCommand request)
     {
         var existingEmailUser = await _userManager.FindByEmailAsync(request.Email);
-        if (existingEmailUser != null) return Result.Failure(ErrorMessages.Auth.EmailAlreadyExists);
+        if (existingEmailUser != null) return Result.Failure(ErrorMessages.AuthError.EmailAlreadyExists);
         var userId = Guid.NewGuid();
         var user = new ApplicationUser
         {
@@ -120,7 +122,7 @@ public class IdentityService : IIdentityService
     public async Task<Result> ResetPasswordAsync(ResetPasswordCommand request)
     {
         var user = await _userManager.FindByEmailAsync(request.Email);
-        if (user == null) return Result.Failure(ErrorMessages.Auth.AccountNotExist);
+        if (user == null) return Result.Failure(ErrorMessages.AuthError.AccountNotExist);
         var result = await _userManager.ResetPasswordAsync(user, request.Token, request.NewPassword);
         if (result.Succeeded)
         {
@@ -135,7 +137,7 @@ public class IdentityService : IIdentityService
     public async Task<Result> AssignRoleAsync(AssignRoleCommand request)
     {
         var user = await _userManager.FindByIdAsync(request.UserId);
-        if (user == null) return Result.Failure(ErrorMessages.Auth.AccountNotExist);
+        if (user == null) return Result.Failure(ErrorMessages.AuthError.AccountNotExist);
 
         var currentRoles = await _userManager.GetRolesAsync(user);
 
@@ -170,9 +172,9 @@ public class IdentityService : IIdentityService
     public async Task<Result<bool>> ToggleUserLockAsync(ToggleUserLockCommand request)
     {
         var user = await _userManager.FindByIdAsync(request.UserId);
-        if (user == null) return Result<bool>.Failure(ErrorMessages.Auth.AccountNotExist);
+        if (user == null) return Result<bool>.Failure(ErrorMessages.AuthError.AccountNotExist);
         if (user.UserName == AdminInfo.AdminUserName)
-            return Result<bool>.Failure(ErrorMessages.Auth.CannotPerformedOnSuperAdmin);
+            return Result<bool>.Failure(ErrorMessages.AuthError.CannotPerformedOnSuperAdmin);
 
         IdentityResult result;
         if (request.LockUser)
@@ -192,7 +194,7 @@ public class IdentityService : IIdentityService
     public async Task<Result> UpdateUserProfileAsync(UpdateUserProfileCommand request)
     {
         var user = await _userManager.FindByIdAsync(_currentUserService.UserId!);
-        if (user == null) return Result.Failure(ErrorMessages.Auth.AccountNotExist);
+        if (user == null) return Result.Failure(ErrorMessages.AuthError.AccountNotExist);
         user.NickName = request.NickName;
         user.Email = request.Email;
         user.PhoneNumber = request.PhoneNumber;
@@ -257,17 +259,17 @@ public class IdentityService : IIdentityService
     public async Task<Result> UpdateUserAsync(UpdateUserCommand request)
     {
         var user = await _userManager.FindByIdAsync(request.UserId);
-        if (user == null) return Result.Failure(ErrorMessages.Auth.AccountNotExist);
+        if (user == null) return Result.Failure(ErrorMessages.AuthError.AccountNotExist);
         if (user.UserName == AdminInfo.AdminUserName)
-            return Result.Failure(ErrorMessages.Auth.CannotPerformedOnSuperAdmin);
+            return Result.Failure(ErrorMessages.AuthError.CannotPerformedOnSuperAdmin);
 
         var existingEmailUser = await _userManager.FindByEmailAsync(request.Email);
         if (existingEmailUser != null && existingEmailUser.Id.ToString() != request.UserId)
-            return Result.Failure(ErrorMessages.Auth.EmailAlreadyExists);
+            return Result.Failure(ErrorMessages.AuthError.EmailAlreadyExists);
 
         var existingNameUser = await _userManager.FindByNameAsync(request.Username);
         if (existingNameUser != null && existingNameUser.Id.ToString() != request.UserId)
-            return Result.Failure(ErrorMessages.Auth.UsernameAlreadyExists);
+            return Result.Failure(ErrorMessages.AuthError.UsernameAlreadyExists);
 
         if (user.UserName != AdminInfo.AdminUserName)
         {
@@ -287,9 +289,9 @@ public class IdentityService : IIdentityService
     public async Task<Result> DeleteUserAsync(string userId)
     {
         var user = await _userManager.FindByIdAsync(userId);
-        if (user == null) return Result.Failure(ErrorMessages.Auth.AccountNotExist);
+        if (user == null) return Result.Failure(ErrorMessages.AuthError.AccountNotExist);
         if (user.UserName == AdminInfo.AdminUserName)
-            return Result.Failure(ErrorMessages.Auth.CannotPerformedOnSuperAdmin);
+            return Result.Failure(ErrorMessages.AuthError.CannotPerformedOnSuperAdmin);
         var result = await _userManager.DeleteAsync(user);
         if (!result.Succeeded) return Result.Failure(result.Errors.Select(e => e.Description).ToArray());
         return Result.Success();
@@ -298,7 +300,7 @@ public class IdentityService : IIdentityService
     public async Task<Result<UserDto>> GetUserByNameAsync(string name)
     {
         var user = await _userManager.FindByNameAsync(name);
-        if (user == null) return Result<UserDto>.Failure(ErrorMessages.Auth.AccountNotExist);
+        if (user == null) return Result<UserDto>.Failure(ErrorMessages.AuthError.AccountNotExist);
         var roles = await _userManager.GetRolesAsync(user);
         var isLocked = await _userManager.IsLockedOutAsync(user);
         var lockoutEnd = await _userManager.GetLockoutEndDateAsync(user);
@@ -317,10 +319,10 @@ public class IdentityService : IIdentityService
     public async Task<Result> RemoveUserAsync(RemoveUserCommand request)
     {
         var user = await _userManager.FindByIdAsync(request.UserId);
-        if (user == null) return Result.Failure(ErrorMessages.Auth.AccountNotExist);
+        if (user == null) return Result.Failure(ErrorMessages.AuthError.AccountNotExist);
         if (user.UserName == AdminInfo.AdminUserName)
-            return Result.Failure(ErrorMessages.Auth.CannotPerformedOnSuperAdmin);
-        if (user.IsDeleted) return Result.Failure(ErrorMessages.Auth.AccountNotExist);
+            return Result.Failure(ErrorMessages.AuthError.CannotPerformedOnSuperAdmin);
+        if (user.IsDeleted) return Result.Failure(ErrorMessages.AuthError.AccountNotExist);
         user.IsDeleted = true;
         user.IsActive = false;
         var result = await _userManager.UpdateAsync(user);
@@ -331,7 +333,7 @@ public class IdentityService : IIdentityService
     public async Task<Result<UserInfoDto>> GetUserInfoAsync(GetUserInfoQuery request)
     {
         var user = await _userManager.FindByIdAsync(_currentUserService.UserId ?? "");
-        if (user is null) return Result<UserInfoDto>.Failure(ErrorMessages.Auth.AccountNotExist);
+        if (user is null) return Result<UserInfoDto>.Failure(ErrorMessages.AuthError.AccountNotExist);
         var roles = await _userManager.GetRolesAsync(user);
         var userInfo = new UserInfoDto
         {
@@ -350,25 +352,20 @@ public class IdentityService : IIdentityService
     {
         if (string.IsNullOrWhiteSpace(request.RefreshToken))
         {
-            return Result<AuthResponse>.Failure(ErrorMessages.Auth.TokenExpired);
+            return Result<AuthResponse>.Failure(ErrorMessages.AuthError.TokenExpired);
         }
 
         var user = await _userManager.Users
             .FirstOrDefaultAsync(u => u.RefreshToken == request.RefreshToken);
 
-        if (user == null)
+        if (user == null|| !user.IsActive || user.IsDeleted || await _userManager.IsLockedOutAsync(user))
         {
-            return Result<AuthResponse>.Failure(ErrorMessages.Auth.RefreshDenied);
-        }
-
-        if (!user.IsActive || user.IsDeleted || await _userManager.IsLockedOutAsync(user))
-        {
-            return Result<AuthResponse>.Failure(ErrorMessages.Auth.RefreshDenied);
+            return Result<AuthResponse>.Failure(ErrorMessages.AuthError.RefreshDenied);
         }
 
         if (user.RefreshTokenExpiryTime <= DateTime.UtcNow)
         {
-            return Result<AuthResponse>.Failure(ErrorMessages.Auth.TokenExpired);
+            return Result<AuthResponse>.Failure(ErrorMessages.AuthError.TokenExpired);
         }
 
         var (newAccessToken, expiresAt) = await _tokenService.GenerateAccessTokenAsync(user);

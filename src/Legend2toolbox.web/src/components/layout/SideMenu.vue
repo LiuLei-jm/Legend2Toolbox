@@ -24,6 +24,13 @@
         <template #title>通讯密钥</template>
       </el-menu-item>
 
+      <el-menu-item index="/script">
+        <el-icon>
+          <Document />
+        </el-icon>
+        <template #title>脚本管理</template>
+      </el-menu-item>
+
       <el-menu-item index="download-gateway" @click="downloadWpfGateway">
         <el-icon>
           <Download />
@@ -51,12 +58,15 @@
 </template>
 
 <script lang='ts' setup>
-import { Box, Key, Ticket, User, Setting, Download } from '@element-plus/icons-vue'
+import { ref } from 'vue'
+import { Box, Key, Ticket, User, Setting, Download, Document } from '@element-plus/icons-vue'
 import { useAuthStore } from '@/stores/auth'
-import {ElMessage} from  'element-plus'
+import { ElMessage } from 'element-plus'
 import { computed } from 'vue'
 
 const authStore = useAuthStore()
+
+const lastDownloadTime = ref<number>(0)
 
 defineProps<{
   isCollapse: boolean
@@ -67,6 +77,17 @@ const hasSuperAdminRole = computed(() => {
 });
 
 const downloadWpfGateway = () => {
+  const now = Date.now()
+  const COOLDOWN_TIME = 60 * 1000
+
+  if (now - lastDownloadTime.value < COOLDOWN_TIME) {
+    const remainingSeconds = Math.ceil((COOLDOWN_TIME - (now - lastDownloadTime.value)) / 1000)
+    ElMessage.warning(`下载太频繁，请等待 ${remainingSeconds} 秒后再试`)
+    return
+  }
+
+  lastDownloadTime.value = now
+
   const downloadUrl = '/downloads/CardGateway.zip'
 
   ElMessage.success('正在开始下载 WPF 客户端网关...')

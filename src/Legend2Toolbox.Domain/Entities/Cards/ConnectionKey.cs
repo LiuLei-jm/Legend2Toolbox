@@ -1,10 +1,13 @@
 ﻿using Legend2Toolbox.Domain.Common;
 using System.Security.Cryptography;
 
-namespace Legend2Toolbox.Domain.Entities;
+namespace Legend2Toolbox.Domain.Entities.Cards;
 
 public class ConnectionKey : AuditableEntity
 {
+    public string Key { get; private set; } = string.Empty;
+    public Guid UserId { get; set; }
+
     private ConnectionKey()
     {
     }
@@ -16,10 +19,6 @@ public class ConnectionKey : AuditableEntity
         CreatedBy = user;
         UserId = userId;
     }
-
-    public string Key { get; private set; } = string.Empty;
-    public Guid UserId { get; set; }
-
     public static ConnectionKey Create(Guid userId, string? user)
     {
         return new ConnectionKey(

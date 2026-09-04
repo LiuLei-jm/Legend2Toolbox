@@ -38,13 +38,13 @@ public class UpdateCardNumberCommandHandler : IRequestHandler<UpdateCardNumberCo
     public async Task<Result> Handle(UpdateCardNumberCommand request, CancellationToken cancellationToken)
     {
         if (!Guid.TryParse(_currentUserService.UserId, out var currentUserId))
-            return Result.Failure(ErrorMessages.Auth.InvalidUserId);
+            return Result.Failure(ErrorMessages.AuthError.InvalidUserId);
         var card = await _context.CardNumbers.FindAsync([request.CardId], cancellationToken);
-        if (card is null) return Result.Failure(ErrorMessages.Card.NotFoundCard);
+        if (card is null) return Result.Failure(ErrorMessages.CardError.NotFoundCard);
         var isAdmin = _currentUserService.UserName == AdminInfo.AdminUserName;
         var isOwner = card.UserId == currentUserId;
         if (!isAdmin && !isOwner)
-            return Result.Failure(ErrorMessages.Auth.NoPermissionToOperate);
+            return Result.Failure(ErrorMessages.AuthError.NoPermissionToOperate);
 
         var utcTime = request.StartTime.ToUniversalTime();
 
