@@ -484,8 +484,6 @@ $RECYCLE.BIN/
 # Database
 *.db
 
-**/Migrations/
-
 
 # Prerequisites
 node_modules/

@@ -26,10 +26,6 @@
         <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
     </ItemGroup>
 
-    <!--<ItemGroup>
-        <Folder Include="Resources\" />
-    </ItemGroup>-->
-
     <ItemGroup>
         <ProjectReference Include="..\Legend2Toolbox.Domain\Legend2Toolbox.Domain.csproj" />
         <ProjectReference Include="..\Legend2Toolbox.Shared\Legend2Toolbox.Shared.csproj" />

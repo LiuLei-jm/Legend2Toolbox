@@ -19,28 +19,24 @@ try
 
     var app = builder.Build();
 
-    if (app.Environment.IsDevelopment())
+    using (var scope = app.Services.CreateScope())
     {
-        using var scope = app.Services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-        db.Database.Migrate();
-    }
-    else
-    {
-        using var scope = app.Services.CreateScope();
-        var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-
         try
         {
+            Log.Information("正在检查数据库迁移...");
             db.Database.Migrate();
+            Log.Information("数据库迁移检查完毕！"); 
         }
         catch (Exception ex)
         {
             Directory.CreateDirectory(@"D:\Logs\ToolboxAPI");
             File.WriteAllText(@"D:\Logs\ToolboxAPI\db-migration-error.txt", ex.ToString());
+            Log.Fatal(ex,"在检查数据库迁移时发生致命错误.");
             throw;
         }
     }
+    
     // Configure the HTTP request pipeline.
     app.UseExceptionHandler();
     if (app.Environment.IsDevelopment())

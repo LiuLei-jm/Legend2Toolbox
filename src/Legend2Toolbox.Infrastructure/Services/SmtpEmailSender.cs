@@ -19,7 +19,7 @@ public class SmtpEmailSender : IEmailSender
         email.From.Add(new MailboxAddress(_emailSettings.SenderName, _emailSettings.SenderEmail));
         email.To.Add(MailboxAddress.Parse(to));
         email.Subject = subject;
-
+        _logger.LogInformation("正在发送邮件...,{SmtpServer}:{SmtpPort} {SenderEmail} - {Password}",_emailSettings.SmtpServer,_emailSettings.SmtpPort, _emailSettings.SenderEmail,_emailSettings.Password);
         email.Body = new TextPart(TextFormat.Html) { Text = body };
         using var smtp = new SmtpClient();
         try
