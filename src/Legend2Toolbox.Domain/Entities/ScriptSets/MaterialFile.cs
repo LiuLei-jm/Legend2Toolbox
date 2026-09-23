@@ -10,6 +10,7 @@ public class MaterialFile : BaseEntity
     public string StoragePath { get; private set; } = string.Empty;
     public string TargetPath { get; private set; } = string.Empty;
     public string Password { get; private set; } = string.Empty;
+    public string Sha256 { get; private set; } = string.Empty;
 
     public long FileSize { get; private set; }
 
@@ -18,7 +19,14 @@ public class MaterialFile : BaseEntity
     {
 
     }
-    public static MaterialFile Create(Guid scriptSetId, string fileName, string storagePath, string targetPath, string password, long fileSize)
+    public static MaterialFile Create(
+        Guid scriptSetId,
+        string fileName,
+        string storagePath,
+        string targetPath,
+        string password,
+        long fileSize,
+        string sha256)
     {
         return new MaterialFile
         {
@@ -27,15 +35,29 @@ public class MaterialFile : BaseEntity
             StoragePath = storagePath,
             TargetPath = targetPath,
             Password = password,
-            FileSize = fileSize
+            FileSize = fileSize,
+            Sha256 = sha256
         };
     }
-    public void Update(string fileName, string storagePath, string targetPath, string password, long fileSize = 0)
+
+    public void Update(
+        string fileName,
+        string storagePath,
+        string targetPath,
+        string password,
+        long fileSize,
+        string sha256)
     {
         FileName = fileName;
         StoragePath = storagePath;
         TargetPath = targetPath;
         Password = password;
         FileSize = fileSize;
+        Sha256 = sha256;
+    }
+
+    public void SetSha256(string sha256)
+    {
+        Sha256 = sha256;
     }
 }

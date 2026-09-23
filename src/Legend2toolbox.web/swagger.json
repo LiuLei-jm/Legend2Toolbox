@@ -7,7 +7,9 @@
   "paths": {
     "/api/admin/users/clients": {
       "get": {
-        "tags": ["Admin User Management"],
+        "tags": [
+          "Admin User Management"
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -17,7 +19,9 @@
     },
     "/api/admin/users": {
       "get": {
-        "tags": ["Admin User Management"],
+        "tags": [
+          "Admin User Management"
+        ],
         "parameters": [
           {
             "name": "pageNumber",
@@ -45,7 +49,9 @@
     },
     "/api/admin/users/name": {
       "get": {
-        "tags": ["Admin User Management"],
+        "tags": [
+          "Admin User Management"
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -65,7 +71,9 @@
     },
     "/api/admin/users/{userId}/lock": {
       "put": {
-        "tags": ["Admin User Management"],
+        "tags": [
+          "Admin User Management"
+        ],
         "parameters": [
           {
             "name": "userId",
@@ -95,7 +103,9 @@
     },
     "/api/admin/users/{userId}/roles": {
       "post": {
-        "tags": ["Admin User Management"],
+        "tags": [
+          "Admin User Management"
+        ],
         "parameters": [
           {
             "name": "userId",
@@ -125,7 +135,9 @@
     },
     "/api/admin/users/{userId}/update": {
       "put": {
-        "tags": ["Admin User Management"],
+        "tags": [
+          "Admin User Management"
+        ],
         "parameters": [
           {
             "name": "userId",
@@ -155,7 +167,9 @@
     },
     "/api/admin/users/{userId}/remove": {
       "put": {
-        "tags": ["Admin User Management"],
+        "tags": [
+          "Admin User Management"
+        ],
         "parameters": [
           {
             "name": "userId",
@@ -175,7 +189,9 @@
     },
     "/api/admin/users/{userId}": {
       "delete": {
-        "tags": ["Admin User Management"],
+        "tags": [
+          "Admin User Management"
+        ],
         "parameters": [
           {
             "name": "userId",
@@ -195,7 +211,9 @@
     },
     "/api/auth/roles": {
       "get": {
-        "tags": ["Authorization"],
+        "tags": [
+          "Authorization"
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -205,7 +223,9 @@
     },
     "/api/auth/register": {
       "post": {
-        "tags": ["Authorization"],
+        "tags": [
+          "Authorization"
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -225,7 +245,9 @@
     },
     "/api/auth/login": {
       "post": {
-        "tags": ["Authorization"],
+        "tags": [
+          "Authorization"
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -245,7 +267,9 @@
     },
     "/api/auth/userinfo": {
       "get": {
-        "tags": ["Authorization"],
+        "tags": [
+          "Authorization"
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -255,7 +279,9 @@
     },
     "/api/auth/change-password": {
       "post": {
-        "tags": ["Authorization"],
+        "tags": [
+          "Authorization"
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -275,7 +301,9 @@
     },
     "/api/auth/forgot-password": {
       "post": {
-        "tags": ["Authorization"],
+        "tags": [
+          "Authorization"
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -295,7 +323,9 @@
     },
     "/api/auth/reset-password": {
       "post": {
-        "tags": ["Authorization"],
+        "tags": [
+          "Authorization"
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -315,7 +345,9 @@
     },
     "/api/auth/refresh": {
       "post": {
-        "tags": ["Authorization"],
+        "tags": [
+          "Authorization"
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -335,7 +367,9 @@
     },
     "/api/auth/update": {
       "put": {
-        "tags": ["Authorization"],
+        "tags": [
+          "Authorization"
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -355,7 +389,9 @@
     },
     "/api/card/create": {
       "post": {
-        "tags": ["Card Number"],
+        "tags": [
+          "Card Number"
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -375,7 +411,9 @@
     },
     "/api/card/update/{id}": {
       "put": {
-        "tags": ["Card Number"],
+        "tags": [
+          "Card Number"
+        ],
         "parameters": [
           {
             "name": "id",
@@ -406,7 +444,9 @@
     },
     "/api/card/delete/{id}": {
       "delete": {
-        "tags": ["Card Number"],
+        "tags": [
+          "Card Number"
+        ],
         "parameters": [
           {
             "name": "id",
@@ -427,7 +467,9 @@
     },
     "/api/card/reissue": {
       "post": {
-        "tags": ["Card Number"],
+        "tags": [
+          "Card Number"
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -447,7 +489,9 @@
     },
     "/api/card/cleanup": {
       "post": {
-        "tags": ["Card Number"],
+        "tags": [
+          "Card Number"
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -467,7 +511,9 @@
     },
     "/api/card/cards": {
       "get": {
-        "tags": ["Card Number"],
+        "tags": [
+          "Card Number"
+        ],
         "parameters": [
           {
             "name": "pageNumber",
@@ -523,7 +569,9 @@
     },
     "/api/card/unexpiredcards": {
       "get": {
-        "tags": ["Card Number"],
+        "tags": [
+          "Card Number"
+        ],
         "parameters": [
           {
             "name": "pageNumber",
@@ -579,7 +627,9 @@
     },
     "/api/card/path": {
       "get": {
-        "tags": ["Card Number"],
+        "tags": [
+          "Card Number"
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -589,7 +639,9 @@
     },
     "/api/card/path/update": {
       "put": {
-        "tags": ["Card Number"],
+        "tags": [
+          "Card Number"
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -609,7 +661,9 @@
     },
     "/api/connection-key": {
       "post": {
-        "tags": ["Connection key"],
+        "tags": [
+          "Connection key"
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -617,7 +671,9 @@
         }
       },
       "get": {
-        "tags": ["Connection key"],
+        "tags": [
+          "Connection key"
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -627,7 +683,9 @@
     },
     "/api/connection-key/clients": {
       "get": {
-        "tags": ["Connection key"],
+        "tags": [
+          "Connection key"
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -637,12 +695,18 @@
     },
     "/api/scripts/material": {
       "post": {
-        "tags": ["Material File"],
+        "tags": [
+          "Material File"
+        ],
         "requestBody": {
           "content": {
             "multipart/form-data": {
               "schema": {
-                "required": ["file", "scriptSetId", "targetPath"],
+                "required": [
+                  "file",
+                  "scriptSetId",
+                  "targetPath"
+                ],
                 "type": "object",
                 "properties": {
                   "scriptSetId": {
@@ -694,7 +758,9 @@
     },
     "/api/scripts/material/{id}": {
       "put": {
-        "tags": ["Material File"],
+        "tags": [
+          "Material File"
+        ],
         "parameters": [
           {
             "name": "id",
@@ -710,32 +776,31 @@
           "content": {
             "multipart/form-data": {
               "schema": {
-                "required": ["req"],
+                "required": [
+                  "targetPath"
+                ],
                 "type": "object",
                 "properties": {
-                  "req": {
-                    "$ref": "#/components/schemas/UpdateMaterialFileRequest"
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "targetPath": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
                   }
                 }
               },
               "encoding": {
-                "req": {
+                "file": {
                   "style": "form"
-                }
-              }
-            },
-            "application/x-www-form-urlencoded": {
-              "schema": {
-                "required": ["req"],
-                "type": "object",
-                "properties": {
-                  "req": {
-                    "$ref": "#/components/schemas/UpdateMaterialFileRequest"
-                  }
-                }
-              },
-              "encoding": {
-                "req": {
+                },
+                "targetPath": {
+                  "style": "form"
+                },
+                "password": {
                   "style": "form"
                 }
               }
@@ -749,7 +814,9 @@
         }
       },
       "delete": {
-        "tags": ["Material File"],
+        "tags": [
+          "Material File"
+        ],
         "parameters": [
           {
             "name": "id",
@@ -770,7 +837,9 @@
     },
     "/api/scripts/material/by-set/{scriptSetId}": {
       "get": {
-        "tags": ["Material File"],
+        "tags": [
+          "Material File"
+        ],
         "parameters": [
           {
             "name": "scriptSetId",
@@ -784,14 +853,78 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MaterialFileDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/scripts/material/{id}/content": {
+      "get": {
+        "tags": [
+          "Material File"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "X-Checksum-SHA256": {
+                "description": "素材文件上传时保存的 SHA-256，小写十六进制格式",
+                "schema": {
+                  "pattern": "^[a-f0-9]{64}$",
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "$ref": "#/components/schemas/Void"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
           }
         }
       }
     },
     "/api/scripts/files": {
       "post": {
-        "tags": ["Script File"],
+        "tags": [
+          "Script File"
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -811,7 +944,9 @@
     },
     "/api/scripts/files/{id}": {
       "put": {
-        "tags": ["Script File"],
+        "tags": [
+          "Script File"
+        ],
         "parameters": [
           {
             "name": "id",
@@ -840,7 +975,9 @@
         }
       },
       "delete": {
-        "tags": ["Script File"],
+        "tags": [
+          "Script File"
+        ],
         "parameters": [
           {
             "name": "id",
@@ -859,7 +996,9 @@
         }
       },
       "get": {
-        "tags": ["Script File"],
+        "tags": [
+          "Script File"
+        ],
         "parameters": [
           {
             "name": "id",
@@ -880,7 +1019,9 @@
     },
     "/api/scripts/files/by-set/{scriptSetId}": {
       "get": {
-        "tags": ["Script File"],
+        "tags": [
+          "Script File"
+        ],
         "parameters": [
           {
             "name": "scriptSetId",
@@ -901,7 +1042,9 @@
     },
     "/api/scripts/sets": {
       "post": {
-        "tags": ["Script Set"],
+        "tags": [
+          "Script Set"
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -919,7 +1062,9 @@
         }
       },
       "get": {
-        "tags": ["Script Set"],
+        "tags": [
+          "Script Set"
+        ],
         "parameters": [
           {
             "name": "pageNumber",
@@ -949,7 +1094,9 @@
     },
     "/api/scripts/sets/{id}": {
       "put": {
-        "tags": ["Script Set"],
+        "tags": [
+          "Script Set"
+        ],
         "parameters": [
           {
             "name": "id",
@@ -978,7 +1125,9 @@
         }
       },
       "delete": {
-        "tags": ["Script Set"],
+        "tags": [
+          "Script Set"
+        ],
         "parameters": [
           {
             "name": "id",
@@ -999,7 +1148,9 @@
     },
     "/api/scripts/db-datas": {
       "post": {
-        "tags": ["Script Set DB Data"],
+        "tags": [
+          "Script Set DB Data"
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -1019,7 +1170,9 @@
     },
     "/api/scripts/db-datas/{id}": {
       "put": {
-        "tags": ["Script Set DB Data"],
+        "tags": [
+          "Script Set DB Data"
+        ],
         "parameters": [
           {
             "name": "id",
@@ -1048,7 +1201,9 @@
         }
       },
       "delete": {
-        "tags": ["Script Set DB Data"],
+        "tags": [
+          "Script Set DB Data"
+        ],
         "parameters": [
           {
             "name": "id",
@@ -1069,7 +1224,9 @@
     },
     "/api/scripts/db-datas/by-set/{scriptSetId}": {
       "get": {
-        "tags": ["Script Set DB Data"],
+        "tags": [
+          "Script Set DB Data"
+        ],
         "parameters": [
           {
             "name": "scriptSetId",
@@ -1240,7 +1397,11 @@
         "additionalProperties": false
       },
       "GameDbTableType": {
-        "enum": [1, 2, 3],
+        "enum": [
+          1,
+          2,
+          3
+        ],
         "type": "integer",
         "format": "int32"
       },
@@ -1254,6 +1415,43 @@
         },
         "additionalProperties": false
       },
+      "HttpValidationProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": { }
+      },
       "LoginRequest": {
         "type": "object",
         "properties": {
@@ -1262,6 +1460,36 @@
             "nullable": true
           },
           "password": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "MaterialFileDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "fileName": {
+            "type": "string",
+            "nullable": true
+          },
+          "targetPath": {
+            "type": "string",
+            "nullable": true
+          },
+          "password": {
+            "type": "string",
+            "nullable": true
+          },
+          "fileSize": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "sha256": {
             "type": "string",
             "nullable": true
           }
@@ -1329,7 +1557,10 @@
         "additionalProperties": false
       },
       "ScriptFileType": {
-        "enum": [1, 2],
+        "enum": [
+          1,
+          2
+        ],
         "type": "integer",
         "format": "int32"
       },
@@ -1402,25 +1633,6 @@
             "format": "date-time"
           },
           "notes": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "UpdateMaterialFileRequest": {
-        "type": "object",
-        "properties": {
-          "file": {
-            "type": "string",
-            "format": "binary",
-            "nullable": true
-          },
-          "targetPath": {
-            "type": "string",
-            "nullable": true
-          },
-          "password": {
             "type": "string",
             "nullable": true
           }
@@ -1517,6 +1729,10 @@
           }
         },
         "additionalProperties": false
+      },
+      "Void": {
+        "type": "object",
+        "additionalProperties": false
       }
     },
     "securitySchemes": {
@@ -1530,7 +1746,7 @@
   },
   "security": [
     {
-      "Bearer": []
+      "Bearer": [ ]
     }
   ]
 }

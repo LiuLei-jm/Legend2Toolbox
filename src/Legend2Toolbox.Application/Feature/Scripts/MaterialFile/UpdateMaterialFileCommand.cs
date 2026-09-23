@@ -41,16 +41,26 @@ public class UpdateMaterialFileCommandHandler : IRequestHandler<UpdateMaterialFi
         var fileName = file.FileName;
         var storagePath = file.StoragePath;
         var fileSize = file.FileSize;
+        var sha256 = file.Sha256;
 
         if(request.File is { Length: > 0 })
         {
             await _fileStorageService.DeleteFileAsync(file.StoragePath, cancellationToken);
             var targetFolder = Path.Combine("materials", _currentUserService.UserId);
-            (storagePath, fileSize) = await _fileStorageService.SaveFileAsync(request.File, targetFolder, cancellationToken);
+            (storagePath, fileSize, sha256) = await _fileStorageService.SaveFileAsync(
+                request.File,
+                targetFolder,
+                cancellationToken);
             fileName = request.File.FileName;
         }
 
-        file.Update(fileName, storagePath, request.TargetPath, request.Password ?? string.Empty, fileSize);
+        file.Update(
+            fileName,
+            storagePath,
+            request.TargetPath,
+            request.Password ?? string.Empty,
+            fileSize,
+            sha256);
         await _context.SaveChangesAsync(cancellationToken);
         return Result<Unit>.Success(Unit.Value);
     }

@@ -1,4 +1,5 @@
 ﻿using Legend2Toolbox.Application.Feature.Scripts.MaterialFile;
+using Legend2Toolbox.Application.Feature.Scripts.DTOS;
 using Legend2Toolbox.Application.Feature.Scripts.ScriptFile;
 using Legend2Toolbox.Application.Feature.Scripts.ScriptSet;
 using Legend2Toolbox.Application.Feature.Scripts.ScriptSetDbData;
@@ -161,7 +162,40 @@ public static class ScriptEndpoints
             var query = new GetMaterialFilesBySetIdQuery(scriptSetId);
             var result = await sender.Send(query);
             return result.ToMinimalApiResult();
-        });
+        })
+            .Produces<List<MaterialFileDto>>(StatusCodes.Status200OK)
+            .ProducesValidationProblem();
+        materialGroup.MapGet("/{id:guid}/content", async (
+            Guid id,
+            HttpContext httpContext,
+            [FromServices] ISender sender) =>
+        {
+            var result = await sender.Send(new GetMaterialFileContentQuery(id));
+            if (result.IsFailure) return Results.NotFound();
+
+            var file = result.Value;
+            httpContext.Response.Headers["X-Checksum-SHA256"] = file.Sha256;
+            return Results.File(
+                file.Content,
+                "application/octet-stream",
+                file.FileName,
+                enableRangeProcessing: true);
+        })
+            .Produces(StatusCodes.Status200OK, contentType: "application/octet-stream")
+            .Produces(StatusCodes.Status404NotFound)
+            .WithOpenApi(operation =>
+            {
+                operation.Responses["200"].Headers["X-Checksum-SHA256"] = new OpenApiHeader
+                {
+                    Description = "素材文件上传时保存的 SHA-256，小写十六进制格式",
+                    Schema = new OpenApiSchema
+                    {
+                        Type = "string",
+                        Pattern = "^[a-f0-9]{64}$"
+                    }
+                };
+                return operation;
+            });
     }
 
     private static void MapScriptSetDbDataEndpoints(RouteGroupBuilder group)

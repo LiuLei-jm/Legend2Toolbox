@@ -29,7 +29,8 @@ public record MaterialFileDto(Guid Id,
                               string FileName,
                               string TargetPath,
                               string Password,
-                              long FileSize);
+                              long FileSize,
+                              string Sha256);
 
 public record ScriptSetDto(
     Guid Id,

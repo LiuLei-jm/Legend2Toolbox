@@ -13,5 +13,6 @@ public class MaterialFileConfiguration : IEntityTypeConfiguration<MaterialFile>
         builder.Property(m => m.FileName).IsRequired().HasMaxLength(200);
         builder.Property(m => m.TargetPath).IsRequired().HasMaxLength(200);
         builder.Property(m => m.Password).IsRequired().HasMaxLength(200);
+        builder.Property(m => m.Sha256).IsRequired().HasMaxLength(64);
     }
 }

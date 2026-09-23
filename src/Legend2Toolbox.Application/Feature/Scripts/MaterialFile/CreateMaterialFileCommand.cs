@@ -48,7 +48,10 @@ public class CreateMaterialFileCommandHandler : IRequestHandler<CreateMaterialFi
         if (!setExists) return Result<Guid>.Failure(ErrorMessages.ScriptError.NotFoundScriptSet);
 
         var targetFolder = Path.Combine("materials", _currentUserService.UserId);
-        var (storagePath, fileSize) = await _fileStorageService.SaveFileAsync(request.File, targetFolder, cancellationToken);
+        var (storagePath, fileSize, sha256) = await _fileStorageService.SaveFileAsync(
+            request.File,
+            targetFolder,
+            cancellationToken);
 
         var materialFile = Domain.Entities.ScriptSets.MaterialFile.Create(
             request.ScriptSetId,
@@ -56,7 +59,8 @@ public class CreateMaterialFileCommandHandler : IRequestHandler<CreateMaterialFi
             storagePath,
             request.TargetPath,
             request.Password,
-            fileSize);
+            fileSize,
+            sha256);
 
         _context.MaterialFiles.Add(materialFile);
 
