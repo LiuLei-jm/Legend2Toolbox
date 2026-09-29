@@ -38,6 +38,7 @@
                                 {{ row.isLockedOut ? '解锁' : '锁定' }}
                             </el-button>
                             <el-button size="small" type="primary" @click="openRoleDialog(row)">分配角色</el-button>
+                            <el-button size="small" type="success" @click="openMembershipDialog(row)">会员时间</el-button>
                             <el-button size="small" type="success" @click="openUpdateDialog(row)">编辑</el-button>
                             <el-button size="small" type="danger" @click="handleDelete(row.id)">删除</el-button>
                         </template>
@@ -72,6 +73,7 @@
                             {{ row.isLockedOut ? '解锁' : '锁定' }}
                         </el-button>
                         <el-button size="small" plain type="primary" @click="openRoleDialog(row)">分配角色</el-button>
+                        <el-button size="small" plain type="success" @click="openMembershipDialog(row)">会员时间</el-button>
                         <el-button size="small" plain type="success" @click="openUpdateDialog(row)">编辑</el-button>
                         <el-button size="small" plain type="danger" @click="handleDelete(row.id)">删除</el-button>
                     </div>
@@ -86,6 +88,7 @@
         </el-card>
 
         <RoleEditDialog v-if="selectedUser" v-model:visible="roleEditVisible" :user-info="selectedUser" @success="loadUsers" />
+        <MembershipTimeDialog v-if="selectedUser" v-model:visible="membershipTimeVisible" :user-info="selectedUser" @success="loadUsers" />
         <UpdateUserDialog v-if="selectedUser" v-model:visible="updateUserVisible" :user-info="selectedUser" @success="loadUsers" />
 
     </div>
@@ -102,6 +105,7 @@ import type { AdminUserInfo } from '@/types/user'
 import { RoleDisplayMap, RoleTagTypeMap } from '@/utils/role'
 
 import RoleEditDialog from './components/RoleEditDialog.vue'
+import MembershipTimeDialog from './components/MembershipTimeDialog.vue'
 import UpdateUserDialog from './components/UpdateUserDialog.vue'
 
 
@@ -114,6 +118,7 @@ const searchUserName = ref<string>('')
 
 const selectedUser = ref<AdminUserInfo>()
 const roleEditVisible = ref<boolean>(false)
+const membershipTimeVisible = ref<boolean>(false)
 const updateUserVisible = ref<boolean>(false)
 
 const loadUsers = async () => {
@@ -172,6 +177,11 @@ const openUpdateDialog = (row: AdminUserInfo) => {
 const openRoleDialog = async (row: AdminUserInfo) => {
     selectedUser.value = { ...row }
     roleEditVisible.value = true
+}
+
+const openMembershipDialog = (row: AdminUserInfo) => {
+    selectedUser.value = { ...row }
+    membershipTimeVisible.value = true
 }
 
 

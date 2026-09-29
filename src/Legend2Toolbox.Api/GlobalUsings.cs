@@ -3,9 +3,11 @@
 global using Legend2Toolbox.Api;
 global using Legend2Toolbox.Api.Endpoints.Identity;
 global using Legend2Toolbox.Api.Exceptions;
+global using Legend2Toolbox.Api.Authorization;
 global using Legend2Toolbox.Api.Hubs;
 global using Legend2Toolbox.Application;
 global using Legend2Toolbox.Application.Common.Interfaces;
+global using Legend2Toolbox.Application.Common.Models;
 global using Legend2Toolbox.Application.Feature.Admin;
 global using Legend2Toolbox.Application.Feature.CardNumber;
 global using Legend2Toolbox.Application.Feature.CardNumber.Events;

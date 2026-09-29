@@ -48,6 +48,13 @@ public static class AdminUserEndpoints
             var result = await sender.Send(command);
             return result.ToMinimalApiResult();
         });
+        group.MapPost("/{userId}/membership-time", async (string userId,
+            [FromBody] AdjustMembershipDaysRequest request,
+            [FromServices] ISender sender) =>
+        {
+            var result = await sender.Send(new AdjustMembershipDaysCommand(userId, request.Days));
+            return result.ToMinimalApiResult();
+        });
         group.MapPut("/{userId}/update", async (string userId,
             [FromBody] UpdateUserRequest request,
             [FromServices] ISender sender) =>

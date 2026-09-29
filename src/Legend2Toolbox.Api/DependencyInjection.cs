@@ -1,4 +1,5 @@
 ﻿using Legend2Toolbox.Infrastructure.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -34,7 +35,12 @@ public static class DependencyInjection
                 ClockSkew = TimeSpan.FromSeconds(5)
             };
         });
-        services.AddAuthorization();
+        services.AddAuthorization(options =>
+        {
+            options.AddPolicy("MemberAccess", policy =>
+                policy.RequireAuthenticatedUser().AddRequirements(new MemberAccessRequirement()));
+        });
+        services.AddScoped<IAuthorizationHandler, MemberAccessAuthorizationHandler>();
         services.AddIdentityApiEndpoints<ApplicationUser>(options =>
             {
                 options.User.AllowedUserNameCharacters =
@@ -149,6 +155,7 @@ public static class DependencyInjection
         services.AddSignalR();
         services.AddSingleton<IConnectionManager, ConnectionManager>();
         services.AddHostedService<ExpiredCardNumberProcessor>();
+        services.AddHostedService<ExpiredMembershipProcessor>();
         services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
         services.AddSingleton<EmailSettings>(sp =>
         sp.GetRequiredService<IOptions<EmailSettings>>().Value);

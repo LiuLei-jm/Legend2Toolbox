@@ -5,6 +5,7 @@ global using Legend2Toolbox.Application.Feature.Admin;
 global using Legend2Toolbox.Application.Feature.Identity;
 global using Legend2Toolbox.Domain.Constants;
 global using Legend2Toolbox.Domain.Entities;
+global using Legend2Toolbox.Domain.Entities.Membership;
 global using Legend2Toolbox.Domain.Enums;
 global using Legend2Toolbox.Domain.Models;
 global using Legend2Toolbox.Infrastructure.Identity;

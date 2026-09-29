@@ -10,16 +10,18 @@ public class IdentityService : IIdentityService
     private readonly IEmailSender _emailSender;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly ITokenService _tokenService;
+    private readonly IMembershipService _membershipService;
 
     public IdentityService(UserManager<ApplicationUser> userManager, ICurrentUserService currentUserService,
         IEmailSender emailSender, ApplicationDbContext context,
-         ITokenService tokenService)
+         ITokenService tokenService, IMembershipService membershipService)
     {
         _userManager = userManager;
         _currentUserService = currentUserService;
         _emailSender = emailSender;
         _context = context;
         _tokenService = tokenService;
+        _membershipService = membershipService;
     }
 
     public async Task<Result<AuthResponse>> LoginUserAsync(LoginCommand request)
@@ -109,10 +111,25 @@ public class IdentityService : IIdentityService
         user.ConnectionKey = ConnectionKey.Create(userId, user.UserName);
         user.CardNumberPath = CardNumberPath.Create(userId);
 
+        await using var transaction = await _context.Database.BeginTransactionAsync();
         var result = await _userManager.CreateAsync(user, request.Password);
         if (result.Succeeded)
         {
-            await _userManager.AddToRoleAsync(user, nameof(Roles.Guest));
+            var guestResult = await _userManager.AddToRoleAsync(user, nameof(Roles.Guest));
+            if (!guestResult.Succeeded)
+            {
+                await transaction.RollbackAsync();
+                return Result.Failure(guestResult.Errors.Select(e => e.Description).ToArray());
+            }
+
+            var membershipResult = await _membershipService.GrantRegistrationMembershipAsync(user.Id);
+            if (membershipResult.IsFailure)
+            {
+                await transaction.RollbackAsync();
+                return Result.Failure(membershipResult.Errors);
+            }
+
+            await transaction.CommitAsync();
             return Result.Success();
         }
 
@@ -165,6 +182,25 @@ public class IdentityService : IIdentityService
                 return Result.Failure(addResult.Errors.Select(e => e.Description).ToArray());
             }
         }
+
+        var requestedMember = request.RoleNames.Contains(nameof(Roles.Member));
+        var previouslyHadMember = currentRoles.Contains(nameof(Roles.Member));
+        var membership = await _context.UserMemberships
+            .SingleOrDefaultAsync(x => x.UserId == user.Id);
+        if (!requestedMember && previouslyHadMember)
+        {
+            membership?.Expire();
+        }
+        else if (requestedMember && !previouslyHadMember &&
+                 (membership is null || membership.ExpireTime <= DateTimeOffset.UtcNow))
+        {
+            if (membership is null)
+                _context.UserMemberships.Add(UserMembership.Create(user.Id, 30, MembershipSource.Admin));
+            else
+                membership.AdjustDays(30);
+        }
+
+        await _context.SaveChangesAsync();
 
         return Result.Success();
     }

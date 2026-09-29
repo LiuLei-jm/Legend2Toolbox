@@ -45,6 +45,15 @@ public static class IdentityEndpoints
             return result.ToMinimalApiResult();
         }).RequireAuthorization();
 
+        group.MapGet("/membership", async (
+            [FromServices] ICurrentUserService currentUser,
+            [FromServices] IMembershipService membershipService) =>
+        {
+            if (!Guid.TryParse(currentUser.UserId, out var userId)) return Results.Unauthorized();
+            var status = await membershipService.GetStatusAsync(userId);
+            return status is null ? Results.NotFound() : Results.Ok(status);
+        }).RequireAuthorization();
+
         group.MapPost("/change-password",
             async ([FromBody] ChangePasswordRequest request, [FromServices] ISender sender) =>
             {
@@ -83,6 +92,26 @@ public static class IdentityEndpoints
             var result = await sender.Send(command);
             return result.ToMinimalApiResult();
         }).RequireAuthorization();
+
+        var paymentGroup = routes.MapGroup("/api/membership").WithTags("Membership Payment");
+        paymentGroup.MapPost("/orders", async (
+            [FromBody] CreateMembershipPaymentRequest request,
+            [FromServices] ICurrentUserService currentUser,
+            [FromServices] IMembershipPaymentService paymentService) =>
+        {
+            if (!Guid.TryParse(currentUser.UserId, out var userId)) return Results.Unauthorized();
+            var result = await paymentService.CreateOrderAsync(userId, request.Provider);
+            return result.ToMinimalApiResult();
+        }).RequireAuthorization();
+
+        paymentGroup.MapPost("/{provider}/notify", async (
+            PaymentProvider provider,
+            [FromBody] PaymentNotificationDto notification,
+            [FromServices] IMembershipPaymentService paymentService) =>
+        {
+            var result = await paymentService.HandleNotificationAsync(provider, notification);
+            return result.ToMinimalApiResult();
+        }).AllowAnonymous();
 
         return routes;
     }

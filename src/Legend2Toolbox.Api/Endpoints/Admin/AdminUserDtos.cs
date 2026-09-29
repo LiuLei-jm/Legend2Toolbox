@@ -7,3 +7,5 @@ public record AssignRoleRequest(List<string> RoleNames);
 public record UpdateUserRequest(string Username, string Email);
 
 public record GetUserByNameRequest(string UserName);
+
+public record AdjustMembershipDaysRequest(int Days);

@@ -17,6 +17,12 @@ public static class DependencyInjection
             sp.GetRequiredService<ApplicationDbContext>()
         );
         services.AddScoped<IIdentityService, IdentityService>();
+        services.AddScoped<IMembershipService, MembershipService>();
+        services.AddScoped<IMembershipPaymentService, MembershipPaymentService>();
+        services.AddScoped<IPaymentGateway, AlipayGateway>();
+        services.AddScoped<IPaymentGateway, WechatGateway>();
+        services.Configure<AlipayGatewayOptions>(configuration.GetSection("Payments:Alipay"));
+        services.Configure<WechatGatewayOptions>(configuration.GetSection("Payments:Wechat"));
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<ICurrentUserService, CurrentUserService>();
         services.AddScoped<IFileStorageService, LocalFileStorageService>();

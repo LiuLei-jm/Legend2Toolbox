@@ -21,6 +21,10 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
 
     public DbSet<ScriptSegment> ScriptSegments => Set<ScriptSegment>();
 
+    public DbSet<UserMembership> UserMemberships => Set<UserMembership>();
+
+    public DbSet<MembershipPaymentOrder> MembershipPaymentOrders => Set<MembershipPaymentOrder>();
+
     public DbSet<ScriptSetDbData> ScriptSetDbDatas => Set<ScriptSetDbData>();
 
     protected override void OnModelCreating(ModelBuilder builder)
