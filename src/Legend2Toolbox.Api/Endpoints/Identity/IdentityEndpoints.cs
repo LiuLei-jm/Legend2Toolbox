@@ -97,19 +97,24 @@ public static class IdentityEndpoints
         paymentGroup.MapPost("/orders", async (
             [FromBody] CreateMembershipPaymentRequest request,
             [FromServices] ICurrentUserService currentUser,
-            [FromServices] IMembershipPaymentService paymentService) =>
+            [FromServices] IMembershipPaymentService paymentService,
+            [FromServices] IAuditService audit) =>
         {
             if (!Guid.TryParse(currentUser.UserId, out var userId)) return Results.Unauthorized();
-            var result = await paymentService.CreateOrderAsync(userId, request.Provider);
+            var result = await audit.ExecuteAsync(new AuditOperation("MembershipPayment", "CreateOrder"),
+                () => paymentService.CreateOrderAsync(userId, request.Provider));
             return result.ToMinimalApiResult();
         }).RequireAuthorization();
 
         paymentGroup.MapPost("/{provider}/notify", async (
             PaymentProvider provider,
             [FromBody] PaymentNotificationDto notification,
-            [FromServices] IMembershipPaymentService paymentService) =>
+            [FromServices] IMembershipPaymentService paymentService,
+            [FromServices] IAuditService audit) =>
         {
-            var result = await paymentService.HandleNotificationAsync(provider, notification);
+            var result = await audit.ExecuteAsync(new AuditOperation("MembershipPayment", "PaymentNotification",
+                notification.OrderId, ActorType: "PaymentCallback"),
+                () => paymentService.HandleNotificationAsync(provider, notification));
             return result.ToMinimalApiResult();
         }).AllowAnonymous();
 

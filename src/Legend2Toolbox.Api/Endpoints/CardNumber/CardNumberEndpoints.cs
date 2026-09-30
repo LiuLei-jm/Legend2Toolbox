@@ -5,7 +5,7 @@ public static class CardNumberEndpoints
     public static IEndpointRouteBuilder MapCardNumberEndpoints(this IEndpointRouteBuilder routes)
     {
         var group = routes.MapGroup("/api/card").WithTags("Card Number")
-            .RequireAuthorization("MemberAccess");
+            .RequireAuthorization();
         group.MapPost("/create", async (CreateCardNumberRequest req, [FromServices] ISender sender) =>
         {
             var command = req.Adapt<CreateCardNumberCommand>();

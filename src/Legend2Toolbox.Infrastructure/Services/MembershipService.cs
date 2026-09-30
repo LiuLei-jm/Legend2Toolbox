@@ -5,11 +5,13 @@ public class MembershipService : IMembershipService
     private const int RegistrationDays = 30;
     private readonly ApplicationDbContext _context;
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly IAuditService _audit;
 
-    public MembershipService(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+    public MembershipService(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IAuditService audit)
     {
         _context = context;
         _userManager = userManager;
+        _audit = audit;
     }
 
     public async Task<Result<MembershipStatusDto>> GrantRegistrationMembershipAsync(Guid userId,
@@ -115,7 +117,12 @@ public class MembershipService : IMembershipService
         {
             var user = await _userManager.FindByIdAsync(userId.ToString());
             if (user is not null && await _userManager.IsInRoleAsync(user, nameof(Roles.Member)))
-                await _userManager.RemoveFromRoleAsync(user, nameof(Roles.Member));
+                await _audit.ExecuteAsync(new AuditOperation("Membership", "Expire", userId.ToString(),
+                    user.UserName, "System"), async () =>
+                {
+                    var result = await _userManager.RemoveFromRoleAsync(user, nameof(Roles.Member));
+                    return result.Succeeded ? Result.Success() : Result.Failure("RoleUpdateFailed");
+                });
         }
     }
 

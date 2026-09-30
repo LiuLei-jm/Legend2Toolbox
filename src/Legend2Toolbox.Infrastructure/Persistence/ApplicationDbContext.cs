@@ -10,6 +10,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     }
 
     public DbSet<CardNumber> CardNumbers => Set<CardNumber>();
+    public DbSet<Legend2Toolbox.Domain.Entities.Audit.AuditLog> AuditLogs => Set<Legend2Toolbox.Domain.Entities.Audit.AuditLog>();
     public DbSet<ConnectionKey> ConnectionKeys => Set<ConnectionKey>();
     public DbSet<CardNumberPath> CardNumberPaths => Set<CardNumberPath>();
 

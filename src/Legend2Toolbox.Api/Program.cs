@@ -56,6 +56,7 @@ try
     app.MapConnectionKeyEndpoints();
     app.MapCardNumberEndpoints();
     app.MapScriptEndpoints();
+    Legend2Toolbox.Api.Endpoints.Audit.AuditEndpoints.MapAuditEndpoints(app);
 
     app.MapHub<ResourceSyncHub>("/sync");
 

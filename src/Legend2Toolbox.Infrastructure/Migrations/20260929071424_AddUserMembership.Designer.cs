@@ -3,6 +3,7 @@ using System;
 using Legend2Toolbox.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,140 +11,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Legend2Toolbox.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260929071424_AddUserMembership")]
+    partial class AddUserMembership
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.28");
-
-            modelBuilder.Entity("Legend2Toolbox.Domain.Entities.Audit.AuditLog", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Action")
-                        .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ActorType")
-                        .IsRequired()
-                        .HasMaxLength(32)
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid?>("ActorUserId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ActorUserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("CaptureIncomplete")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("ClientIp")
-                        .HasMaxLength(64)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("DataStatus")
-                        .IsRequired()
-                        .HasMaxLength(32)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ErrorCode")
-                        .HasMaxLength(128)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Module")
-                        .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("TEXT");
-
-                    b.Property<long>("OccurredAtUnixMs")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Outcome")
-                        .IsRequired()
-                        .HasMaxLength(32)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("PeerIp")
-                        .HasMaxLength(64)
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid?>("SubjectUserId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("TargetId")
-                        .HasMaxLength(128)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("TargetName")
-                        .HasMaxLength(256)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("TraceId")
-                        .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OccurredAtUnixMs");
-
-                    b.HasIndex("ActorUserId", "OccurredAtUnixMs");
-
-                    b.HasIndex("Module", "TargetId", "OccurredAtUnixMs");
-
-                    b.HasIndex("SubjectUserId", "Action", "OccurredAtUnixMs");
-
-                    b.ToTable("AuditLogs", (string)null);
-                });
-
-            modelBuilder.Entity("Legend2Toolbox.Domain.Entities.Audit.AuditLogDetail", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("AuditLogId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ChangeType")
-                        .IsRequired()
-                        .HasMaxLength(32)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("EntityId")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("EntityType")
-                        .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("NewValues")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("OldValues")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("Sequence")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AuditLogId", "Sequence")
-                        .IsUnique();
-
-                    b.ToTable("AuditLogDetails", (string)null);
-                });
 
             modelBuilder.Entity("Legend2Toolbox.Domain.Entities.Cards.CardNumber", b =>
                 {
@@ -284,57 +159,6 @@ namespace Legend2Toolbox.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("ConnectionKeys");
-                });
-
-            modelBuilder.Entity("Legend2Toolbox.Domain.Entities.Membership.MembershipPaymentOrder", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<decimal>("Amount")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("CreatedOn")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("DurationDays")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("OrderId")
-                        .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("PaidOn")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Provider")
-                        .IsRequired()
-                        .HasMaxLength(32)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(32)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("TradeNo")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrderId")
-                        .IsUnique();
-
-                    b.HasIndex("UserId", "CreatedOn");
-
-                    b.ToTable("MembershipPaymentOrders", (string)null);
                 });
 
             modelBuilder.Entity("Legend2Toolbox.Domain.Entities.Membership.UserMembership", b =>
@@ -734,15 +558,6 @@ namespace Legend2Toolbox.Infrastructure.Migrations
                     b.ToTable("UserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Legend2Toolbox.Domain.Entities.Audit.AuditLogDetail", b =>
-                {
-                    b.HasOne("Legend2Toolbox.Domain.Entities.Audit.AuditLog", null)
-                        .WithMany("Details")
-                        .HasForeignKey("AuditLogId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Legend2Toolbox.Domain.Entities.Cards.CardNumber", b =>
                 {
                     b.HasOne("Legend2Toolbox.Infrastructure.Identity.ApplicationUser", null)
@@ -766,15 +581,6 @@ namespace Legend2Toolbox.Infrastructure.Migrations
                     b.HasOne("Legend2Toolbox.Infrastructure.Identity.ApplicationUser", null)
                         .WithOne("ConnectionKey")
                         .HasForeignKey("Legend2Toolbox.Domain.Entities.Cards.ConnectionKey", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Legend2Toolbox.Domain.Entities.Membership.MembershipPaymentOrder", b =>
-                {
-                    b.HasOne("Legend2Toolbox.Infrastructure.Identity.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -881,11 +687,6 @@ namespace Legend2Toolbox.Infrastructure.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Legend2Toolbox.Domain.Entities.Audit.AuditLog", b =>
-                {
-                    b.Navigation("Details");
                 });
 
             modelBuilder.Entity("Legend2Toolbox.Domain.Entities.ScriptSets.ScriptFile", b =>

@@ -1,13 +1,25 @@
 ﻿namespace Legend2Toolbox.Infrastructure;
 
+using Legend2Toolbox.Infrastructure.Auditing;
+
 public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructureService(this IServiceCollection services,
         IConfiguration configuration)
     {
         var connectionString = configuration.GetConnectionString("Default");
-        services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseSqlite(connectionString,
+        services.AddHttpContextAccessor();
+        services.Configure<AuditOptions>(configuration.GetSection("Audit"));
+        services.AddScoped<AuditSession>();
+        services.AddScoped<IAuditService, AuditService>();
+        services.AddScoped<AuditSaveChangesInterceptor>();
+        services.AddScoped<AuditTransactionInterceptor>();
+        services.AddSingleton<AuditStore>();
+        services.AddHostedService<AuditRetryService>();
+        services.AddDbContext<ApplicationDbContext>((sp, options) =>
+        options.AddInterceptors(sp.GetRequiredService<AuditSaveChangesInterceptor>(),
+                sp.GetRequiredService<AuditTransactionInterceptor>())
+            .UseSqlite(connectionString,
             sqlOptions => sqlOptions.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)
             ));
 

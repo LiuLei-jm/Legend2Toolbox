@@ -11,10 +11,11 @@ public class IdentityService : IIdentityService
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly ITokenService _tokenService;
     private readonly IMembershipService _membershipService;
+    private readonly IAuditService _audit;
 
     public IdentityService(UserManager<ApplicationUser> userManager, ICurrentUserService currentUserService,
         IEmailSender emailSender, ApplicationDbContext context,
-         ITokenService tokenService, IMembershipService membershipService)
+         ITokenService tokenService, IMembershipService membershipService, IAuditService audit)
     {
         _userManager = userManager;
         _currentUserService = currentUserService;
@@ -22,11 +23,13 @@ public class IdentityService : IIdentityService
         _context = context;
         _tokenService = tokenService;
         _membershipService = membershipService;
+        _audit = audit;
     }
 
     public async Task<Result<AuthResponse>> LoginUserAsync(LoginCommand request)
     {
         var user = await _userManager.FindByNameAsync(request.Username);
+        if (user is not null) _audit.IdentifySubject(user.Id, user.UserName);
         if (user == null || !user.IsActive || user.IsDeleted)
             return Result<AuthResponse>.Failure(ErrorMessages.AuthError.InvalidCredentials);
         if (await _userManager.IsLockedOutAsync(user))
@@ -130,6 +133,7 @@ public class IdentityService : IIdentityService
             }
 
             await transaction.CommitAsync();
+            _audit.IdentifySubject(user.Id, user.UserName);
             return Result.Success();
         }
 
@@ -143,6 +147,7 @@ public class IdentityService : IIdentityService
         var result = await _userManager.ResetPasswordAsync(user, request.Token, request.NewPassword);
         if (result.Succeeded)
         {
+            _audit.IdentifySubject(user.Id, user.UserName);
             await _userManager.ResetAccessFailedCountAsync(user);
             await _userManager.UpdateSecurityStampAsync(user);
             return Result.Success();

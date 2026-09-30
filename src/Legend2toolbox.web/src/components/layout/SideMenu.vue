@@ -7,9 +7,16 @@
       <h1 v-show="!isCollapse" class="logo-title">工具集合</h1>
     </div>
 
-    <el-menu :collapse="isCollapse" :collapse-transition="false" :default-active="$route.path" :router="true"
-      active-text-color="#409EFF" background-color="#304156" class="side-el-menu" text-color="#bfcbd9">
-
+    <el-menu
+      :collapse="isCollapse"
+      :collapse-transition="false"
+      :default-active="$route.path"
+      :router="true"
+      active-text-color="#409EFF"
+      background-color="#304156"
+      class="side-el-menu"
+      text-color="#bfcbd9"
+    >
       <el-menu-item index="/card-number">
         <el-icon>
           <Ticket />
@@ -29,6 +36,11 @@
           <Document />
         </el-icon>
         <template #title>脚本管理</template>
+      </el-menu-item>
+
+      <el-menu-item index="/audit">
+        <el-icon><Document /></el-icon>
+        <template #title>操作记录</template>
       </el-menu-item>
 
       <el-menu-item index="download-gateway" @click="downloadWpfGateway">
@@ -51,54 +63,57 @@
           </el-icon>
           <span>用户管理</span>
         </el-menu-item>
+        <el-menu-item index="/admin/audit">
+          <el-icon><Document /></el-icon>
+          <span>审计记录</span>
+        </el-menu-item>
       </el-sub-menu>
-
     </el-menu>
   </el-aside>
 </template>
 
-<script lang='ts' setup>
-import { ref } from 'vue'
-import { Box, Key, Ticket, User, Setting, Download, Document } from '@element-plus/icons-vue'
-import { useAuthStore } from '@/stores/auth'
-import { ElMessage } from 'element-plus'
-import { computed } from 'vue'
+<script lang="ts" setup>
+import { ref } from "vue";
+import { Box, Key, Ticket, User, Setting, Download, Document } from "@element-plus/icons-vue";
+import { useAuthStore } from "@/stores/auth";
+import { ElMessage } from "element-plus";
+import { computed } from "vue";
 
-const authStore = useAuthStore()
+const authStore = useAuthStore();
 
-const lastDownloadTime = ref<number>(0)
+const lastDownloadTime = ref<number>(0);
 
 defineProps<{
-  isCollapse: boolean
-}>()
+  isCollapse: boolean;
+}>();
 
 const hasSuperAdminRole = computed(() => {
-  return authStore.userInfo?.roles.includes('SuperAdmin')
+  return authStore.userInfo?.roles.includes("SuperAdmin");
 });
 
 const downloadWpfGateway = () => {
-  const now = Date.now()
-  const COOLDOWN_TIME = 60 * 1000
+  const now = Date.now();
+  const COOLDOWN_TIME = 60 * 1000;
 
   if (now - lastDownloadTime.value < COOLDOWN_TIME) {
-    const remainingSeconds = Math.ceil((COOLDOWN_TIME - (now - lastDownloadTime.value)) / 1000)
-    ElMessage.warning(`下载太频繁，请等待 ${remainingSeconds} 秒后再试`)
-    return
+    const remainingSeconds = Math.ceil((COOLDOWN_TIME - (now - lastDownloadTime.value)) / 1000);
+    ElMessage.warning(`下载太频繁，请等待 ${remainingSeconds} 秒后再试`);
+    return;
   }
 
-  lastDownloadTime.value = now
+  lastDownloadTime.value = now;
 
-  const downloadUrl = '/downloads/CardGateway.zip'
+  const downloadUrl = "/downloads/CardGateway.zip";
 
-  ElMessage.success('正在开始下载 WPF 客户端网关...')
+  ElMessage.success("正在开始下载 WPF 客户端网关...");
 
-  const link = document.createElement('a')
-  link.href = downloadUrl
-  link.download = 'CardGateway.zip'
-  document.body.appendChild(link)
-  link.click()
-  document.body.removeChild(link)
-}
+  const link = document.createElement("a");
+  link.href = downloadUrl;
+  link.download = "CardGateway.zip";
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
 </script>
 
 <style scoped>

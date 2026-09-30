@@ -14,6 +14,20 @@ const routes: Array<RouteRecordRaw> = [
     },
     children: [
       {
+        path: 'audit',
+        name: 'MyAudit',
+        component: () => import('@/views/audit/AuditView.vue'),
+        meta: { title: '我的操作与登录记录' }
+      },
+      {
+        path: 'admin/audit',
+        name: 'AdminAudit',
+        component: () => import('@/views/audit/AuditView.vue'),
+        meta: { title: '全部审计记录' },
+        beforeEnter: () => useAuthStore().userInfo?.roles.includes('SuperAdmin')
+          ? true : { name: 'MyAudit' }
+      },
+      {
         path: 'profile',
         name: 'UserProfile',
         component: () => import('@/views/auth/ProfileInfo.vue'),

@@ -11,7 +11,7 @@ public static class ScriptEndpoints
     public static IEndpointRouteBuilder MapScriptEndpoints(this IEndpointRouteBuilder app)
     {
         var group = app.MapGroup("/api/scripts")
-            .RequireAuthorization("MemberAccess");
+            .RequireAuthorization();
 
         MapScriptSetEndpoints(group);
         MapScriptFileEndpoints(group);
